@@ -8,9 +8,9 @@
 - node_modules/.bin/tsc.cmd --noEmit 通过。
 - node_modules/.bin/vite.cmd build 通过。
 - cargo check --manifest-path src-tauri/Cargo.toml 通过。
-- cargo test --manifest-path src-tauri/Cargo.toml 通过（3 个备份/导入导出测试）。
+- cargo test --manifest-path src-tauri/Cargo.toml 通过（4 个测试，含剪贴板旧内容判断和备份导入导出）。
 - cargo fmt --all -- --check、node --test tests/*.test.mjs 通过。
-- Tauri NSIS 构建已通过，生成 x64 安装包。
+- Tauri NSIS 构建已通过，生成 x64 安装包；修复取词焦点/所有者校验后已重新生成。
 - 已用 Windows 桌面启动 release exe，主窗口可见，中文工作台正常显示。
 
 ## 当前实现
@@ -19,7 +19,7 @@ Tauri 2 + React/TypeScript + Rust。后端实现托盘、单实例、全局快�
 
 ## 未验证/阻塞
 
-- 真实 PDF、快捷键冲突、托盘菜单、浮窗不抢焦点、翻译 API 和安装包安装/退出仍需人工验收。
+- 真实 PDF 选区、快捷键冲突实际占用、托盘菜单、浮窗不抢焦点、翻译 API 和安装包安装/退出仍需人工验收。
 - JSON 导入导出后端命令已实现，完整导入 UI 仍待补齐。
 - 未使用真实 API 做翻译验证；CI 文件已配置但尚未在 GitHub runner 执行。
 

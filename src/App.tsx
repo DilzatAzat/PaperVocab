@@ -15,12 +15,17 @@ function formatTime(value: string) {
   return new Date(value.endsWith("Z") ? value : `${value}Z`).toLocaleString("zh-CN", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
 }
 
+function localDate() {
+  const date = new Date();
+  return [date.getFullYear(), String(date.getMonth() + 1).padStart(2, "0"), String(date.getDate()).padStart(2, "0")].join("-");
+}
+
 export function App() {
   const [page, setPage] = useState<Page>(isPopup ? "today" : "today");
   const [words, setWords] = useState<Word[]>([]);
   const [reviews, setReviews] = useState<Word[]>([]);
   const [query, setQuery] = useState("");
-  const [date, setDate] = useState("");
+  const [date, setDate] = useState(localDate());
   const [settings, setSettings] = useState<Settings | null>(null);
   const [capture, setCapture] = useState<CaptureEvent | null>(null);
   const [error, setError] = useState("");
@@ -42,6 +47,7 @@ export function App() {
     if (!tauriAvailable) return;
     let unlisten: (() => void) | undefined;
     void listen<CaptureEvent>("capture-status", async (event) => {
+      if (event.payload.word_id && capture?.word_id && event.payload.word_id !== capture.word_id && event.payload.status !== "saved") return;
       setCapture(event.payload);
       if (event.payload.status === "saved" || event.payload.status === "translated" || event.payload.status === "failed") {
         await reload();
@@ -52,9 +58,9 @@ export function App() {
       }
     }).then((fn) => { unlisten = fn; });
     return () => { unlisten?.(); };
-  }, [query, date, page, settings]);
+  }, [query, date, page, settings, capture]);
 
-  const todayCount = useMemo(() => words.filter((word) => word.first_seen_at.slice(0, 10) === new Date().toISOString().slice(0, 10)).length, [words]);
+  const todayCount = useMemo(() => words.filter((word) => word.first_seen_at.slice(0, 10) === localDate()).length, [words]);
 
   if (isPopup) return <CapturePopup capture={capture} />;
 

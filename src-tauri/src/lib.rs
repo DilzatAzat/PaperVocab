@@ -20,6 +20,7 @@ use windows::Win32::UI::Input::KeyboardAndMouse::{
     KEYEVENTF_KEYUP, VIRTUAL_KEY, VK_C, VK_CONTROL, VK_LWIN, VK_MENU, VK_RWIN, VK_SHIFT,
 };
 mod backup;
+mod capture;
 
 const DEFAULT_SHORTCUT: &str = "CTRL+SHIFT+L";
 const KEYRING_SERVICE: &str = "PaperVocab";
@@ -85,11 +86,7 @@ fn now() -> String {
 }
 
 fn normalize(value: &str) -> (String, String) {
-    let original = value
-        .trim()
-        .split_whitespace()
-        .collect::<Vec<_>>()
-        .join(" ");
+    let original = value.split_whitespace().collect::<Vec<_>>().join(" ");
     let key = if original.chars().count() >= 2
         && original.chars().count() <= 16
         && original
@@ -184,6 +181,7 @@ fn api_key() -> Option<String> {
         .ok()
 }
 
+#[allow(dead_code)]
 fn capture_selection() -> Result<String, String> {
     let modifier_keys = [VK_CONTROL, VK_SHIFT, VK_MENU, VK_LWIN, VK_RWIN];
     let deadline = std::time::Instant::now() + Duration::from_secs(2);
@@ -407,7 +405,7 @@ fn process_capture(app: tauri::AppHandle) {
     if state.capture_busy.swap(true, Ordering::SeqCst) {
         return;
     }
-    match capture_selection() {
+    match capture::selection(capture::foreground()) {
         Ok(text) => {
             let word = state
                 .db
@@ -604,6 +602,16 @@ fn save_settings(
     if shortcut.is_empty() {
         return Err("快捷键不能为空".into());
     }
+    let previous_shortcut = {
+        let db = state.db.lock().map_err(|_| "数据库锁定失败")?;
+        get_setting(&db, "shortcut", DEFAULT_SHORTCUT)
+    };
+    let manager = app.global_shortcut();
+    if previous_shortcut != shortcut {
+        manager
+            .register(shortcut.as_str())
+            .map_err(|e| format!("快捷键注册失败：{}", e))?;
+    }
     {
         let db = state.db.lock().map_err(|_| "数据库锁定失败")?;
         for (key, value) in [
@@ -621,11 +629,9 @@ fn save_settings(
             .set_password(value.trim())
             .map_err(|e| e.to_string())?;
     }
-    let manager = app.global_shortcut();
-    manager.unregister_all().map_err(|e| e.to_string())?;
-    manager
-        .register(shortcut.as_str())
-        .map_err(|e| format!("快捷键注册失败：{}", e))?;
+    if previous_shortcut != shortcut {
+        let _ = manager.unregister(previous_shortcut.as_str());
+    }
     get_settings(state)
 }
 
@@ -645,9 +651,8 @@ fn retry_translation(
     );
     translate_word(&app, &state, &word)
         .map(|_| ())
-        .map_err(|error| {
+        .inspect_err(|error| {
             mark_translation_failed(&app, &state, &word, error.clone());
-            error
         })
 }
 
@@ -697,8 +702,13 @@ pub fn run() {
                 db: Mutex::new(connection),
                 capture_busy: AtomicBool::new(false),
             });
-            register_shortcut(app.handle(), DEFAULT_SHORTCUT)
-                .map_err(|e| format!("默认快捷键注册失败：{}", e))?;
+            let configured_shortcut = {
+                let state = app.state::<AppState>();
+                let db = state.db.lock().map_err(|_| "数据库锁定失败")?;
+                get_setting(&db, "shortcut", DEFAULT_SHORTCUT)
+            };
+            register_shortcut(app.handle(), configured_shortcut.as_str())
+                .map_err(|e| format!("快捷键注册失败：{}", e))?;
             let menu = tauri::menu::MenuBuilder::new(app)
                 .text("show", "打开 PaperVocab")
                 .text("quit", "退出")

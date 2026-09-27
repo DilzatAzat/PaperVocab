@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { listen } from "@tauri-apps/api/event";
 import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
 import { getCurrentWindow } from "@tauri-apps/api/window";
@@ -9,7 +9,7 @@ type CaptureEvent = { word_id: number; original: string; status: string; message
 
 const tauriAvailable = typeof window !== "undefined" && "__TAURI_INTERNALS__" in window;
 const isPopup = tauriAvailable && getCurrentWindow().label === "capture";
-const defaultSettings: Settings = { api_base_url: "https://api.openai.com/v1", model: "gpt-4o-mini", domain: "通用英语", shortcut: "CTRL+SHIFT+L", has_api_key: false };
+const defaultSettings: Settings = { api_base_url: "https://api.openai.com/v1", model: "gpt-4o-mini", domain: "通用英语", shortcut: "CTRL+SHIFT+L", has_api_key: false, shortcut_error: null };
 
 function formatTime(value: string) {
   return new Date(value.endsWith("Z") ? value : `${value}Z`).toLocaleString("zh-CN", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
@@ -28,6 +28,7 @@ export function App() {
   const [date, setDate] = useState(localDate());
   const [settings, setSettings] = useState<Settings | null>(null);
   const [capture, setCapture] = useState<CaptureEvent | null>(null);
+  const activeCaptureId = useRef<number | null>(null);
   const [error, setError] = useState("");
   const [manual, setManual] = useState("");
   const [sentence, setSentence] = useState("");
@@ -47,18 +48,21 @@ export function App() {
     if (!tauriAvailable) return;
     let unlisten: (() => void) | undefined;
     void listen<CaptureEvent>("capture-status", async (event) => {
-      if (event.payload.word_id && capture?.word_id && event.payload.word_id !== capture.word_id && event.payload.status !== "saved") return;
-      setCapture(event.payload);
+      if (event.payload.status === "saved" && event.payload.word_id) {
+        activeCaptureId.current = event.payload.word_id;
+      }
       if (event.payload.status === "saved" || event.payload.status === "translated" || event.payload.status === "failed") {
         await reload();
       }
+      if (event.payload.word_id && activeCaptureId.current && event.payload.word_id !== activeCaptureId.current) return;
+      setCapture(event.payload);
       if (event.payload.status === "saved" || event.payload.status === "loading" || event.payload.status === "translated" || event.payload.status === "failed") {
         const popup = await WebviewWindow.getByLabel("capture");
         if (popup && !isPopup) await popup.show();
       }
     }).then((fn) => { unlisten = fn; });
     return () => { unlisten?.(); };
-  }, [query, date, page, settings, capture]);
+  }, [query, date, page, settings]);
 
   const todayCount = useMemo(() => words.filter((word) => word.first_seen_at.slice(0, 10) === localDate()).length, [words]);
 
@@ -102,6 +106,6 @@ function WordList({ words, onDelete, onRetry }: { words: Word[]; onDelete: (id: 
 
 function ReviewPanel({ words, onReview }: { words: Word[]; onReview: (id: number, rating: string) => Promise<void> }) { const [index, setIndex] = useState(0); const [show, setShow] = useState(false); const [busy, setBusy] = useState(false); const word = words[index]; if (!word) return <div className="empty-state review-empty"><div className="empty-icon">✓</div><h2>今天没有到期单词</h2><p>新收的词也可以在这里主动复习。</p></div>; const rate = async (rating: string) => { if (busy) return; setBusy(true); try { await onReview(word.id, rating); setShow(false); setIndex(0); } finally { setBusy(false); } }; return <section className="review-panel"><div className="review-progress">{index + 1} / {words.length}</div><div className="review-card"><div className="review-word">{word.original}</div>{show ? <div className="review-answer"><span>{word.part_of_speech}</span><strong>{word.meaning_zh || "暂无释义"}</strong><p>{word.explanation_zh}</p></div> : <button className="primary-button reveal" onClick={() => setShow(true)}>查看释义</button>}</div>{show && <div className="rating-row"><button disabled={busy} onClick={() => void rate("unknown")}>不认识</button><button disabled={busy} onClick={() => void rate("familiar")}>有点印象</button><button disabled={busy} className="primary-button" onClick={() => void rate("known")}>认识</button></div>}</section>; }
 
-function SettingsPanel({ settings, onSaved }: { settings: Settings | null; onSaved: (settings: Settings) => void }) { const [baseUrl, setBaseUrl] = useState(settings?.api_base_url || "https://api.openai.com/v1"); const [model, setModel] = useState(settings?.model || "gpt-4o-mini"); const [domain, setDomain] = useState(settings?.domain || "通用英语"); const [key, setKey] = useState(""); const [shortcut, setShortcut] = useState(settings?.shortcut || "CTRL+SHIFT+L"); const [message, setMessage] = useState(""); useEffect(() => { if (settings) { setBaseUrl(settings.api_base_url); setModel(settings.model); setDomain(settings.domain); setShortcut(settings.shortcut); } }, [settings]); const save = async () => { if (!tauriAvailable) { setMessage("请在 PaperVocab 桌面版中保存设置"); return; } try { const next = await api.saveSettings(baseUrl, model, domain, key, shortcut); onSaved(next); setKey(""); setMessage("设置已保存"); } catch (e) { setMessage(String(e)); } }; return <section className="settings-panel"><div className="settings-intro"><div className="eyebrow">TRANSLATION</div><h2>翻译服务</h2><p>PaperVocab 使用 OpenAI 兼容的 Chat Completions 接口。请求在本机后端发出，密钥保存在 Windows 凭据管理器中。</p></div><label>API Base URL<input value={baseUrl} onChange={(e) => setBaseUrl(e.target.value)} /></label><label>模型<input value={model} onChange={(e) => setModel(e.target.value)} placeholder="gpt-4o-mini" /></label><label>API 密钥<input type="password" value={key} onChange={(e) => setKey(e.target.value)} placeholder={settings?.has_api_key ? "已保存，留空表示不修改" : "sk-…"} /></label><label>默认领域<select value={domain} onChange={(e) => setDomain(e.target.value)}><option>通用英语</option><option>人工智能</option><option>生物学</option></select></label><div className="settings-divider" /><div className="settings-intro"><div className="eyebrow">CAPTURE</div><h2>全局取词</h2><p>快捷键会等待你松开组合键，再模拟 Ctrl+C 读取选区；模拟复制可能改变当前剪贴板内容。</p></div><label>快捷键<input value={shortcut} onChange={(e) => setShortcut(e.target.value.toUpperCase())} placeholder="CTRL+SHIFT+L" /></label><div className="settings-actions"><button className="primary-button" onClick={() => void save()}>保存设置</button>{message && <span className="save-message">{message}</span>}</div></section>; }
+function SettingsPanel({ settings, onSaved }: { settings: Settings | null; onSaved: (settings: Settings) => void }) { const [baseUrl, setBaseUrl] = useState(settings?.api_base_url || "https://api.openai.com/v1"); const [model, setModel] = useState(settings?.model || "gpt-4o-mini"); const [domain, setDomain] = useState(settings?.domain || "通用英语"); const [key, setKey] = useState(""); const [shortcut, setShortcut] = useState(settings?.shortcut || "CTRL+SHIFT+L"); const [message, setMessage] = useState(""); useEffect(() => { if (settings) { setBaseUrl(settings.api_base_url); setModel(settings.model); setDomain(settings.domain); setShortcut(settings.shortcut); } }, [settings]); const save = async () => { if (!tauriAvailable) { setMessage("请在 PaperVocab 桌面版中保存设置"); return; } try { const next = await api.saveSettings(baseUrl, model, domain, key, shortcut); onSaved(next); setKey(""); setMessage("设置已保存"); } catch (e) { setMessage(String(e)); } }; return <section className="settings-panel"><div className="settings-intro"><div className="eyebrow">TRANSLATION</div><h2>翻译服务</h2><p>PaperVocab 使用 OpenAI 兼容的 Chat Completions 接口。请求在本机后端发出，密钥保存在 Windows 凭据管理器中。</p></div><label>API Base URL<input value={baseUrl} onChange={(e) => setBaseUrl(e.target.value)} /></label><label>模型<input value={model} onChange={(e) => setModel(e.target.value)} placeholder="gpt-4o-mini" /></label><label>API 密钥<input type="password" value={key} onChange={(e) => setKey(e.target.value)} placeholder={settings?.has_api_key ? "已保存，留空表示不修改" : "sk-…"} /></label><label>默认领域<select value={domain} onChange={(e) => setDomain(e.target.value)}><option>通用英语</option><option>人工智能</option><option>生物学</option></select></label><div className="settings-divider" /><div className="settings-intro"><div className="eyebrow">CAPTURE</div><h2>全局取词</h2><p>快捷键会等待你松开组合键，再模拟 Ctrl+C 读取选区；完成取词后会尽量恢复原有文字或图片剪贴板。</p></div>{settings?.shortcut_error && <div className="error-banner settings-error">{settings.shortcut_error}</div>}<label>快捷键<input value={shortcut} onChange={(e) => setShortcut(e.target.value.toUpperCase())} placeholder="CTRL+SHIFT+L" /></label><div className="settings-actions"><button className="primary-button" onClick={() => void save()}>保存设置</button>{message && <span className="save-message">{message}</span>}</div></section>; }
 
-function CapturePopup({ capture }: { capture: CaptureEvent | null }) { const hide = () => void getCurrentWindow().hide(); return <div className="popup-shell"><div className="popup-top"><span className="brand-mark small">P</span><span>PaperVocab</span><button onClick={hide}>×</button></div>{capture ? <><div className="popup-word">{capture.original}</div>{capture.status === "loading" || capture.status === "saved" ? <div className="popup-loading"><span className="spinner" />正在获取释义…</div> : capture.status === "failed" ? <div className="popup-fail">{capture.message || "翻译失败，可稍后重试"}</div> : <div className="popup-result"><div className="popup-pos">{capture.word?.part_of_speech}</div><strong>{capture.word?.meaning_zh || "暂无释义"}</strong><p>{capture.word?.explanation_zh}</p>{capture.word?.example_en && <div className="example">{capture.word.example_en}</div>}</div>}</> : <div className="popup-loading">等待选中的文本…</div>}<button className="popup-close" onClick={hide}>关闭</button></div>; }
+function CapturePopup({ capture }: { capture: CaptureEvent | null }) { const hide = () => void getCurrentWindow().hide(); return <div className="popup-shell"><div className="popup-top"><div className="popup-brand"><span className="brand-mark small">P</span><span>PaperVocab</span></div><button className="popup-close-icon" aria-label="关闭取词浮窗" title="关闭" onClick={hide}>×</button></div>{capture ? <><div className="popup-word">{capture.original}</div>{capture.status === "loading" || capture.status === "saved" ? <div className="popup-loading"><span className="spinner" />正在获取释义…</div> : capture.status === "failed" ? <div className="popup-fail"><strong>暂时无法翻译</strong><span>{capture.message || "请稍后重试"}</span></div> : <div className="popup-result"><div className="popup-pos">{capture.word?.part_of_speech}</div><strong>{capture.word?.meaning_zh || "暂无释义"}</strong><p>{capture.word?.explanation_zh}</p>{capture.word?.example_en && <div className="example"><span>生成例句</span>{capture.word.example_en}</div>}</div>}</> : <div className="popup-loading">等待选中的文本…</div>}<button className="popup-close" onClick={hide}>关闭</button></div>; }

@@ -16,7 +16,7 @@ export type Word = {
 };
 export type Encounter = { id: number; word_id: number; original: string; seen_at: string; source_sentence: string | null };
 export type Review = { id: number; word_id: number; rating: string; reviewed_at: string; due_at: string };
-export type Settings = { api_base_url: string; model: string; domain: string; shortcut: string; has_api_key: boolean };
+export type Settings = { api_base_url: string; model: string; domain: string; shortcut: string; has_api_key: boolean; shortcut_error: string | null };
 
 export const api = {
   words: (search?: string, date?: string) => invoke<Word[]>("list_words", { search: search || null, date: date || null }),

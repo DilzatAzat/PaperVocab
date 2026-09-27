@@ -1,0 +1,22 @@
+# GitHub 发布步骤
+
+当前工程已经准备好双语 README、MIT License、Issue/PR 模板、Windows CI 和 tag 发布工作流。尚未自动推送，因为目标 GitHub 仓库地址和登录授权需要由维护者确认。
+
+## 首次上传
+
+在 GitHub 创建一个空仓库后，在本地执行：
+
+    cd C:\Users\ROG\Desktop\paperVocab
+    git remote add origin https://github.com/<你的用户名>/<仓库名>.git
+    git push -u origin master
+
+## 发布可下载版本
+
+    git tag v0.1.0
+    git push origin v0.1.0
+
+release.yml 会在 Windows runner 上重新构建 NSIS 安装包，并自动附加到 GitHub Release。发布前请确认 README.md 中的截图路径和仓库地址已经正确。
+
+## 宣传素材
+
+可复制 docs/LAUNCH.md 中的中英文介绍，用于 GitHub Release、知乎、掘金或社交媒体。宣传内容应明确第一版限制，不把未验证的 PDF/翻译兼容性写成保证。

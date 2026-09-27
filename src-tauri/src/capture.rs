@@ -1,17 +1,17 @@
-use arboard::Clipboard;
+use arboard::{Clipboard, ImageData};
 use std::{
     thread,
     time::{Duration, Instant},
 };
 use windows::Win32::{
     Foundation::HWND,
-    System::DataExchange::{GetClipboardOwner, GetClipboardSequenceNumber},
+    System::DataExchange::GetClipboardSequenceNumber,
     UI::{
         Input::KeyboardAndMouse::{
             GetAsyncKeyState, SendInput, INPUT, INPUT_0, INPUT_KEYBOARD, KEYBDINPUT,
             KEYEVENTF_KEYUP, VK_C, VK_CONTROL, VK_LWIN, VK_MENU, VK_RWIN, VK_SHIFT,
         },
-        WindowsAndMessaging::{GetForegroundWindow, GetWindowThreadProcessId},
+        WindowsAndMessaging::GetForegroundWindow,
     },
 };
 
@@ -21,6 +21,45 @@ pub fn foreground() -> HWND {
 
 pub fn is_new_text(before: u32, after: u32, text: &str) -> bool {
     before != after && !text.trim().is_empty()
+}
+
+pub fn should_restore(expected_sequence: u32, current_sequence: u32) -> bool {
+    expected_sequence == current_sequence
+}
+
+struct ClipboardSnapshot {
+    text: Option<String>,
+    image: Option<ImageData<'static>>,
+}
+
+fn snapshot() -> ClipboardSnapshot {
+    match Clipboard::new() {
+        Ok(mut clipboard) => ClipboardSnapshot {
+            text: clipboard.get_text().ok(),
+            image: clipboard.get_image().ok(),
+        },
+        Err(_) => ClipboardSnapshot {
+            text: None,
+            image: None,
+        },
+    }
+}
+
+fn restore(snapshot: ClipboardSnapshot, expected_sequence: u32) {
+    if !should_restore(expected_sequence, unsafe { GetClipboardSequenceNumber() }) {
+        return;
+    }
+    let Ok(mut clipboard) = Clipboard::new() else {
+        return;
+    };
+    if !should_restore(expected_sequence, unsafe { GetClipboardSequenceNumber() }) {
+        return;
+    }
+    if let Some(image) = snapshot.image {
+        let _ = clipboard.set_image(image);
+    } else if let Some(text) = snapshot.text {
+        let _ = clipboard.set_text(text);
+    }
 }
 
 pub fn selection(source: HWND) -> Result<String, String> {
@@ -38,6 +77,7 @@ pub fn selection(source: HWND) -> Result<String, String> {
     if source.0.is_null() || foreground() != source {
         return Err("阅读器焦点已改变，请重新选择后取词".into());
     }
+    let previous = snapshot();
     let before = unsafe { GetClipboardSequenceNumber() };
     let key = |vk, up| INPUT {
         r#type: INPUT_KEYBOARD,
@@ -69,16 +109,6 @@ pub fn selection(source: HWND) -> Result<String, String> {
         }
         let sequence = unsafe { GetClipboardSequenceNumber() };
         if sequence != before {
-            let owner = unsafe { GetClipboardOwner() }.map_err(|_| "无法确认剪贴板来源")?;
-            let mut source_pid = 0;
-            let mut owner_pid = 0;
-            unsafe {
-                GetWindowThreadProcessId(source, Some(&mut source_pid));
-                GetWindowThreadProcessId(owner, Some(&mut owner_pid));
-            }
-            if owner_pid != source_pid {
-                return Err("取词期间剪贴板被其他程序更新，请重试".into());
-            }
             if let Ok(text) = Clipboard::new().and_then(|mut clipboard| clipboard.get_text()) {
                 let after = unsafe { GetClipboardSequenceNumber() };
                 if after != sequence {
@@ -87,6 +117,7 @@ pub fn selection(source: HWND) -> Result<String, String> {
                 if !is_new_text(before, after, &text) {
                     return Err("选区没有文字".into());
                 }
+                restore(previous, after);
                 return Ok(text);
             }
         }
@@ -105,5 +136,11 @@ mod tests {
         assert!(!is_new_text(10, 10, "old text"));
         assert!(!is_new_text(10, 11, "  "));
         assert!(is_new_text(u32::MAX, 0, "new selection"));
+    }
+
+    #[test]
+    fn clipboard_is_restored_only_when_sequence_is_stable() {
+        assert!(should_restore(22, 22));
+        assert!(!should_restore(22, 23));
     }
 }

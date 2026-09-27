@@ -1,0 +1,29 @@
+name: Bug report
+description: 报告可复现的问题
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: steps
+    attributes:
+      label: 复现步骤 / Steps
+      description: 请写出最小复现步骤。
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: 期望与实际 / Expected and actual
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: 版本与系统 / Version and Windows version
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: 脱敏日志 / Redacted logs
+      description: 不要粘贴 API 密钥、数据库或论文原文。

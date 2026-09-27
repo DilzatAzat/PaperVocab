@@ -1,6 +1,3 @@
-#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
-
-use arboard::Clipboard;
 use chrono::{SecondsFormat, Utc};
 use keyring::Entry;
 use reqwest::blocking::Client;
@@ -14,11 +11,6 @@ use std::sync::{
 use std::{thread, time::Duration};
 use tauri::{Emitter, Manager, State};
 use tauri_plugin_global_shortcut::{GlobalShortcutExt, ShortcutState};
-use windows::Win32::System::DataExchange::GetClipboardSequenceNumber;
-use windows::Win32::UI::Input::KeyboardAndMouse::{
-    GetAsyncKeyState, SendInput, INPUT, INPUT_0, INPUT_KEYBOARD, KEYBDINPUT, KEYBD_EVENT_FLAGS,
-    KEYEVENTF_KEYUP, VIRTUAL_KEY, VK_C, VK_CONTROL, VK_LWIN, VK_MENU, VK_RWIN, VK_SHIFT,
-};
 mod backup;
 mod capture;
 
@@ -71,6 +63,7 @@ struct Settings {
     domain: String,
     shortcut: String,
     has_api_key: bool,
+    shortcut_error: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -174,6 +167,22 @@ fn get_setting(connection: &Connection, key: &str, fallback: &str) -> String {
         .unwrap_or_else(|_| fallback.to_string())
 }
 
+fn set_shortcut_error(connection: &Connection, error: Option<&str>) -> Result<(), String> {
+    match error {
+        Some(value) => connection
+            .execute(
+                "INSERT INTO settings(key,value) VALUES ('shortcut_error',?1) ON CONFLICT(key) DO UPDATE SET value=?1",
+                [value],
+            )
+            .map(|_| ())
+            .map_err(|e| e.to_string()),
+        None => connection
+            .execute("DELETE FROM settings WHERE key='shortcut_error'", [])
+            .map(|_| ())
+            .map_err(|e| e.to_string()),
+    }
+}
+
 fn api_key() -> Option<String> {
     Entry::new(KEYRING_SERVICE, KEYRING_USER)
         .ok()?
@@ -181,96 +190,13 @@ fn api_key() -> Option<String> {
         .ok()
 }
 
-#[allow(dead_code)]
-fn capture_selection() -> Result<String, String> {
-    let modifier_keys = [VK_CONTROL, VK_SHIFT, VK_MENU, VK_LWIN, VK_RWIN];
-    let deadline = std::time::Instant::now() + Duration::from_secs(2);
-    while modifier_keys
-        .iter()
-        .any(|key| unsafe { GetAsyncKeyState(key.0 as i32) } < 0)
-    {
-        if std::time::Instant::now() >= deadline {
-            return Err("请松开快捷键后再试".into());
-        }
-        thread::sleep(Duration::from_millis(15));
+fn response_excerpt(body: &str) -> String {
+    let compact = body.split_whitespace().collect::<Vec<_>>().join(" ");
+    let mut excerpt = compact.chars().take(240).collect::<String>();
+    if compact.chars().count() > 240 {
+        excerpt.push_str("...");
     }
-    let before = unsafe { GetClipboardSequenceNumber() };
-    let inputs = [
-        INPUT {
-            r#type: INPUT_KEYBOARD,
-            Anonymous: INPUT_0 {
-                ki: KEYBDINPUT {
-                    wVk: VIRTUAL_KEY(VK_CONTROL.0),
-                    wScan: 0,
-                    dwFlags: KEYBD_EVENT_FLAGS(0),
-                    time: 0,
-                    dwExtraInfo: 0,
-                },
-            },
-        },
-        INPUT {
-            r#type: INPUT_KEYBOARD,
-            Anonymous: INPUT_0 {
-                ki: KEYBDINPUT {
-                    wVk: VIRTUAL_KEY(VK_C.0),
-                    wScan: 0,
-                    dwFlags: KEYBD_EVENT_FLAGS(0),
-                    time: 0,
-                    dwExtraInfo: 0,
-                },
-            },
-        },
-        INPUT {
-            r#type: INPUT_KEYBOARD,
-            Anonymous: INPUT_0 {
-                ki: KEYBDINPUT {
-                    wVk: VIRTUAL_KEY(VK_C.0),
-                    wScan: 0,
-                    dwFlags: KEYEVENTF_KEYUP,
-                    time: 0,
-                    dwExtraInfo: 0,
-                },
-            },
-        },
-        INPUT {
-            r#type: INPUT_KEYBOARD,
-            Anonymous: INPUT_0 {
-                ki: KEYBDINPUT {
-                    wVk: VIRTUAL_KEY(VK_CONTROL.0),
-                    wScan: 0,
-                    dwFlags: KEYEVENTF_KEYUP,
-                    time: 0,
-                    dwExtraInfo: 0,
-                },
-            },
-        },
-    ];
-    let sent = unsafe { SendInput(&inputs, std::mem::size_of::<INPUT>() as i32) };
-    if sent != inputs.len() as u32 {
-        return Err("无法向当前阅读器发送复制操作".into());
-    }
-    let mut changed = false;
-    for _ in 0..14 {
-        thread::sleep(Duration::from_millis(50));
-        let current = unsafe { GetClipboardSequenceNumber() };
-        if current != before {
-            changed = true;
-            break;
-        }
-    }
-    if !changed {
-        return Err("没有检测到新的选中文本；扫描版 PDF 或不可复制文本无法取词".into());
-    }
-    let mut clipboard =
-        Clipboard::new().map_err(|_| "无法读取剪贴板，请检查系统权限".to_string())?;
-    let text = clipboard
-        .get_text()
-        .map_err(|_| "选区没有可复制的文字；扫描版 PDF 需要 OCR 才能取词".to_string())?;
-    let (text, _) = normalize(&text);
-    if text.is_empty() {
-        return Err("没有检测到新的选中文本".into());
-    }
-    Ok(text)
+    excerpt
 }
 
 fn upsert_word(
@@ -329,17 +255,55 @@ fn translate_word(app: &tauri::AppHandle, state: &AppState, word: &Word) -> Resu
     for attempt in 0..2 {
         let response = client.post(&endpoint).bearer_auth(&key).json(&body).send();
         match response {
-            Ok(response) if response.status().is_success() => {
-                let data: Value = response
-                    .json()
-                    .map_err(|e| format!("响应格式错误：{}", e))?;
+            Ok(response) => {
+                let status = response.status();
+                let raw = response
+                    .text()
+                    .map_err(|e| format!("读取翻译响应失败：{}", e))?;
+                if !status.is_success() {
+                    let provider_message =
+                        serde_json::from_str::<Value>(&raw).ok().and_then(|value| {
+                            value
+                                .get("error")
+                                .and_then(|error| error.get("message"))
+                                .and_then(Value::as_str)
+                                .map(str::to_owned)
+                        });
+                    last_error = match provider_message {
+                        Some(message) => format!("翻译服务返回 HTTP {}：{}", status, message),
+                        None => format!(
+                            "翻译服务返回 HTTP {}。请检查 API Base URL、模型和密钥。响应片段：{}",
+                            status,
+                            response_excerpt(&raw)
+                        ),
+                    };
+                    if status.as_u16() != 429 && status.as_u16() < 500 {
+                        break;
+                    }
+                    if attempt == 0 {
+                        thread::sleep(Duration::from_millis(450));
+                    }
+                    continue;
+                }
+                let data: Value = serde_json::from_str(&raw).map_err(|error| {
+                    format!(
+                        "翻译服务返回的不是 JSON。请使用 OpenAI 兼容的 /chat/completions 接口。响应片段：{}（{}）",
+                        response_excerpt(&raw),
+                        error
+                    )
+                })?;
                 let content = data
                     .get("choices")
                     .and_then(|v| v.get(0))
                     .and_then(|v| v.get("message"))
                     .and_then(|v| v.get("content"))
                     .and_then(Value::as_str)
-                    .ok_or_else(|| "响应缺少 choices[0].message.content".to_string())?;
+                    .ok_or_else(|| {
+                        format!(
+                            "响应缺少 choices[0].message.content。请确认 API Base URL 指向兼容 Chat Completions 的服务。响应片段：{}",
+                            response_excerpt(&raw)
+                        )
+                    })?;
                 let clean = content.trim().trim_matches(|c| c == char::from(96));
                 let parsed: Translation = serde_json::from_str(clean)
                     .map_err(|e| format!("模型返回不是有效 JSON：{}", e))?;
@@ -355,17 +319,6 @@ fn translate_word(app: &tauri::AppHandle, state: &AppState, word: &Word) -> Resu
                 );
                 return Ok(updated);
             }
-            Ok(response) => {
-                let status = response.status();
-                last_error = match status.as_u16() {
-                    401 | 403 => "API 密钥无效或没有权限".into(),
-                    429 => "API 请求过于频繁，请稍后重试".into(),
-                    _ => format!("翻译服务返回 HTTP {}", status),
-                };
-                if status.as_u16() != 429 && status.as_u16() < 500 {
-                    break;
-                }
-            }
             Err(error) => {
                 last_error = format!("网络请求失败：{}", error);
             }
@@ -380,10 +333,6 @@ fn translate_word(app: &tauri::AppHandle, state: &AppState, word: &Word) -> Resu
         [word.id],
     )
     .map_err(|e| e.to_string())?;
-    emit_status(
-        app,
-        json!({"word_id": word.id, "original": word.original, "status":"failed", "message":last_error}),
-    );
     Err(last_error)
 }
 
@@ -585,6 +534,10 @@ fn get_settings(state: State<'_, AppState>) -> Result<Settings, String> {
         domain: get_setting(&db, "domain", "通用英语"),
         shortcut: get_setting(&db, "shortcut", DEFAULT_SHORTCUT),
         has_api_key: api_key().is_some(),
+        shortcut_error: {
+            let value = get_setting(&db, "shortcut_error", "");
+            (!value.is_empty()).then_some(value)
+        },
     })
 }
 
@@ -602,12 +555,15 @@ fn save_settings(
     if shortcut.is_empty() {
         return Err("快捷键不能为空".into());
     }
-    let previous_shortcut = {
+    let (previous_shortcut, previous_shortcut_error) = {
         let db = state.db.lock().map_err(|_| "数据库锁定失败")?;
-        get_setting(&db, "shortcut", DEFAULT_SHORTCUT)
+        (
+            get_setting(&db, "shortcut", DEFAULT_SHORTCUT),
+            get_setting(&db, "shortcut_error", ""),
+        )
     };
     let manager = app.global_shortcut();
-    if previous_shortcut != shortcut {
+    if previous_shortcut != shortcut || !previous_shortcut_error.is_empty() {
         manager
             .register(shortcut.as_str())
             .map_err(|e| format!("快捷键注册失败：{}", e))?;
@@ -622,6 +578,7 @@ fn save_settings(
         ] {
             db.execute("INSERT INTO settings(key,value) VALUES (?1,?2) ON CONFLICT(key) DO UPDATE SET value=?2", params![key, value]).map_err(|e| e.to_string())?;
         }
+        set_shortcut_error(&db, None)?;
     }
     if let Some(value) = api_key_value.filter(|v| !v.trim().is_empty()) {
         Entry::new(KEYRING_SERVICE, KEYRING_USER)
@@ -707,8 +664,15 @@ pub fn run() {
                 let db = state.db.lock().map_err(|_| "数据库锁定失败")?;
                 get_setting(&db, "shortcut", DEFAULT_SHORTCUT)
             };
-            register_shortcut(app.handle(), configured_shortcut.as_str())
-                .map_err(|e| format!("快捷键注册失败：{}", e))?;
+            let state = app.state::<AppState>();
+            if let Err(error) = register_shortcut(app.handle(), configured_shortcut.as_str()) {
+                let message = format!("快捷键注册失败：{}。请在设置中更换快捷键。", error);
+                let db = state.db.lock().map_err(|e| e.to_string())?;
+                set_shortcut_error(&db, Some(&message))?;
+            } else {
+                let db = state.db.lock().map_err(|e| e.to_string())?;
+                set_shortcut_error(&db, None)?;
+            }
             let menu = tauri::menu::MenuBuilder::new(app)
                 .text("show", "打开 PaperVocab")
                 .text("quit", "退出")

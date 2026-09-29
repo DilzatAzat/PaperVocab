@@ -4,9 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#eef2f6" />
-    <meta name="description" content="PaperVocab 是面向英文论文阅读的 Windows 工具。选词、中文释义、记录与复习，融入同一段阅读流程。" />
+    <meta name="description" content="PaperVocab 是面向英文论文阅读的 Windows 工具。选词、目标语言释义、记录与复习，融入同一段阅读流程。默认使用中文。" />
     <meta property="og:title" content="PaperVocab | 让论文里的生词顺手留下" />
-    <meta property="og:description" content="一个安静的 Windows 阅读伴侣：按下快捷键，得到中文释义，并把单词留下来。" />
+    <meta property="og:description" content="一个安静的 Windows 阅读伴侣：按下快捷键，得到目标语言释义，并把单词留下来。" />
     <meta property="og:type" content="website" />
     <title>PaperVocab | 论文阅读伴侣</title>
     <link rel="stylesheet" href="styles.css?v=7" />
@@ -35,7 +35,7 @@
             <a class="button button-primary" href="#download" data-i18n="heroPrimary">下载 Windows 版 <span aria-hidden="true">↗</span></a>
             <a class="button button-quiet" href="#workflow" data-i18n="heroSecondary">了解使用流程</a>
           </div>
-          <div class="hero-note"><span class="status-dot"></span><span data-i18n="heroNote">Windows 10/11 · 中文释义 · 本地词本</span></div>
+          <div class="hero-note"><span class="status-dot"></span><span data-i18n="heroNote">Windows 10/11 · 目标语言可选 · 默认中文</span></div>
         </div>
 
         <div class="hero-visual" aria-label="PaperVocab product preview">
@@ -73,16 +73,16 @@
         <div class="section-intro"><p class="eyebrow" data-i18n="workflowEyebrow">THE WORKFLOW</p><h2 data-i18n="workflowTitle">从选词到复习，只需三步。</h2><p data-i18n="workflowLede">PaperVocab 在需要时出现，让查词、记录和复习自然衔接。</p></div>
         <div class="workflow-grid">
           <article class="workflow-step"><span>01</span><h3 data-i18n="stepOneTitle">选中</h3><p data-i18n="stepOneBody">在可复制的 PDF 或浏览器里选中英文词或短语。</p><div class="step-demo select-demo"><span>representation</span></div></article>
-          <article class="workflow-step"><span>02</span><h3 data-i18n="stepTwoTitle">按快捷键</h3><p data-i18n="stepTwoBody">原词立即保存，随后请求中文释义。</p><div class="step-demo key-demo"><kbd>Ctrl</kbd><b>+</b><kbd>Shift</kbd><b>+</b><kbd>L</kbd></div></article>
+          <article class="workflow-step"><span>02</span><h3 data-i18n="stepTwoTitle">按快捷键</h3><p data-i18n="stepTwoBody">原词立即保存，随后请求当前选择的目标语言释义。</p><div class="step-demo key-demo"><kbd>Ctrl</kbd><b>+</b><kbd>Shift</kbd><b>+</b><kbd>L</kbd></div></article>
           <article class="workflow-step"><span>03</span><h3 data-i18n="stepThreeTitle">回顾与复习</h3><p data-i18n="stepThreeBody">按日期查看遇见记录，再用三个选项完成复习。</p><div class="step-demo review-demo"><span data-i18n="reviewDemoWord">representation</span><i data-i18n="reviewDemoStatus">有点印象</i></div></article>
         </div>
       </section>
 
       <section class="feature-band">
-        <div class="feature-copy"><p class="eyebrow" data-i18n="featureEyebrow">MADE FOR RESEARCH READING</p><h2 data-i18n="featureTitle">查词、翻译，继续读。</h2><p data-i18n="featureLede">选词即查，释义和遇见记录随手留存。当前从 Windows 端中文释义起步；手机复习、跨设备接续和更多译文语言是后续方向。</p></div>
+        <div class="feature-copy"><p class="eyebrow" data-i18n="featureEyebrow">MADE FOR RESEARCH READING</p><h2 data-i18n="featureTitle">查词、翻译，继续读。</h2><p data-i18n="featureLede">选词即查，释义和遇见记录随手留存。原文面向英文论文，目标语言可选择中文、英语、德语、法语或日语。</p></div>
         <div class="feature-list">
           <div><span class="feature-mark">↗</span><strong data-i18n="featureOneTitle">自选翻译服务</strong><p data-i18n="featureOneBody">目前支持兼容 OpenAI Chat Completions 协议的 API；密钥保存在 Windows 凭据管理器。</p></div>
-          <div><span class="feature-mark">⌁</span><strong data-i18n="featureTwoTitle">贴近研究领域</strong><p data-i18n="featureTwoBody">当前可选通用英语、人工智能和生物学领域，后续继续扩展。</p></div>
+          <div><span class="feature-mark">⌁</span><strong data-i18n="featureTwoTitle">选择目标语言</strong><p data-i18n="featureTwoBody">当前可选中文、英语、德语、法语和日语；默认目标语言为中文。</p></div>
           <div><span class="feature-mark">✓</span><strong data-i18n="featureThreeTitle">阅读记录不断线</strong><p data-i18n="featureThreeBody">原词先保存，翻译失败可重试；遇见日期和复习记录持续保留。</p></div>
         </div>
       </section>
@@ -96,6 +96,6 @@
 
     <footer class="site-footer"><span>PaperVocab</span><span data-i18n="footerText">让论文阅读与翻译更顺畅。</span><a data-repo-link href="#top" data-i18n="footerRepo">GitHub 仓库</a></footer>
     <script src="config.js"></script>
-    <script src="app.js?v=8"></script>
+    <script src="app.js?v=9"></script>
   </body>
 </html>

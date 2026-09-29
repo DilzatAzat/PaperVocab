@@ -39,3 +39,10 @@
 - 独立只读审查发现移动端隐藏“使用流程”导航，以及安装包发布后的固定文案与动态下载状态可能矛盾；均已修复。
 - 英文复习示例改为与“有点印象”对应的 “Somewhat familiar”。320px 视口发现的 15px 横向溢出由 `body` 最小宽度导致，移除后中英文导航均完整显示。
 - 修复后 `pnpm test` 7/7、`node --check site/app.js`、`git diff --check` 通过；浏览器验证中英文内容及桌面/窄视口布局。
+
+## 2026-09-30 目标语言与协议复核
+
+- 独立审查发现：备份未携带目标语言、语言切换状态误用 `failed`、在途旧语言请求可能覆盖新设置、宣传页仍使用中文释义和固定领域表述。已分别修复为备份字段兼容迁移、`stale` 状态、写回前核对当前目标语言，以及目标语言/协议双语文案。
+- 新增 Rust 测试覆盖目标语言规范化、真实旧 `domain` 设置迁移、语言切换 stale、旧翻译响应字段别名、旧备份兼容和目标语言备份回环；翻译写回增加 generation 条件，避免同词并发结果互相覆盖。
+- 已验证：`cargo test` 11/11、`cargo check`、`cargo fmt --check`、`cargo clippy --all-targets -- -D warnings`、`pnpm test` 7/7、TypeScript、Vite、`node --check site/app.js`、`git diff --check`。
+- 待 Windows 实测：真实 PDF、托盘/浮窗交互、快捷键冲突、剪贴板保护、真实 API 和安装包安装卸载；未宣称这些系统交互已通过。

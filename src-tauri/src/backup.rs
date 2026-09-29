@@ -27,11 +27,17 @@ struct Word {
     meaning_zh: Option<String>,
     explanation_zh: Option<String>,
     example_en: Option<String>,
+    #[serde(default = "default_translation_language")]
+    translation_language: String,
     translation_status: String,
     first_seen_at: String,
     last_seen_at: String,
     encounter_count: i64,
     deleted_at: Option<String>,
+}
+
+fn default_translation_language() -> String {
+    "中文".to_string()
 }
 
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
@@ -82,7 +88,7 @@ pub fn export(db: &Connection) -> Result<String, String> {
     let tx = db.unchecked_transaction().map_err(|e| e.to_string())?;
     let origin = schema(&tx)?;
     let words = {
-        let mut q = tx.prepare("SELECT id,original,normalized_key,part_of_speech,meaning_zh,explanation_zh,example_en,translation_status,first_seen_at,last_seen_at,encounter_count,deleted_at FROM words ORDER BY id").map_err(|e| e.to_string())?;
+        let mut q = tx.prepare("SELECT id,original,normalized_key,part_of_speech,meaning_zh,explanation_zh,example_en,translation_language,translation_status,first_seen_at,last_seen_at,encounter_count,deleted_at FROM words ORDER BY id").map_err(|e| e.to_string())?;
         let rows = q
             .query_map([], |r| {
                 Ok(Word {
@@ -93,11 +99,12 @@ pub fn export(db: &Connection) -> Result<String, String> {
                     meaning_zh: r.get(4)?,
                     explanation_zh: r.get(5)?,
                     example_en: r.get(6)?,
-                    translation_status: r.get(7)?,
-                    first_seen_at: r.get(8)?,
-                    last_seen_at: r.get(9)?,
-                    encounter_count: r.get(10)?,
-                    deleted_at: r.get(11)?,
+                    translation_language: r.get(7)?,
+                    translation_status: r.get(8)?,
+                    first_seen_at: r.get(9)?,
+                    last_seen_at: r.get(10)?,
+                    encounter_count: r.get(11)?,
+                    deleted_at: r.get(12)?,
                 })
             })
             .map_err(|e| e.to_string())?;
@@ -217,7 +224,12 @@ fn validate(data: &Backup) -> Result<(), String> {
         optional_text(&w.meaning_zh, 16384)?;
         optional_text(&w.explanation_zh, 16384)?;
         optional_text(&w.example_en, 16384)?;
-        if !["pending", "ready", "failed", "error", "translated"]
+        if !["中文", "English", "Deutsch", "Français", "日本語"]
+            .contains(&w.translation_language.as_str())
+        {
+            return Err("Invalid translation language".into());
+        }
+        if !["pending", "ready", "failed", "stale", "error", "translated"]
             .contains(&w.translation_status.as_str())
         {
             return Err("Invalid translation status".into());
@@ -325,7 +337,7 @@ pub fn import(db: &mut Connection, json: &str) -> Result<(), String> {
         let id = if let Some(id) = existing {
             id
         } else {
-            tx.execute("INSERT INTO words(original,normalized_key,part_of_speech,meaning_zh,explanation_zh,example_en,translation_status,first_seen_at,last_seen_at,encounter_count,deleted_at) VALUES(?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11)", params![w.original,w.normalized_key,w.part_of_speech,w.meaning_zh,w.explanation_zh,w.example_en,w.translation_status,w.first_seen_at,w.last_seen_at,w.encounter_count,w.deleted_at]).map_err(|e| e.to_string())?;
+            tx.execute("INSERT INTO words(original,normalized_key,part_of_speech,meaning_zh,explanation_zh,example_en,translation_language,translation_status,first_seen_at,last_seen_at,encounter_count,deleted_at) VALUES(?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12)", params![w.original,w.normalized_key,w.part_of_speech,w.meaning_zh,w.explanation_zh,w.example_en,w.translation_language,w.translation_status,w.first_seen_at,w.last_seen_at,w.encounter_count,w.deleted_at]).map_err(|e| e.to_string())?;
             let id = tx.last_insert_rowid();
             new_words.insert(id);
             id
@@ -407,7 +419,7 @@ mod tests {
     fn database() -> Connection {
         let db = Connection::open_in_memory().unwrap();
         db.execute_batch("PRAGMA foreign_keys=ON;
-            CREATE TABLE words(id INTEGER PRIMARY KEY,original TEXT NOT NULL,normalized_key TEXT UNIQUE NOT NULL,part_of_speech TEXT,meaning_zh TEXT,explanation_zh TEXT,example_en TEXT,translation_status TEXT NOT NULL,first_seen_at TEXT NOT NULL,last_seen_at TEXT NOT NULL,encounter_count INTEGER NOT NULL,deleted_at TEXT);
+            CREATE TABLE words(id INTEGER PRIMARY KEY,original TEXT NOT NULL,normalized_key TEXT UNIQUE NOT NULL,part_of_speech TEXT,meaning_zh TEXT,explanation_zh TEXT,example_en TEXT,translation_language TEXT NOT NULL DEFAULT '中文',translation_status TEXT NOT NULL,first_seen_at TEXT NOT NULL,last_seen_at TEXT NOT NULL,encounter_count INTEGER NOT NULL,deleted_at TEXT);
             CREATE TABLE encounters(id INTEGER PRIMARY KEY,word_id INTEGER NOT NULL REFERENCES words(id),original TEXT NOT NULL,seen_at TEXT NOT NULL,source_sentence TEXT);
             CREATE TABLE reviews(id INTEGER PRIMARY KEY,word_id INTEGER NOT NULL REFERENCES words(id),rating TEXT NOT NULL,reviewed_at TEXT NOT NULL,due_at TEXT NOT NULL);
             CREATE TABLE settings(key TEXT PRIMARY KEY,value TEXT NOT NULL);").unwrap();
@@ -415,7 +427,7 @@ mod tests {
     }
 
     fn seed(db: &Connection) {
-        db.execute_batch("INSERT INTO words VALUES(9,'DNA','DNA','noun','deoxyribonucleic acid',NULL,NULL,'ready','2026-09-27T00:00:00Z','2026-09-27T00:00:00Z',1,'2026-09-27T01:00:00Z');
+        db.execute_batch("INSERT INTO words VALUES(9,'DNA','DNA','noun','deoxyribonucleic acid',NULL,NULL,'English','ready','2026-09-27T00:00:00Z','2026-09-27T00:00:00Z',1,'2026-09-27T01:00:00Z');
             INSERT INTO encounters VALUES(11,9,'DNA','2026-09-27T00:00:00Z','Original sentence');
             INSERT INTO reviews VALUES(13,9,'known','2026-09-27T00:00:00Z','2026-10-04T00:00:00Z');
             INSERT INTO settings VALUES('api_key','SECRET_MUST_NOT_EXPORT');").unwrap();
@@ -438,6 +450,10 @@ mod tests {
         assert_eq!(count(&target, "words"), 1);
         assert_eq!(count(&target, "encounters"), 1);
         assert_eq!(count(&target, "reviews"), 1);
+        let language: String = target
+            .query_row("SELECT translation_language FROM words", [], |r| r.get(0))
+            .unwrap();
+        assert_eq!(language, "English");
         assert_eq!(count(&target, "settings"), 0);
         let deleted: String = target
             .query_row("SELECT deleted_at FROM words", [], |r| r.get(0))
@@ -512,5 +528,23 @@ mod tests {
         assert_eq!(count(&target, "words"), 1);
         assert_eq!(count(&target, "encounters"), 1);
         assert!(import(&mut target, &" ".repeat(MAX_BYTES + 1)).is_err());
+    }
+
+    #[test]
+    fn legacy_backup_without_translation_language_defaults_to_chinese() {
+        let source = database();
+        seed(&source);
+        let data = export(&source).unwrap();
+        let mut value: serde_json::Value = serde_json::from_str(&data).unwrap();
+        value["words"][0]
+            .as_object_mut()
+            .unwrap()
+            .remove("translation_language");
+        let mut target = database();
+        import(&mut target, &value.to_string()).unwrap();
+        let language: String = target
+            .query_row("SELECT translation_language FROM words", [], |r| r.get(0))
+            .unwrap();
+        assert_eq!(language, "中文");
     }
 }

@@ -1,6 +1,6 @@
 import { invoke } from "@tauri-apps/api/core";
 
-export type TranslationStatus = "pending" | "translated" | "failed";
+export type TranslationStatus = "pending" | "translated" | "failed" | "stale";
 export type Word = {
   id: number;
   original: string;
@@ -9,6 +9,8 @@ export type Word = {
   meaning_zh: string | null;
   explanation_zh: string | null;
   example_en: string | null;
+  translation_language: string;
+  translation_generation: number;
   translation_status: TranslationStatus;
   first_seen_at: string;
   last_seen_at: string;
@@ -16,7 +18,7 @@ export type Word = {
 };
 export type Encounter = { id: number; word_id: number; original: string; seen_at: string; source_sentence: string | null };
 export type Review = { id: number; word_id: number; rating: string; reviewed_at: string; due_at: string };
-export type Settings = { api_base_url: string; model: string; domain: string; shortcut: string; has_api_key: boolean; shortcut_error: string | null };
+export type Settings = { api_base_url: string; model: string; target_language: string; shortcut: string; has_api_key: boolean; shortcut_error: string | null };
 
 export const api = {
   words: (search?: string, date?: string) => invoke<Word[]>("list_words", { search: search || null, date: date || null }),
@@ -27,7 +29,7 @@ export const api = {
   undoDelete: (id: number) => invoke<void>("undo_delete", { id }),
   review: (wordId: number, rating: string) => invoke<Review>("save_review", { wordId, rating }),
   settings: () => invoke<Settings>("get_settings"),
-  saveSettings: (baseUrl: string, model: string, domain: string, apiKey: string, shortcut: string) =>
-    invoke<Settings>("save_settings", { baseUrl, model, domain, apiKeyValue: apiKey || null, shortcut }),
+  saveSettings: (baseUrl: string, model: string, targetLanguage: string, apiKey: string, shortcut: string) =>
+    invoke<Settings>("save_settings", { baseUrl, model, targetLanguage, apiKeyValue: apiKey || null, shortcut }),
   retry: (wordId: number) => invoke<void>("retry_translation", { wordId }),
 };

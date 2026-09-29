@@ -32,4 +32,4 @@
 - 发布检查发现仓库无 Release，旧主页安装包直链返回 404；改为查询真实 Release 资产，有安装包才提供直链，其余状态指向 Releases 页面。
 - 独立审查发现 tag、包版本与安装包资产可能不一致；Release 工作流增加三处版本一致性校验，主页拒绝与 tag 不一致的资产。
 - `pnpm test` 7/7、`node --check site/app.js`、JSON/Cargo 版本核对、Ruby YAML 解析和 `git diff --check` 均通过；真实 Release 资产仍待首次发布后验证。
-- GitHub Windows CI 首次运行成功，NSIS 安装包作为 Actions 工件上传；移动端中英文首屏经 390×844 浏览器视口检查，未见横向溢出或正文遮挡。
+- GitHub Windows CI 首次运行成功，NSIS 安装包作为 Actions 工件上传；中英文首屏经 390×844 移动视口和 1280×720 桌面视口检查，下一段内容可见，未见横向溢出或正文遮挡。

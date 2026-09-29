@@ -10,6 +10,8 @@ Select English text in a PDF or browser, press the global shortcut, and PaperVoc
 
 Open GitHub Releases and download the latest PaperVocab_*_x64-setup.exe. The first release targets Windows 10/11 x64.
 
+After Pages is enabled, the promotional site is available at `https://<username>.github.io/<repository>/`; its main download button points to the current GitHub Release installer and a second link opens the Release page. See [docs/DOMAIN.md](docs/DOMAIN.md) for a custom domain.
+
 ## Use
 
 1. Start PaperVocab and open Settings.

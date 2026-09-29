@@ -7,6 +7,13 @@
 - [x] M4 基础复习：三档评分和确定间隔
 - [ ] M5：Windows 真机 PDF、安装包安装启动退出、mock 翻译服务和导入导出完整验收（代码门禁与 NSIS 构建已通过，桌面交互仍待人工执行；导入/导出 UI 尚未补齐）
 
+## 发布主页
+
+- [x] 独立双语宣传主页：`site/index.html`、`site/styles.css`、`site/app.js`
+- [x] GitHub Pages 自动部署：`.github/workflows/pages.yml`
+- [x] Release 下载入口、双语 README、发布/域名/宣传文档
+- [ ] 在真实 GitHub 仓库启用 Pages、推送首个 tag 并验证公开下载链接
+
 ## 第一版验收
 
 配置 API 后，在可复制 PDF 中选中文本按 Ctrl+Shift+L，看到浮窗释义，重启仍能查看，并完成一次复习。

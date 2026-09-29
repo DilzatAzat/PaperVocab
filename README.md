@@ -10,6 +10,8 @@ PaperVocab 是一个面向英文论文阅读的 Windows 本地单词本。
 
 打开 GitHub Releases，下载最新的 PaperVocab_*_x64-setup.exe。第一版面向 Windows 10/11 x64。
 
+宣传主页部署后可通过 `https://<用户名>.github.io/<仓库名>/` 访问，主页下载按钮会指向当前版本的 GitHub Release 安装包，并保留 Release 页面入口。自定义域名和 Pages 设置见 [docs/DOMAIN.md](docs/DOMAIN.md)。
+
 ## 使用
 
 1. 启动 PaperVocab，打开“设置”。

@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#eef2f6" />
+    <meta name="description" content="PaperVocab 是一个面向英文论文阅读的 Windows 本地单词本。选词、释义、复习，一次完成。" />
+    <meta property="og:title" content="PaperVocab | 让论文里的生词顺手留下" />
+    <meta property="og:description" content="一个安静的 Windows 阅读伴侣：按下快捷键，得到中文释义，并把单词留下来。" />
+    <meta property="og:type" content="website" />
+    <title>PaperVocab | 论文阅读伴侣</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="PaperVocab home">
+        <span class="brand-mark">P</span>
+        <span>PaperVocab</span>
+      </a>
+      <nav class="site-nav" aria-label="Primary navigation">
+        <a href="#workflow" data-i18n="navWorkflow">怎么工作</a>
+        <a href="#download" data-i18n="navDownload">下载</a>
+        <a href="#open-source" data-i18n="navOpenSource">开源</a>
+      </nav>
+      <button class="language-toggle" type="button" data-language-toggle aria-label="Switch language">EN</button>
+    </header>
+
+    <main id="top">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="eyebrow" data-i18n="heroEyebrow">ENGLISH PAPER READING</p>
+          <h1 id="hero-title" data-i18n="heroTitle">让论文里的生词，<em>顺手留下。</em></h1>
+          <p class="hero-lede" data-i18n="heroLede">选中一个词，按下快捷键。释义出现在阅读边缘，单词留在本地词本里，不打断你正在读的内容。</p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#download" data-i18n="heroPrimary">下载 Windows 版 <span aria-hidden="true">↗</span></a>
+            <a class="button button-quiet" href="#workflow" data-i18n="heroSecondary">看看它怎么工作</a>
+          </div>
+          <div class="hero-note"><span class="status-dot"></span><span data-i18n="heroNote">本地优先 · Windows 10/11 · MIT License</span></div>
+        </div>
+
+        <div class="hero-visual" aria-label="PaperVocab product preview">
+          <div class="paper-sheet">
+            <div class="paper-meta"><span data-i18n="paperMeta">RESEARCH NOTE 04</span><span>12:42</span></div>
+            <div class="paper-title" data-i18n="paperTitle">Learning representations from limited supervision</div>
+            <div class="paper-line wide"></div>
+            <div class="paper-line"></div>
+            <div class="paper-line short"></div>
+            <p class="paper-copy"><span data-i18n="paperCopyA">A useful representation should remain</span> <mark>robust</mark> <span data-i18n="paperCopyB">when the available labels are sparse.</span></p>
+            <div class="paper-line"></div>
+            <div class="paper-line wide"></div>
+            <div class="paper-line short"></div>
+            <div class="paper-footer"><span>01</span><span>PaperVocab</span></div>
+          </div>
+          <div class="lookup-card">
+            <div class="lookup-top"><span class="mini-mark">P</span><span>PaperVocab</span><button type="button" data-preview-close aria-label="Close preview">×</button></div>
+            <div class="lookup-word">robust</div>
+            <div class="lookup-pos" data-i18n="lookupPos">形容词</div>
+            <div class="lookup-meaning" data-i18n="lookupMeaning">稳健的；具有适应力的</div>
+            <p data-i18n="lookupExplain">在论文中常指方法面对噪声、数据变化或有限监督时仍能保持稳定。</p>
+            <div class="lookup-example"><span data-i18n="lookupExampleLabel">生成例句</span><span data-i18n="lookupExample">The robust model performs well on unseen data.</span></div>
+            <button class="lookup-close" type="button" data-preview-close data-i18n="lookupClose">关闭</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="signal-row" aria-label="Product principles">
+        <div><span class="signal-number">01</span><strong data-i18n="signalOneTitle">不离开阅读</strong><p data-i18n="signalOneBody">浮窗贴近你的阅读流程，不要求切换到另一个网页。</p></div>
+        <div><span class="signal-number">02</span><strong data-i18n="signalTwoTitle">先保存，再翻译</strong><p data-i18n="signalTwoBody">网络失败时，原词仍在本地词本里等待重试。</p></div>
+        <div><span class="signal-number">03</span><strong data-i18n="signalThreeTitle">按自己的节奏复习</strong><p data-i18n="signalThreeBody">按日期查看遇见记录，用三个简单选项完成复习。</p></div>
+      </section>
+
+      <section class="workflow section-shell" id="workflow">
+        <div class="section-intro"><p class="eyebrow" data-i18n="workflowEyebrow">A SMALL RITUAL</p><h2 data-i18n="workflowTitle">三步，把理解留下来。</h2><p data-i18n="workflowLede">PaperVocab 只在你需要时出现，让查词、记录和复习成为阅读的一部分。</p></div>
+        <div class="workflow-grid">
+          <article class="workflow-step"><span>01</span><h3 data-i18n="stepOneTitle">选中</h3><p data-i18n="stepOneBody">在可复制的 PDF 或浏览器里选中英文词或短语。</p><div class="step-demo select-demo"><span>representation</span></div></article>
+          <article class="workflow-step"><span>02</span><h3 data-i18n="stepTwoTitle">按一下</h3><p data-i18n="stepTwoBody">按全局快捷键，PaperVocab 读取新选区并立即保存。</p><div class="step-demo key-demo"><kbd>Ctrl</kbd><b>+</b><kbd>Shift</kbd><b>+</b><kbd>L</kbd></div></article>
+          <article class="workflow-step"><span>03</span><h3 data-i18n="stepThreeTitle">以后复习</h3><p data-i18n="stepThreeBody">释义、遇见日期和复习记录都留在本地。</p><div class="step-demo review-demo"><span data-i18n="reviewDemoWord">representation</span><i data-i18n="reviewDemoStatus">有点印象</i></div></article>
+        </div>
+      </section>
+
+      <section class="feature-band">
+        <div class="feature-copy"><p class="eyebrow" data-i18n="featureEyebrow">MADE FOR LONG PAPERS</p><h2 data-i18n="featureTitle">安静、清楚、属于你的数据。</h2><p data-i18n="featureLede">没有账号，没有云同步，没有复杂的游戏化。你配置自己的翻译 API，词本保存在 Windows 应用数据目录。</p></div>
+        <div class="feature-list">
+          <div><span class="feature-mark">↗</span><strong data-i18n="featureOneTitle">OpenAI 兼容接口</strong><p data-i18n="featureOneBody">支持 Chat Completions 协议，密钥进入 Windows 凭据管理器。</p></div>
+          <div><span class="feature-mark">⌁</span><strong data-i18n="featureTwoTitle">面向论文语境</strong><p data-i18n="featureTwoBody">可选择通用英语、人工智能或生物学领域。</p></div>
+          <div><span class="feature-mark">✓</span><strong data-i18n="featureThreeTitle">可恢复的本地记录</strong><p data-i18n="featureThreeBody">原词先保存，翻译失败可以稍后重试。</p></div>
+        </div>
+      </section>
+
+      <section class="download-section section-shell" id="download">
+        <div class="download-copy"><p class="eyebrow" data-i18n="downloadEyebrow">READY WHEN YOU ARE</p><h2 data-i18n="downloadTitle">给下一篇论文一个轻量入口。</h2><p data-i18n="downloadLede">下载 Windows 安装包，配置自己的 API，就可以开始第一次取词。</p></div>
+        <div class="download-panel"><div class="download-version"><span class="status-dot"></span><span data-i18n="downloadStatus">最新公开版本</span><strong data-release-version>v0.1.0</strong></div><a class="button button-primary full" data-installer-link href="#" data-i18n="downloadButton">下载 Windows 安装包 <span aria-hidden="true">↗</span></a><a class="release-link" data-release-page-link href="#" data-i18n="downloadReleasePage">查看 GitHub Release 页面</a><p data-i18n="downloadMeta">Windows 10/11 · x64 · NSIS installer</p></div>
+      </section>
+
+      <section class="open-source section-shell" id="open-source">
+        <div><p class="eyebrow" data-i18n="openEyebrow">OPEN SOURCE, LOCAL FIRST</p><h2 data-i18n="openTitle">把阅读工具交给使用它的人。</h2><p data-i18n="openLede">PaperVocab 使用 MIT License 开源。欢迎提交翻译协议适配、Windows 交互测试和体验改进。</p></div>
+        <a class="text-link" data-repo-link href="#" data-i18n="openButton">查看 GitHub 仓库 <span aria-hidden="true">↗</span></a>
+      </section>
+    </main>
+
+    <footer class="site-footer"><span>PaperVocab</span><span data-i18n="footerText">为读英文论文的人做的小工具。</span><a data-docs-link href="#open-source" data-i18n="footerDocs">项目文档</a></footer>
+    <script src="config.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

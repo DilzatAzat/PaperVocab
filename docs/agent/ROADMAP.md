@@ -15,6 +15,12 @@
 - [x] 创建公开仓库 `DilzatAzat/PaperVocab`，推送 `master`，启用并验证 GitHub Pages
 - [ ] 完成 Windows 真机验收后推送首个 tag，验证 Release 安装包公开下载链接
 
+## 后续方向（不属于当前桌面版）
+
+- [ ] 支持更多翻译 API 协议；当前仅支持兼容 OpenAI Chat Completions 的服务。
+- [ ] 扩展研究领域和可选译文语言；当前为三个领域与中文释义。
+- [ ] 评估手机端复习和跨设备接续，先明确账号、同步和隐私模型。
+
 ## 第一版验收
 
 配置 API 后，在可复制 PDF 中选中文本按 Ctrl+Shift+L，看到浮窗释义，重启仍能查看，并完成一次复习。

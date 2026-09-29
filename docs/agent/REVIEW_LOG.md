@@ -33,3 +33,9 @@
 - 独立审查发现 tag、包版本与安装包资产可能不一致；Release 工作流增加三处版本一致性校验，主页拒绝与 tag 不一致的资产。
 - `pnpm test` 7/7、`node --check site/app.js`、JSON/Cargo 版本核对、Ruby YAML 解析和 `git diff --check` 均通过；真实 Release 资产仍待首次发布后验证。
 - GitHub Windows CI 首次运行成功，NSIS 安装包作为 Actions 工件上传；中英文首屏经 390×844 移动视口和 1280×720 桌面视口检查，下一段内容可见，未见横向溢出或正文遮挡。
+
+## 2026-09-29 宣传页文案调整
+
+- 独立只读审查发现移动端隐藏“使用流程”导航，以及安装包发布后的固定文案与动态下载状态可能矛盾；均已修复。
+- 英文复习示例改为与“有点印象”对应的 “Somewhat familiar”。320px 视口发现的 15px 横向溢出由 `body` 最小宽度导致，移除后中英文导航均完整显示。
+- 修复后 `pnpm test` 7/7、`node --check site/app.js`、`git diff --check` 通过；浏览器验证中英文内容及桌面/窄视口布局。

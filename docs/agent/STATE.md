@@ -22,6 +22,9 @@
 - 390×844 移动视口和 1280×720 桌面视口的中英文首屏均显示下一段内容，页面无横向溢出，释义预览不遮挡正文。
 - 宣传页文案已改为“使用流程”和阅读/翻译主线，移除导航和整段开源宣传；GitHub 仓库入口保留在页脚。API 协议和目标语言均按当前实现表述，手机复习、跨设备接续及更多 API 协议标为后续方向。
 - 本轮本地验证：`pnpm test` 7/7、`node --check site/app.js`、`pnpm exec tsc --noEmit`、`pnpm exec vite build`、`cargo check`、`cargo test` 11/11、`cargo fmt --check`、`cargo clippy -D warnings`、`git diff --check` 通过；宣传页文案已更新为目标语言和 OpenAI Chat Completions 兼容协议说明。
+- 本轮界面更新已将“今日收词”和“全部单词”合并为“收词汇总”，默认展示全部词，日期筛选可选并可清除，同时展示当前筛选结果和本地词库总数。
+- 桌面主窗改为自绘无边框标题栏，侧栏、收词区、统计区、列表和设置页采用轻量玻璃材质；导航、搜索、日期、状态、删除和关闭操作改用 Lucide 图标。主窗关闭仍交由现有 Tauri close handler 驻留托盘。
+- 浏览器视口复验：1280×720 和 390×844 无横向溢出，移动端手动收词输入高度正常；设置页在窄视口可滚动展示。
 
 ## 当前实现
 
@@ -34,7 +37,7 @@ Tauri 2 + React/TypeScript + Rust。后端实现托盘、单实例、全局快�
 - 未使用真实 API 做翻译验证；未在真实 PDF、托盘、浮窗和安装包安装流程上重复人工验收；后续代码提交的 GitHub CI 结果仍需核对。
 - GitHub Release 尚未发布，`releases/latest` 返回 404；主页据此显示待发布状态，发布安装包后会自动链接到实际资产。
 - 本轮本地提交 `1a09c6f` 尚未推送；`git push origin master` 因当前环境无法连接 `github.com:443` 失败，代码和安装包仍保存在本机。
-- 当前工作树中没有未跟踪文件；先前出现的根目录 `papervocab.exe` 与 `uninstall.exe` 没有纳入任何提交。
+- 当前工作树的 UI 改动尚未提交；Playwright 生成的本地截图和会话目录不纳入版本控制。先前出现的根目录 `papervocab.exe` 与 `uninstall.exe` 没有纳入任何提交。
 
 ## 下一步
 

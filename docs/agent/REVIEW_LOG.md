@@ -46,3 +46,11 @@
 - 新增 Rust 测试覆盖目标语言规范化、真实旧 `domain` 设置迁移、语言切换 stale、旧翻译响应字段别名、旧备份兼容和目标语言备份回环；翻译写回增加 generation 条件，避免同词并发结果互相覆盖。
 - 已验证：`cargo test` 11/11、`cargo check`、`cargo fmt --check`、`cargo clippy --all-targets -- -D warnings`、`pnpm test` 7/7、TypeScript、Vite、`node --check site/app.js`、`git diff --check`。
 - 待 Windows 实测：真实 PDF、托盘/浮窗交互、快捷键冲突、剪贴板保护、真实 API 和安装包安装卸载；未宣称这些系统交互已通过。
+
+## 2026-09-30 收词汇总与桌面 UI 复核
+
+- 已复核页面合并逻辑：前端只保留 `library/review/settings`，日期默认为空，列表查询与本地词库总数查询分开，清除日期后回到全量结果。
+- 已复核自绘标题栏只在主窗渲染，按钮带有中文 `aria-label` 和 `title`；浮窗关闭按钮改为 Lucide `X`，列表删除和重试操作改为图标并保留可读标签。
+- 浏览器验证发现无 Tauri 环境下缺少标题栏会使 CSS Grid 主内容行高异常、移动端 flex 基准会拉伸手动输入区；已分别通过始终渲染预览标题栏、固定桌面 shell 高度并将手动输入 flex 基准改为自动修复。
+- 已验证：`pnpm exec tsc --noEmit`、`pnpm exec vite build`、`pnpm test` 7/7、`cargo check`、`cargo test --locked` 11/11、`git diff --check`；1280×720 和 390×844 页面无横向溢出。
+- 待 Windows 实测：无边框标题栏按钮、主窗关闭驻留托盘、真实 PDF 取词、浮窗焦点和安装包安装/退出。

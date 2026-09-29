@@ -8,9 +8,9 @@ Select English text in a PDF or browser, press the global shortcut, and PaperVoc
 
 ## Download
 
-Open GitHub Releases and download the latest PaperVocab_*_x64-setup.exe. The first release targets Windows 10/11 x64.
+The source is public; the Windows installer has not been released yet. Once published, download `PaperVocab_*_x64-setup.exe` from [GitHub Releases](https://github.com/DilzatAzat/PaperVocab/releases). The first release targets Windows 10/11 x64.
 
-After Pages is enabled, the promotional site is available at `https://<username>.github.io/<repository>/`; its main download button points to the current GitHub Release installer and a second link opens the Release page. See [docs/DOMAIN.md](docs/DOMAIN.md) for a custom domain.
+Visit the [promotional site](https://dilzatazat.github.io/PaperVocab/). Once an installer is published, the site finds the latest GitHub Release asset automatically. See [docs/DOMAIN.md](docs/DOMAIN.md) for a custom domain.
 
 ## Use
 

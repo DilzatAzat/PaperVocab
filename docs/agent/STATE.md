@@ -16,6 +16,10 @@
 - 已用 Windows 桌面启动 release exe，进程存在且主窗口标题为 PaperVocab；此前已检查中文工作台显示正常。
 - 已完成独立宣传主页 `site/`：中文默认、中英文切换、产品流程说明、GitHub 仓库入口和 Release 下载入口；新增 GitHub Pages 工作流，部署时自动写入真实仓库地址。
 - 已补充 GitHub 发布、自定义域名和双语宣传文案文档；主页本地静态服务器首屏、桌面布局和移动断点已检查。
+- 公开仓库 `https://github.com/DilzatAzat/PaperVocab` 已创建，`master` 已推送；GitHub Pages 已启用，第二次工作流运行成功，`https://dilzatazat.github.io/PaperVocab/` 返回 HTTP 200。
+- 主页在浏览器中确认无 Release 时显示“安装包尚未发布”并链接 Releases；新增 4 项发布入口测试，总计 `pnpm test` 7 项通过。Release 工作流已加入 tag/package/Tauri/Cargo 版本校验。
+- 首轮 GitHub Windows CI 运行 `36543891519` 成功，包含前端构建、Rust 检查、NSIS 构建；上传了 `PaperVocab-windows-x64` 临时工件（14 天保留，非公开 Release）。
+- 390×844 移动视口的中英文首屏均显示下一段内容，页面无横向溢出，释义预览不遮挡正文。
 
 ## 当前实现
 
@@ -25,10 +29,10 @@ Tauri 2 + React/TypeScript + Rust。后端实现托盘、单实例、全局快�
 
 - 真实 PDF 选区、快捷键冲突实际占用、托盘菜单、浮窗不抢焦点、翻译 API、剪贴板图片/并发保护和安装包安装/退出仍需人工验收。
 - JSON 导入导出后端命令已实现，完整导入/导出 UI 仍待补齐。
-- 未使用真实 API 做翻译验证；CI 文件已配置但尚未在 GitHub runner 执行。
-- GitHub Pages、Release 工作流尚未在真实 GitHub 仓库执行；主页本地配置为空时下载按钮保留当前页锚点，部署工作流会注入真实仓库地址和版本并生成安装包直链。
-- 根目录未跟踪的 `papervocab.exe` 与 `uninstall.exe` 保留原样，未纳入提交；它们不是当前构建产物。
+- 未使用真实 API 做翻译验证；后续代码提交的 GitHub CI 结果仍需核对。
+- GitHub Release 尚未发布，`releases/latest` 返回 404；主页据此显示待发布状态，发布安装包后会自动链接到实际资产。
+- 当前工作树中没有未跟踪文件；先前出现的根目录 `papervocab.exe` 与 `uninstall.exe` 没有纳入任何提交。
 
 ## 下一步
 
-用户需在真实 PDF、托盘和安装包上执行 `docs/WINDOWS_TEST.md`，再记录安装包 SHA-256 与未通过项。发布主页时需在 GitHub 开启 Pages 的 GitHub Actions 构建，并按 `docs/GITHUB_PUBLISH.md` 推送仓库和版本 tag。
+用户需在真实 PDF、托盘和安装包上执行 `docs/WINDOWS_TEST.md`，再按 `docs/GITHUB_PUBLISH.md` 推送版本 tag 并验证公开安装包下载。

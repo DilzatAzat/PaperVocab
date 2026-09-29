@@ -24,3 +24,12 @@
 - 修复页脚文档入口，改为指向仓库 `docs/`；补充 Release 页面入口。
 - 语言切换现在同步 `<title>`、description、Open Graph 元信息和关键 ARIA 文本。
 - Pages 工作流同时监听 `master` 与 `main`；预览浮窗关闭按钮已绑定实际行为，存储不可用时语言切换仍可工作。
+
+## 2026-09-29 公开仓库与 Pages
+
+- `DilzatAzat/PaperVocab` 公开仓库已创建；通过一次性 Git 代理设置推送 `master`。未修改旧博客或全局 Git/Codex 配置。
+- GitHub Pages 首次运行在启用 Pages 前失败于 Configure Pages；启用后重新运行成功，站点和 `config.js` 均返回 HTTP 200。
+- 发布检查发现仓库无 Release，旧主页安装包直链返回 404；改为查询真实 Release 资产，有安装包才提供直链，其余状态指向 Releases 页面。
+- 独立审查发现 tag、包版本与安装包资产可能不一致；Release 工作流增加三处版本一致性校验，主页拒绝与 tag 不一致的资产。
+- `pnpm test` 7/7、`node --check site/app.js`、JSON/Cargo 版本核对、Ruby YAML 解析和 `git diff --check` 均通过；真实 Release 资产仍待首次发布后验证。
+- GitHub Windows CI 首次运行成功，NSIS 安装包作为 Actions 工件上传；移动端中英文首屏经 390×844 浏览器视口检查，未见横向溢出或正文遮挡。

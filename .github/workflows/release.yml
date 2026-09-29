@@ -21,6 +21,18 @@ jobs:
           node-version: "24"
           cache: pnpm
       - uses: dtolnay/rust-toolchain@stable
+      - name: Verify release versions
+        shell: pwsh
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          $packageVersion = (Get-Content package.json -Raw | ConvertFrom-Json).version
+          $tauriVersion = (Get-Content src-tauri/tauri.conf.json -Raw | ConvertFrom-Json).version
+          $metadata = cargo metadata --no-deps --format-version 1 --manifest-path src-tauri/Cargo.toml | ConvertFrom-Json
+          $cargoVersion = ($metadata.packages | Where-Object { $_.name -eq 'papervocab' } | Select-Object -First 1).version
+          if ($env:RELEASE_TAG -ne "v$packageVersion" -or $tauriVersion -ne $packageVersion -or $cargoVersion -ne $packageVersion) {
+            throw "Version mismatch: tag=$env:RELEASE_TAG package=$packageVersion tauri=$tauriVersion cargo=$cargoVersion"
+          }
       - run: pnpm install --frozen-lockfile
       - run: pnpm test
       - run: pnpm exec tauri build --bundles nsis

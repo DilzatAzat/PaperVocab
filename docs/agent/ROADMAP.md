@@ -12,7 +12,8 @@
 - [x] 独立双语宣传主页：`site/index.html`、`site/styles.css`、`site/app.js`
 - [x] GitHub Pages 自动部署：`.github/workflows/pages.yml`
 - [x] Release 下载入口、双语 README、发布/域名/宣传文档
-- [ ] 在真实 GitHub 仓库启用 Pages、推送首个 tag 并验证公开下载链接
+- [x] 创建公开仓库 `DilzatAzat/PaperVocab`，推送 `master`，启用并验证 GitHub Pages
+- [ ] 完成 Windows 真机验收后推送首个 tag，验证 Release 安装包公开下载链接
 
 ## 第一版验收
 

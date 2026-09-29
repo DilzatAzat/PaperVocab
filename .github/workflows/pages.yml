@@ -30,8 +30,7 @@ jobs:
         env:
           REPOSITORY_URL: https://github.com/${{ github.repository }}
         run: |
-          VERSION=$(node -p "require('./package.json').version")
-          printf 'window.PAPERVOCAB_REPO = "%s";\nwindow.PAPERVOCAB_VERSION = "%s";\nwindow.PAPERVOCAB_BRANCH = "%s";\n' "$REPOSITORY_URL" "$VERSION" "${{ github.ref_name }}" > site/config.js
+          printf 'window.PAPERVOCAB_REPO = "%s";\nwindow.PAPERVOCAB_BRANCH = "%s";\n' "$REPOSITORY_URL" "${{ github.ref_name }}" > site/config.js
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Upload site artifact

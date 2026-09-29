@@ -33,6 +33,7 @@ Tauri 2 + React/TypeScript + Rust。后端实现托盘、单实例、全局快�
 - JSON 导入导出后端命令已实现，备份已保留目标语言字段；完整导入/导出 UI 仍待补齐。
 - 未使用真实 API 做翻译验证；未在真实 PDF、托盘、浮窗和安装包安装流程上重复人工验收；后续代码提交的 GitHub CI 结果仍需核对。
 - GitHub Release 尚未发布，`releases/latest` 返回 404；主页据此显示待发布状态，发布安装包后会自动链接到实际资产。
+- 本轮本地提交 `1a09c6f` 尚未推送；`git push origin master` 因当前环境无法连接 `github.com:443` 失败，代码和安装包仍保存在本机。
 - 当前工作树中没有未跟踪文件；先前出现的根目录 `papervocab.exe` 与 `uninstall.exe` 没有纳入任何提交。
 
 ## 下一步

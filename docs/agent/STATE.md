@@ -25,6 +25,8 @@
 - 本轮界面更新已将“今日收词”和“全部单词”合并为“收词汇总”，默认展示全部词，日期筛选可选并可清除，同时展示当前筛选结果和本地词库总数。
 - 桌面主窗改为自绘无边框标题栏，侧栏、收词区、统计区、列表和设置页采用轻量玻璃材质；导航、搜索、日期、状态、删除和关闭操作改用 Lucide 图标。主窗关闭仍交由现有 Tauri close handler 驻留托盘。
 - 浏览器视口复验：1280×720 和 390×844 无横向溢出，移动端手动收词输入高度正常；设置页在窄视口可滚动展示。
+- 本轮修复标题栏权限和交互：主窗 capability 现在允许最小化、最大化/还原、关闭和拖动；标题栏改为标准三按钮，整条标题栏可拖动。浮窗单独使用隐藏/拖动权限，内容区支持滚动，关闭按钮固定在底部。
+- 已将 PaperVocab 图标升级为论文书页与光标星芒标记，重新生成 `src-tauri/icons/icon.ico`，应用内品牌标记同步使用 `public/brand-mark.png`。
 
 ## 当前实现
 
@@ -36,8 +38,8 @@ Tauri 2 + React/TypeScript + Rust。后端实现托盘、单实例、全局快�
 - JSON 导入导出后端命令已实现，备份已保留目标语言字段；完整导入/导出 UI 仍待补齐。
 - 未使用真实 API 做翻译验证；未在真实 PDF、托盘、浮窗和安装包安装流程上重复人工验收；后续代码提交的 GitHub CI 结果仍需核对。
 - GitHub Release 尚未发布，`releases/latest` 返回 404；主页据此显示待发布状态，发布安装包后会自动链接到实际资产。
-- UI 改动已提交为 `3311d8f` 并通过 `git -c http.proxy=http://127.0.0.1:9567 push origin master` 推送到 `origin/master`；安装包仍保存在本机，尚未创建 GitHub Release。
-- 当前工作树的 UI 改动尚未提交；Playwright 生成的本地截图和会话目录不纳入版本控制。先前出现的根目录 `papervocab.exe` 与 `uninstall.exe` 没有纳入任何提交。
+- UI 改动已提交为 `3311d8f` 并通过 `git -c http.proxy=http://127.0.0.1:9567 push origin master` 推送到 `origin/master`；本轮标题栏、浮窗和图标修复待提交，安装包仍保存在本机，尚未创建 GitHub Release。
+- Playwright 生成的本地截图和会话目录不纳入版本控制。先前出现的根目录 `papervocab.exe` 与 `uninstall.exe` 没有纳入任何提交。
 
 ## 下一步
 

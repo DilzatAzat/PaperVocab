@@ -1,0 +1,11 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "capture-capability",
+  "description": "Permissions used by the lookup popup",
+  "windows": ["capture"],
+  "permissions": [
+    "core:default",
+    "core:window:allow-hide",
+    "core:window:allow-start-dragging"
+  ]
+}

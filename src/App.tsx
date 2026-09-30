@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type MouseEvent, type ReactNode } from "react";
 import { listen } from "@tauri-apps/api/event";
 import { WebviewWindow } from "@tauri-apps/api/webviewWindow";
 import { getCurrentWindow } from "@tauri-apps/api/window";
-import { BookMarked, CalendarDays, Check, CircleAlert, ChevronRight, LibraryBig, Languages, Minimize2, Maximize2, RotateCcw, Search, Settings2, Sparkles, Trash2, X } from "lucide-react";
+import { BookMarked, CalendarDays, Check, CircleAlert, ChevronRight, Copy, LibraryBig, Languages, Minus, RotateCcw, Search, Settings2, Sparkles, Square, Trash2, X } from "lucide-react";
 import { api, Settings, Word } from "./api";
 
 type Page = "library" | "review" | "settings";
@@ -14,6 +14,10 @@ const defaultSettings: Settings = { api_base_url: "https://api.openai.com/v1", m
 
 function formatTime(value: string) {
   return new Date(value.endsWith("Z") ? value : `${value}Z`).toLocaleString("zh-CN", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
+}
+
+function BrandMark({ small = false }: { small?: boolean }) {
+  return <img className={`brand-mark ${small ? "small" : ""}`} src="/brand-mark.png" alt="" aria-hidden="true" />;
 }
 
 export function App() {
@@ -73,7 +77,7 @@ export function App() {
   return <div className="app-shell">
     <WindowTitlebar />
     <aside className="sidebar">
-      <div className="brand"><span className="brand-mark">P</span><span>PaperVocab</span></div>
+      <div className="brand"><BrandMark /><span>PaperVocab</span></div>
       <div className="sidebar-caption">阅读伴侣</div>
       <nav>
         <NavButton active={page === "library"} onClick={() => setPage("library")} label="收词汇总" count={libraryTotal} icon={<LibraryBig />} />
@@ -98,7 +102,27 @@ export function App() {
 
 function WindowTitlebar() {
   const window = tauriAvailable ? getCurrentWindow() : null;
-  return <div className="window-titlebar"><div className="window-title" data-tauri-drag-region><span className="brand-mark tiny">P</span><span>PaperVocab</span></div>{window && <div className="window-controls"><button title="最小化" aria-label="最小化" onClick={() => void window.minimize()}><Minimize2 size={14} /></button><button title="最大化或还原" aria-label="最大化或还原" onClick={() => void window.toggleMaximize()}><Maximize2 size={14} /></button><button className="window-close" title="关闭并驻留托盘" aria-label="关闭并驻留托盘" onClick={() => void window.close()}><X size={15} /></button></div>}</div>;
+  const [maximized, setMaximized] = useState(false);
+
+  useEffect(() => {
+    if (!window) return;
+    let unlisten: (() => void) | undefined;
+    void window.isMaximized().then(setMaximized).catch(() => undefined);
+    void window.onResized(() => { void window.isMaximized().then(setMaximized).catch(() => undefined); }).then((fn) => { unlisten = fn; });
+    return () => { unlisten?.(); };
+  }, [window]);
+
+  const beginDrag = (event: MouseEvent<HTMLDivElement>) => {
+    if (!window || event.button !== 0 || (event.target as HTMLElement).closest("button")) return;
+    void window.startDragging();
+  };
+  const toggleMaximize = async () => {
+    if (!window) return;
+    await window.toggleMaximize();
+    setMaximized(await window.isMaximized());
+  };
+
+  return <div className="window-titlebar" onMouseDown={beginDrag}><div className="window-title"><BrandMark small /><span>PaperVocab</span></div>{window && <div className="window-controls"><button title="最小化" aria-label="最小化" onClick={() => void window.minimize()}><Minus size={15} /></button><button title={maximized ? "还原窗口" : "最大化"} aria-label={maximized ? "还原窗口" : "最大化"} onClick={() => void toggleMaximize()}>{maximized ? <Copy size={14} /> : <Square size={14} />}</button><button className="window-close" title="关闭并驻留托盘" aria-label="关闭并驻留托盘" onClick={() => void window.close()}><X size={15} /></button></div>}</div>;
 }
 
 function NavButton({ active, onClick, label, count, icon }: { active: boolean; onClick: () => void; label: string; count?: number; icon: ReactNode }) { return <button className={`nav-button ${active ? "active" : ""}`} onClick={onClick}><span className="nav-icon">{icon}</span><span>{label}</span>{count !== undefined && <span className="nav-count">{count}</span>}</button>; }
@@ -109,4 +133,4 @@ function ReviewPanel({ words, onReview }: { words: Word[]; onReview: (id: number
 
 function SettingsPanel({ settings, onSaved }: { settings: Settings | null; onSaved: (settings: Settings) => void }) { const [baseUrl, setBaseUrl] = useState(settings?.api_base_url || "https://api.openai.com/v1"); const [model, setModel] = useState(settings?.model || "gpt-4o-mini"); const [targetLanguage, setTargetLanguage] = useState(settings?.target_language || "中文"); const [key, setKey] = useState(""); const [shortcut, setShortcut] = useState(settings?.shortcut || "CTRL+SHIFT+L"); const [message, setMessage] = useState(""); useEffect(() => { if (settings) { setBaseUrl(settings.api_base_url); setModel(settings.model); setTargetLanguage(settings.target_language); setShortcut(settings.shortcut); } }, [settings]); const save = async () => { if (!tauriAvailable) { setMessage("请在 PaperVocab 桌面版中保存设置"); return; } try { const next = await api.saveSettings(baseUrl, model, targetLanguage, key, shortcut); onSaved(next); setKey(""); setMessage("设置已保存"); } catch (e) { setMessage(String(e)); } }; return <section className="settings-panel"><div className="settings-intro"><div className="eyebrow">TRANSLATION</div><h2>翻译服务</h2><p>当前支持 OpenAI Chat Completions 兼容协议，请求在本机后端发出，密钥保存在 Windows 凭据管理器中。兼容该协议的服务可以使用；原生 Anthropic 等其他协议暂不支持。</p></div><label>API Base URL<input value={baseUrl} onChange={(e) => setBaseUrl(e.target.value)} placeholder="https://api.openai.com/v1" /></label><label>模型<input value={model} onChange={(e) => setModel(e.target.value)} placeholder="gpt-4o-mini" /></label><label>API 密钥<input type="password" value={key} onChange={(e) => setKey(e.target.value)} placeholder={settings?.has_api_key ? "已保存，留空表示不修改" : "sk-…"} /></label><label>目标语言<select value={targetLanguage} onChange={(e) => setTargetLanguage(e.target.value)}><option value="中文">中文</option><option value="English">English</option><option value="Deutsch">Deutsch</option><option value="Français">Français</option><option value="日本語">日本語</option></select></label><div className="settings-divider" /><div className="settings-intro"><div className="eyebrow">CAPTURE</div><h2>全局取词</h2><p>快捷键会等待你松开组合键，再模拟 Ctrl+C 读取选区；完成取词后会尽量恢复原有文字或图片剪贴板。</p></div>{settings?.shortcut_error && <div className="error-banner settings-error">{settings.shortcut_error}</div>}<label>快捷键<input value={shortcut} onChange={(e) => setShortcut(e.target.value.toUpperCase())} placeholder="CTRL+SHIFT+L" /></label><div className="settings-actions"><button className="primary-button" onClick={() => void save()}>保存设置</button>{message && <span className="save-message">{message}</span>}</div></section>; }
 
-function CapturePopup({ capture }: { capture: CaptureEvent | null }) { const hide = () => void getCurrentWindow().hide(); return <div className="popup-shell"><div className="popup-top"><div className="popup-brand"><span className="brand-mark small">P</span><span>PaperVocab</span></div><button className="popup-close-icon" aria-label="关闭取词浮窗" title="关闭" onClick={hide}><X size={16} /></button></div>{capture ? <><div className="popup-word">{capture.original}</div>{capture.status === "loading" || capture.status === "saved" ? <div className="popup-loading"><span className="spinner" />正在获取释义…</div> : capture.status === "failed" ? <div className="popup-fail"><strong>暂时无法翻译</strong><span>{capture.message || "请稍后重试"}</span></div> : <div className="popup-result"><div className="popup-pos">{capture.word?.part_of_speech}</div><strong>{capture.word?.meaning_zh || "暂无释义"}</strong><p>{capture.word?.explanation_zh}</p>{capture.word?.example_en && <div className="example"><span>生成例句</span>{capture.word.example_en}</div>}</div>}</> : <div className="popup-loading">等待选中的文本…</div>}<button className="popup-close" onClick={hide}>关闭</button></div>; }
+function CapturePopup({ capture }: { capture: CaptureEvent | null }) { const hide = () => void getCurrentWindow().hide(); const drag = (event: MouseEvent<HTMLDivElement>) => { if (event.button === 0 && !(event.target as HTMLElement).closest("button")) void getCurrentWindow().startDragging(); }; return <div className="popup-shell"><div className="popup-top" onMouseDown={drag}><div className="popup-brand"><BrandMark small /><span>PaperVocab</span></div><button className="popup-close-icon" aria-label="关闭取词浮窗" title="关闭" onClick={hide}><X size={16} /></button></div><div className="popup-body">{capture ? <><div className="popup-word">{capture.original}</div>{capture.status === "loading" || capture.status === "saved" ? <div className="popup-loading"><span className="spinner" />正在获取释义…</div> : capture.status === "failed" ? <div className="popup-fail"><strong>暂时无法翻译</strong><span>{capture.message || "请稍后重试"}</span></div> : <div className="popup-result"><div className="popup-pos">{capture.word?.part_of_speech}</div><strong>{capture.word?.meaning_zh || "暂无释义"}</strong><p>{capture.word?.explanation_zh}</p>{capture.word?.example_en && <div className="example"><span>生成例句</span>{capture.word.example_en}</div>}</div>}</> : <div className="popup-loading">等待选中的文本…</div>}</div><button className="popup-close" onClick={hide}>关闭</button></div>; }

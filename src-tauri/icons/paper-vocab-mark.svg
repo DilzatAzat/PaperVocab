@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024" fill="none">
+  <defs>
+    <linearGradient id="surface" x1="132" y1="96" x2="862" y2="930" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#18335F"/>
+      <stop offset="0.54" stop-color="#3569C5"/>
+      <stop offset="1" stop-color="#6B9BE6"/>
+    </linearGradient>
+    <linearGradient id="page" x1="282" y1="312" x2="742" y2="742" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#DCEBFF"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="508" y1="220" x2="714" y2="474" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#B7F4E4"/>
+      <stop offset="1" stop-color="#75C9F2"/>
+    </linearGradient>
+    <filter id="shadow" x="188" y="236" width="648" height="570" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="24" stdDeviation="24" flood-color="#0C234C" flood-opacity="0.28"/>
+    </filter>
+  </defs>
+  <rect x="32" y="32" width="960" height="960" rx="232" fill="url(#surface)"/>
+  <path d="M73 348C173 184 319 94 503 74C685 54 838 112 951 239" stroke="#FFFFFF" stroke-opacity="0.18" stroke-width="34" stroke-linecap="round"/>
+  <circle cx="770" cy="258" r="106" fill="#A4F0E1" fill-opacity="0.16"/>
+  <g filter="url(#shadow)">
+    <path d="M260 355C335 315 417 316 500 373V752C412 696 332 694 260 731V355Z" fill="url(#page)"/>
+    <path d="M500 373C584 316 671 315 764 355V731C676 694 591 696 500 752V373Z" fill="#EEF7FF"/>
+    <path d="M500 372V752" stroke="#8BB3E8" stroke-width="17" stroke-linecap="round"/>
+    <path d="M305 423C362 399 416 405 460 434M305 492C362 468 416 474 460 503M305 561C362 537 416 543 460 572" stroke="#8AA7D2" stroke-width="18" stroke-linecap="round"/>
+    <path d="M540 434C594 405 652 399 719 423M540 503C594 474 652 468 719 492M540 572C594 543 652 537 719 561" stroke="#78A3D7" stroke-width="18" stroke-linecap="round"/>
+    <path d="M607 224L632 288L699 314L632 340L607 407L581 340L514 314L581 288L607 224Z" fill="url(#accent)" stroke="#FFFFFF" stroke-opacity="0.9" stroke-width="12" stroke-linejoin="round"/>
+  </g>
+  <path d="M251 811C413 868 615 868 773 811" stroke="#FFFFFF" stroke-opacity="0.24" stroke-width="20" stroke-linecap="round"/>
+</svg>

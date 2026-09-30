@@ -54,3 +54,11 @@
 - 浏览器验证发现无 Tauri 环境下缺少标题栏会使 CSS Grid 主内容行高异常、移动端 flex 基准会拉伸手动输入区；已分别通过始终渲染预览标题栏、固定桌面 shell 高度并将手动输入 flex 基准改为自动修复。
 - 已验证：`pnpm exec tsc --noEmit`、`pnpm exec vite build`、`pnpm test` 7/7、`cargo check`、`cargo test --locked` 11/11、`git diff --check`；1280×720 和 390×844 页面无横向溢出。
 - 待 Windows 实测：无边框标题栏按钮、主窗关闭驻留托盘、真实 PDF 取词、浮窗焦点和安装包安装/退出。
+
+## 2026-09-30 标题栏、浮窗滚动与图标修复
+
+- 根因：capability 只允许主窗 show/hide，没有允许 `close`、`minimize`、`toggle-maximize`、`is-maximized` 和 `start-dragging`，导致自绘窗口控制和拖动无效；已补充主窗权限并为浮窗建立独立 capability。
+- 标题栏改为最小化、最大化/还原、关闭三按钮，整条标题栏通过 `startDragging` 移动；关闭继续进入现有 `CloseRequested -> prevent_close + hide` 托盘路径。
+- 浮窗由固定滚动外壳改为固定头部、可滚动内容区和固定底部关闭按钮，窗口高度调整为 300px，长释义不会把关闭操作推出视口。
+- 使用统一 PaperVocab 书页/星芒图标重新生成 Windows `icon.ico`，应用内品牌图和浏览器 favicon 同步替换。
+- `pnpm exec tsc --noEmit`、`pnpm exec vite build`、`cargo check`、`pnpm test` 7/7、`pnpm tauri build` 均通过；新 NSIS 包待提交后更新哈希。

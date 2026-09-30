@@ -1,6 +1,6 @@
 # 当前状态
 
-更新时间：2026-09-30
+更新时间：2026-10-01
 
 ## 已验证
 
@@ -12,7 +12,7 @@
 - cargo fmt --all -- --check、node --test tests/*.test.mjs 通过。
 - cargo clippy --locked --all-targets -- -D warnings 通过。
 - Tauri NSIS 构建已通过，生成 x64 安装包；最新 release exe 的 PE Subsystem 为 2 (Windows GUI)。
-- 当前本地安装包：`src-tauri/target/release/bundle/nsis/PaperVocab_0.1.0_x64-setup.exe`，SHA-256 为 `5AE0767B7199BE167CC32B689D3D12B4BC05D2284CDB711FF2AC09D8EE7C39E2`；release exe PE Subsystem 为 2（Windows GUI）。
+- 当前本地安装包：`src-tauri/target/release/bundle/nsis/PaperVocab_0.1.0_x64-setup.exe`，SHA-256 为 `FAE4876100E7D77061DD4AECEBC1AB7E6191833CEAA4B8116909B49C6A8EA59A`；release exe PE Subsystem 为 2（Windows GUI）。
 - 已用 Windows 桌面启动 release exe，进程存在且主窗口标题为 PaperVocab；此前已检查中文工作台显示正常。
 - 已完成独立宣传主页 `site/`：中文默认、中英文切换、产品流程说明、GitHub 仓库入口和 Release 下载入口；新增 GitHub Pages 工作流，部署时自动写入真实仓库地址。
 - 已补充 GitHub 发布、自定义域名和双语宣传文案文档；主页本地静态服务器首屏、桌面布局和移动断点已检查。
@@ -30,6 +30,8 @@
 - 本轮将取词浮窗顶部改为从窗口上沿开始的 62px 有色拖动区，正文仍独立滚动。Windows 11 实测标题区中部拖动位移 `(+120,+64)`，靠近上沿 8px 拖动位移 `(-80,-40)`；实际浮窗顶部关闭按钮点击后隐藏。
 - 品牌标记改为深色底纸页字母 P，已同步 SVG、ICO 和应用内 PNG。Cargo `build.rs` 现追踪 `icons/icon.ico`，避免图标变更时复用旧 Windows 资源库。重建并静默覆盖安装后，从 release exe 与已安装 exe 提取的 32px 图标逐像素一致，桌面快捷方式指向新 exe 且 Windows 快捷方式图标提取结果为新 P 标记。
 - Windows 11 上使用无选区测试触发真实浮窗，提示“没有新的可复制文本”，未创建单词或遇见记录；两个临时测试窗口已关闭，测试时意外产生的一条收词已按精确时间和 ID 清理，数据库复核为 0 词、0 遇见。
+- 2026-10-01 品牌图改为单枚 Berkshire Swash 装饰性 P，去掉横线和底部蓝色；SVG、ICO、应用内 PNG、宣传页标记同步。字体轮廓的 SIL OFL 许可文本已收入仓库。NSIS 重建成功，静默覆盖安装退出码 0；release 与已安装 exe 提取图标的 PNG SHA-256 一致。已安装程序可启动，进程和主窗口标题均为 PaperVocab。
+- 宣传页新增与当前软件一致的收词汇总预览：搜索、首次收录日期筛选、词库总数、重复遇见次数；中英文文案同时更新，并明确选中文本会发送至自选翻译 API。Playwright 检查 1280px、390px 和 320px，词库预览完整、无横向溢出；320×700 首屏露出下一段。公开安装包仍未发布，主页正确显示待发布状态。
 
 ## 当前实现
 
@@ -39,9 +41,9 @@ Tauri 2 + React/TypeScript + Rust。后端实现托盘、单实例、全局快�
 
 - 真实 PDF 选区、快捷键冲突实际占用、托盘菜单、浮窗不抢焦点、翻译 API、剪贴板图片/并发保护和完整安装/退出流程仍需人工验收；本轮只验证了浮窗拖动/关闭、无选区提示和覆盖安装后的图标。
 - JSON 导入导出后端命令已实现，备份已保留目标语言字段；完整导入/导出 UI 仍待补齐。
-- 未使用真实 API 做翻译验证；未在真实 PDF、托盘、浮窗和安装包安装流程上重复人工验收；后续代码提交的 GitHub CI 结果仍需核对。
+- 未使用真实 API 做翻译验证；未在真实 PDF、托盘、浮窗和安装包完整退出流程上重复人工验收；后续代码提交的 GitHub CI 结果仍需核对。此轮只完成静默覆盖安装和启动烟测，未测试卸载。
 - GitHub Release 尚未发布，`releases/latest` 返回 404；主页据此显示待发布状态，发布安装包后会自动链接到实际资产。
-- UI 改动已提交为 `3311d8f`；先前标题栏、浮窗和图标修复已提交为 `ad2cdc6` 并推送到 `origin/master`。安装包保存在本机，尚未创建 GitHub Release；最新提交和远端状态以实际 Git 状态为准。
+- 当前提交和远端状态以实际 Git 状态为准。安装包保存在本机，尚未创建 GitHub Release。
 - Playwright 生成的本地截图和会话目录不纳入版本控制。先前出现的根目录 `papervocab.exe` 与 `uninstall.exe` 没有纳入任何提交。
 
 ## 下一步

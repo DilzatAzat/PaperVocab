@@ -1,19 +1,19 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024" fill="none">
   <defs>
-    <linearGradient id="ink" x1="190" y1="74" x2="834" y2="950" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#30434A"/>
-      <stop offset="0.52" stop-color="#1D3037"/>
-      <stop offset="1" stop-color="#112127"/>
+    <linearGradient id="surface" x1="175" y1="96" x2="840" y2="930" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#314247"/>
+      <stop offset="0.55" stop-color="#1D2C30"/>
+      <stop offset="1" stop-color="#101D21"/>
     </linearGradient>
-    <linearGradient id="paper" x1="321" y1="242" x2="718" y2="781" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#FFFFFF"/>
-      <stop offset="1" stop-color="#E4F0EE"/>
+    <linearGradient id="letter" x1="0" y1="0" x2="0.8" y2="1">
+      <stop stop-color="#FFFCF4"/>
+      <stop offset="1" stop-color="#E1EBE7"/>
     </linearGradient>
   </defs>
-  <rect x="32" y="32" width="960" height="960" rx="228" fill="url(#ink)"/>
-  <rect x="48" y="48" width="928" height="928" rx="212" stroke="#FFFFFF" stroke-opacity="0.18" stroke-width="12"/>
-  <path d="M307 226H534C689 226 786 315 786 450C786 585 689 675 534 675H452V798H307V226Z" fill="url(#paper)"/>
-  <path d="M452 363H528C600 363 641 395 641 450C641 506 600 538 528 538H452V363Z" fill="#1D3037"/>
-  <path d="M492 488H594" stroke="#ED9F80" stroke-width="24" stroke-linecap="round"/>
-  <path d="M307 798V724L379 761L452 724V798L379 761L307 798Z" fill="#91D9C8"/>
+  <rect x="32" y="32" width="960" height="960" rx="228" fill="url(#surface)"/>
+  <rect x="49" y="49" width="926" height="926" rx="211" stroke="#FFFFFF" stroke-opacity="0.19" stroke-width="10"/>
+  <!-- Berkshire Swash P outline; SIL OFL 1.1 license is in BerkshireSwash-OFL.txt. -->
+  <g transform="matrix(0.45665 0 0 -0.45665 182.72 849.75)">
+    <path d="M836 131Q836 54 795.5 19.0Q755 -16 672 -16Q588 -16 548.0 19.0Q508 54 508 131V1327Q508 1382 432 1382Q377 1382 320.5 1365.5Q264 1349 218.5 1320.5Q173 1292 144.0 1252.5Q115 1213 115 1167Q115 1135 123.5 1116.0Q132 1097 143.0 1087.5Q154 1078 165.5 1075.5Q177 1073 182 1073Q207 1073 223.0 1081.5Q239 1090 252.0 1099.5Q265 1109 276.5 1117.5Q288 1126 303 1126Q315 1126 328.5 1120.5Q342 1115 353.5 1103.0Q365 1091 373.0 1071.5Q381 1052 381 1024Q381 984 365.5 955.0Q350 926 325.5 906.5Q301 887 269.5 877.5Q238 868 207 868Q159 868 120.5 884.5Q82 901 55.0 930.0Q28 959 14.0 998.0Q0 1037 0 1081Q0 1164 31.0 1227.5Q62 1291 118.5 1337.0Q175 1383 254.0 1413.5Q333 1444 429.0 1462.0Q525 1480 634.5 1487.5Q744 1495 862 1495Q1148 1495 1295.0 1385.5Q1442 1276 1442 1071Q1442 971 1415.5 894.0Q1389 817 1344.5 761.5Q1300 706 1242.0 671.5Q1184 637 1122.0 622.0Q1060 607 997.5 610.0Q935 613 881 633L895 676Q970 653 1018.5 674.5Q1067 696 1094.5 751.0Q1122 806 1132.5 890.0Q1143 974 1143 1075Q1143 1151 1127.0 1213.5Q1111 1276 1083.5 1320.0Q1056 1364 1019.5 1388.5Q983 1413 942 1413Q910 1413 889.5 1403.5Q869 1394 857.5 1379.5Q846 1365 841.5 1348.5Q837 1332 836 1317Z" fill="url(#letter)"/>
+  </g>
 </svg>

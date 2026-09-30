@@ -13,6 +13,7 @@
 - [x] GitHub Pages 自动部署：`.github/workflows/pages.yml`
 - [x] Release 下载入口、双语 README、发布/域名/宣传文档
 - [x] 创建公开仓库 `DilzatAzat/PaperVocab`，推送 `master`，启用并验证 GitHub Pages
+- [x] 品牌标记改为单枚艺术化 P；主页同步收词汇总、首次收录日期筛选和真实翻译 API 数据流
 - [ ] 完成 Windows 真机验收后推送首个 tag，验证 Release 安装包公开下载链接
 
 ## 后续方向（不属于当前桌面版）

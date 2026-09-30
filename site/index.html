@@ -4,17 +4,18 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#eef2f6" />
-    <meta name="description" content="PaperVocab 是面向英文论文阅读的 Windows 工具。选词、目标语言释义、记录与复习，融入同一段阅读流程。默认使用中文。" />
+    <meta name="description" content="PaperVocab 帮你在英文论文中快捷取词、收词与复习。原词保存在本地，选中文本会发送至你配置的翻译 API。" />
     <meta property="og:title" content="PaperVocab | 让论文里的生词顺手留下" />
-    <meta property="og:description" content="一个安静的 Windows 阅读伴侣：按下快捷键，得到目标语言释义，并把单词留下来。" />
+    <meta property="og:description" content="选词、查看释义，再到收词汇总里搜索、按首次收录日期筛选和复习。" />
     <meta property="og:type" content="website" />
     <title>PaperVocab | 论文阅读伴侣</title>
-    <link rel="stylesheet" href="styles.css?v=7" />
+    <link rel="icon" type="image/png" href="brand-mark.png" />
+    <link rel="stylesheet" href="styles.css?v=8" />
   </head>
   <body>
     <header class="site-header">
       <a class="brand" href="#top" aria-label="PaperVocab home">
-        <span class="brand-mark">P</span>
+        <img class="brand-mark" src="brand-mark.png" alt="" aria-hidden="true" />
         <span>PaperVocab</span>
       </a>
       <nav class="site-nav" aria-label="Primary navigation">
@@ -52,12 +53,13 @@
             <div class="paper-footer"><span>01</span><span>PaperVocab</span></div>
           </div>
           <div class="lookup-card">
-            <div class="lookup-top"><span class="mini-mark">P</span><span>PaperVocab</span><button type="button" data-preview-close aria-label="Close preview">×</button></div>
-            <div class="lookup-word">robust</div>
-            <div class="lookup-pos" data-i18n="lookupPos">形容词</div>
-            <div class="lookup-meaning" data-i18n="lookupMeaning">稳健的；具有适应力的</div>
-            <p data-i18n="lookupExplain">在论文中常指方法面对噪声、数据变化或有限监督时仍能保持稳定。</p>
-            <div class="lookup-example"><span data-i18n="lookupExampleLabel">生成例句</span><span data-i18n="lookupExample">The robust model performs well on unseen data.</span></div>
+            <div class="lookup-top"><img class="mini-mark" src="brand-mark.png" alt="" aria-hidden="true" /><span>PaperVocab</span><button type="button" data-preview-close aria-label="Close preview">×</button></div>
+            <div class="lookup-body"><div class="lookup-word">robust</div>
+              <div class="lookup-pos" data-i18n="lookupPos">形容词</div>
+              <div class="lookup-meaning" data-i18n="lookupMeaning">稳健的；具有适应力的</div>
+              <p data-i18n="lookupExplain">在论文中常指方法面对噪声、数据变化或有限监督时仍能保持稳定。</p>
+              <div class="lookup-example"><span data-i18n="lookupExampleLabel">生成例句</span><span data-i18n="lookupExample">The robust model performs well on unseen data.</span></div>
+            </div>
             <button class="lookup-close" type="button" data-preview-close data-i18n="lookupClose">关闭</button>
           </div>
         </div>
@@ -66,7 +68,7 @@
       <section class="signal-row" aria-label="Product principles">
         <div><span class="signal-number">01</span><strong data-i18n="signalOneTitle">不离开阅读</strong><p data-i18n="signalOneBody">浮窗贴近你的阅读流程，不要求切换到另一个网页。</p></div>
         <div><span class="signal-number">02</span><strong data-i18n="signalTwoTitle">先保存，再翻译</strong><p data-i18n="signalTwoBody">网络失败时，原词仍在本地词本里等待重试。</p></div>
-        <div><span class="signal-number">03</span><strong data-i18n="signalThreeTitle">按自己的节奏复习</strong><p data-i18n="signalThreeBody">按日期查看遇见记录，用三个简单选项完成复习。</p></div>
+        <div><span class="signal-number">03</span><strong data-i18n="signalThreeTitle">按自己的节奏复习</strong><p data-i18n="signalThreeBody">在收词汇总中找回单词，再用三个简单选项完成复习。</p></div>
       </section>
 
       <section class="workflow section-shell" id="workflow">
@@ -74,7 +76,23 @@
         <div class="workflow-grid">
           <article class="workflow-step"><span>01</span><h3 data-i18n="stepOneTitle">选中</h3><p data-i18n="stepOneBody">在可复制的 PDF 或浏览器里选中英文词或短语。</p><div class="step-demo select-demo"><span>representation</span></div></article>
           <article class="workflow-step"><span>02</span><h3 data-i18n="stepTwoTitle">按快捷键</h3><p data-i18n="stepTwoBody">原词立即保存，随后请求当前选择的目标语言释义。</p><div class="step-demo key-demo"><kbd>Ctrl</kbd><b>+</b><kbd>Shift</kbd><b>+</b><kbd>L</kbd></div></article>
-          <article class="workflow-step"><span>03</span><h3 data-i18n="stepThreeTitle">回顾与复习</h3><p data-i18n="stepThreeBody">按日期查看遇见记录，再用三个选项完成复习。</p><div class="step-demo review-demo"><span data-i18n="reviewDemoWord">representation</span><i data-i18n="reviewDemoStatus">有点印象</i></div></article>
+          <article class="workflow-step"><span>03</span><h3 data-i18n="stepThreeTitle">回顾与复习</h3><p data-i18n="stepThreeBody">在收词汇总中搜索或按首次收录日期筛选，再进入到期复习。</p><div class="step-demo review-demo"><span data-i18n="reviewDemoWord">representation</span><i data-i18n="reviewDemoStatus">有点印象</i></div></article>
+        </div>
+      </section>
+
+      <section class="library-section section-shell" aria-labelledby="library-title">
+        <div class="library-copy"><p class="eyebrow" data-i18n="libraryEyebrow">YOUR WORDS, TOGETHER</p><h2 id="library-title" data-i18n="libraryTitle">收词汇总，随时找回。</h2><p data-i18n="libraryLede">全部收词集中在一处。搜索单词或释义、按首次收录日期筛选，同时看到词库总数与重复遇见次数。</p></div>
+        <div class="library-preview" aria-label="PaperVocab library preview">
+          <div class="library-preview-bar"><img src="brand-mark.png" alt="" aria-hidden="true" /><span>PaperVocab</span><span class="preview-controls" aria-hidden="true">−　□　×</span></div>
+          <div class="library-preview-layout">
+            <div class="library-preview-nav"><div class="preview-nav-active" data-i18n="libraryNav">收词汇总</div><div data-i18n="libraryReview">到期复习</div><div data-i18n="librarySettings">设置</div></div>
+            <div class="library-preview-content"><span class="preview-eyebrow">LOCAL LIBRARY</span><h3 data-i18n="libraryNav">收词汇总</h3>
+              <div class="library-preview-counts"><div><span data-i18n="libraryFiltered">当前筛选结果</span><strong>2</strong></div><div><span data-i18n="libraryTotal">本地词库总数</span><strong>2</strong></div></div>
+              <div class="library-preview-tools"><span data-i18n="librarySearch">搜索单词或释义</span><span data-i18n="libraryDate">首次收录日期</span></div>
+              <div class="library-preview-row"><strong>robust</strong><span data-i18n="libraryMeaningOne">稳健的</span><small data-i18n="libraryEncounter">遇见 2 次</small></div>
+              <div class="library-preview-row"><strong>representation</strong><span data-i18n="libraryMeaningTwo">表征；表示</span><small data-i18n="libraryEncounterOne">遇见 1 次</small></div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -83,7 +101,7 @@
         <div class="feature-list">
           <div><span class="feature-mark">↗</span><strong data-i18n="featureOneTitle">自选翻译服务</strong><p data-i18n="featureOneBody">目前支持兼容 OpenAI Chat Completions 协议的 API；密钥保存在 Windows 凭据管理器。</p></div>
           <div><span class="feature-mark">⌁</span><strong data-i18n="featureTwoTitle">选择目标语言</strong><p data-i18n="featureTwoBody">当前可选中文、英语、德语、法语和日语；默认目标语言为中文。</p></div>
-          <div><span class="feature-mark">✓</span><strong data-i18n="featureThreeTitle">阅读记录不断线</strong><p data-i18n="featureThreeBody">原词先保存，翻译失败可重试；遇见日期和复习记录持续保留。</p></div>
+          <div><span class="feature-mark">✓</span><strong data-i18n="featureThreeTitle">统一收词与复习</strong><p data-i18n="featureThreeBody">收词汇总支持搜索、首次收录日期筛选和总数查看；重复遇见不会被误算为复习。</p></div>
         </div>
       </section>
 
@@ -96,6 +114,6 @@
 
     <footer class="site-footer"><span>PaperVocab</span><span data-i18n="footerText">让论文阅读与翻译更顺畅。</span><a data-repo-link href="#top" data-i18n="footerRepo">GitHub 仓库</a></footer>
     <script src="config.js"></script>
-    <script src="app.js?v=9"></script>
+    <script src="app.js?v=10"></script>
   </body>
 </html>

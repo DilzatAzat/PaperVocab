@@ -12,7 +12,7 @@
 - cargo fmt --all -- --check、node --test tests/*.test.mjs 通过。
 - cargo clippy --locked --all-targets -- -D warnings 通过。
 - Tauri NSIS 构建已通过，生成 x64 安装包；最新 release exe 的 PE Subsystem 为 2 (Windows GUI)。
-- 当前本地安装包：`src-tauri/target/release/bundle/nsis/PaperVocab_0.1.0_x64-setup.exe`，SHA-256 为 `A0EFC7496B43C8E68347612178041AAB792C5C0DB09F15DB88ED28C40227ABAC`；本轮构建的 release exe PE Subsystem 为 2（Windows GUI）。
+- 当前本地安装包：`src-tauri/target/release/bundle/nsis/PaperVocab_0.1.0_x64-setup.exe`，SHA-256 为 `29C38DB58B0505C525CD89B67A55B13F27092B71447BA03D554E9CEBFEB4C582`；本轮构建的 release exe PE Subsystem 为 2（Windows GUI）。
 - 已用 Windows 桌面启动 release exe，进程存在且主窗口标题为 PaperVocab；此前已检查中文工作台显示正常。
 - 已完成独立宣传主页 `site/`：中文默认、中英文切换、产品流程说明、GitHub 仓库入口和 Release 下载入口；新增 GitHub Pages 工作流，部署时自动写入真实仓库地址。
 - 已补充 GitHub 发布、自定义域名和双语宣传文案文档；主页本地静态服务器首屏、桌面布局和移动断点已检查。
@@ -38,7 +38,7 @@ Tauri 2 + React/TypeScript + Rust。后端实现托盘、单实例、全局快�
 - JSON 导入导出后端命令已实现，备份已保留目标语言字段；完整导入/导出 UI 仍待补齐。
 - 未使用真实 API 做翻译验证；未在真实 PDF、托盘、浮窗和安装包安装流程上重复人工验收；后续代码提交的 GitHub CI 结果仍需核对。
 - GitHub Release 尚未发布，`releases/latest` 返回 404；主页据此显示待发布状态，发布安装包后会自动链接到实际资产。
-- UI 改动已提交为 `3311d8f` 并通过 `git -c http.proxy=http://127.0.0.1:9567 push origin master` 推送到 `origin/master`；本轮标题栏、浮窗和图标修复待提交，安装包仍保存在本机，尚未创建 GitHub Release。
+- UI 改动已提交为 `3311d8f`；本轮标题栏、浮窗和图标修复已提交为 `ad2cdc6`，并通过 `git -c http.proxy=http://127.0.0.1:9567 push origin master` 推送到 `origin/master`；安装包仍保存在本机，尚未创建 GitHub Release。
 - Playwright 生成的本地截图和会话目录不纳入版本控制。先前出现的根目录 `papervocab.exe` 与 `uninstall.exe` 没有纳入任何提交。
 
 ## 下一步

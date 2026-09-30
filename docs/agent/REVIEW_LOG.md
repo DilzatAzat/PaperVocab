@@ -77,3 +77,10 @@
 - 审查发现中文模式的预览关闭按钮仍保留英文无障碍标签；已与品牌首页标签一并本地化。
 - Playwright 在 320、390、1280px 检查页面，无横向溢出；320px 英文首屏原本未露出下一段，已压缩窄屏预览后复验。中文和英文词库预览内容完整。GitHub API 对未发布 Release 返回 404，页面按预期显示待发布。
 - `pnpm test` 7/7、TypeScript、Vite、`node --check site/app.js`、`cargo check`、`pnpm tauri build` 通过；重建安装包 SHA-256 为 `FAE4876100E7D77061DD4AECEBC1AB7E6191833CEAA4B8116909B49C6A8EA59A`。静默覆盖安装退出码 0，已安装和 release EXE 图标提取结果相同，安装后启动烟测通过。
+
+## 2026-10-01 日期占位符修复
+
+- 根因：原生 `input[type=date]` 的分段占位符由 WebView2/系统区域设置生成，HTML 的中文语言标记无法保证统一显示；现由按钮显示中文日期文本并打开原生日历，日期值继续原样传递为 `YYYY-MM-DD`。
+- 独立只读审查复核按钮用户激活、Enter/Space 操作、固定尺寸、焦点样式和日期值未引入时区转换，未发现阻断问题。
+- 浏览器回归验证空值、选定日期、清除和窄视口。真实 Windows WebView2 实测原生日历可打开；选择 10 月 1 日显示完整中文，Space 打开后选 10 月 2 日，筛选结果为 0；Escape 保留日期，清除恢复 4 条，未修改词库数据。
+- `pnpm test` 7/7、`pnpm exec tsc --noEmit`、`pnpm exec vite build`、`pnpm tauri build` 通过。确认原设置已保存且密钥输入框为空后覆盖安装，退出码 0；新安装包 SHA-256 为 `FFF47C55EDA27DE7A9F27A6B6B875F0097551BCADABAC808B3F36F75A2F67FC7`。

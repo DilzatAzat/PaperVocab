@@ -94,11 +94,23 @@ export function App() {
       {page === "settings" ? <SettingsPanel settings={settings} onSaved={(next) => setSettings(next)} /> : page === "review" ? <ReviewPanel words={reviews} onReview={async (id, rating) => { await api.review(id, rating); await reload(); }} /> : <>
         <section className="capture-strip"><div className="capture-intro"><div className="capture-icon"><Sparkles size={17} /></div><div><strong>快速收词</strong><span>在 PDF 或浏览器选中英文，按全局快捷键即可保存</span></div></div><div className="manual-entry"><input value={manual} onChange={(e) => setManual(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") void addManual(); }} placeholder="手动输入单词或短语" /><input value={sentence} onChange={(e) => setSentence(e.target.value)} placeholder="原句（可选）" /><button onClick={() => void addManual()}>收录</button></div></section>
         <section className="summary-strip"><div><span className="summary-label">当前筛选结果</span><strong>{words.length}</strong></div><div><span className="summary-label">本地词库总数</span><strong>{libraryTotal}</strong></div><span className="summary-note">重复遇见会更新记录，不会重复创建单词</span></section>
-        <section className="library-toolbar"><div className="search-box"><Search size={16} /><input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="搜索单词或释义" /></div><div className="filter-actions"><label className="date-filter"><CalendarDays size={15} />日期 <input type="date" value={date} onChange={(e) => setDate(e.target.value)} /></label>{date && <button className="clear-filter" onClick={() => setDate("")}><X size={14} />清除</button>}</div></section>
+        <section className="library-toolbar"><div className="search-box"><Search size={16} /><input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="搜索单词或释义" /></div><div className="filter-actions"><DateFilter value={date} onChange={setDate} />{date && <button className="clear-filter" onClick={() => setDate("")}><X size={14} />清除</button>}</div></section>
         <WordList words={words} onDelete={async (id) => { await api.deleteWord(id); await reload(); }} onRetry={async (id) => { await api.retry(id); await reload(); }} />
       </>}
     </main>
   </div>;
+}
+
+function DateFilter({ value, onChange }: { value: string; onChange: (value: string) => void }) {
+  const input = useRef<HTMLInputElement>(null);
+  const [year, month, day] = value.split("-");
+  const display = value ? `${year}年${month}月${day}日` : "年 / 月 / 日";
+
+  return <div className="date-filter"><span>日期</span><div className="date-control">
+    <button className={`date-picker-button ${value ? "" : "is-empty"}`} type="button" aria-label={value ? `首次收录日期：${display}，点击更改` : "选择首次收录日期"} onClick={() => input.current?.showPicker()}><span>{display}</span><CalendarDays size={15} /></button>
+    {/* Keep the native calendar anchored to the control without exposing its locale-dependent placeholder. */}
+    <input ref={input} type="date" value={value} tabIndex={-1} aria-label="首次收录日期" onChange={(event) => onChange(event.target.value)} />
+  </div></div>;
 }
 
 function WindowTitlebar() {

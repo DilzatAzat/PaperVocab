@@ -12,7 +12,7 @@
 - cargo fmt --all -- --check、node --test tests/*.test.mjs 通过。
 - cargo clippy --locked --all-targets -- -D warnings 通过。
 - Tauri NSIS 构建已通过，生成 x64 安装包；最新 release exe 的 PE Subsystem 为 2 (Windows GUI)。
-- 当前本地安装包：`src-tauri/target/release/bundle/nsis/PaperVocab_0.1.0_x64-setup.exe`，SHA-256 为 `FAE4876100E7D77061DD4AECEBC1AB7E6191833CEAA4B8116909B49C6A8EA59A`；release exe PE Subsystem 为 2（Windows GUI）。
+- 当前本地安装包：`src-tauri/target/release/bundle/nsis/PaperVocab_0.1.0_x64-setup.exe`，SHA-256 为 `FFF47C55EDA27DE7A9F27A6B6B875F0097551BCADABAC808B3F36F75A2F67FC7`；release exe PE Subsystem 为 2（Windows GUI）。
 - 已用 Windows 桌面启动 release exe，进程存在且主窗口标题为 PaperVocab；此前已检查中文工作台显示正常。
 - 已完成独立宣传主页 `site/`：中文默认、中英文切换、产品流程说明、GitHub 仓库入口和 Release 下载入口；新增 GitHub Pages 工作流，部署时自动写入真实仓库地址。
 - 已补充 GitHub 发布、自定义域名和双语宣传文案文档；主页本地静态服务器首屏、桌面布局和移动断点已检查。
@@ -32,6 +32,7 @@
 - Windows 11 上使用无选区测试触发真实浮窗，提示“没有新的可复制文本”，未创建单词或遇见记录；两个临时测试窗口已关闭，测试时意外产生的一条收词已按精确时间和 ID 清理，数据库复核为 0 词、0 遇见。
 - 2026-10-01 品牌图改为单枚 Berkshire Swash 装饰性 P，去掉横线和底部蓝色；SVG、ICO、应用内 PNG、宣传页标记同步。字体轮廓的 SIL OFL 许可文本已收入仓库。NSIS 重建成功，静默覆盖安装退出码 0；release 与已安装 exe 提取图标的 PNG SHA-256 一致。已安装程序可启动，进程和主窗口标题均为 PaperVocab。
 - 宣传页新增与当前软件一致的收词汇总预览：搜索、首次收录日期筛选、词库总数、重复遇见次数；中英文文案同时更新，并明确选中文本会发送至自选翻译 API。Playwright 检查 1280px、390px 和 320px，词库预览完整、无横向溢出；320×700 首屏露出下一段。公开安装包仍未发布，主页正确显示待发布状态。
+- 日期筛选已修复 WebView2 原生空值显示 `yyyy/mm/日` 的混合语言问题：可见空值统一为“年 / 月 / 日”，选中后显示“2026年10月01日”；内部仍用 `YYYY-MM-DD`，未增加时区转换。浏览器及已安装 Windows 桌面版实测日历打开、Enter/Space 选择、Escape 取消和清除均正常；筛选 10 月 2 日为 0 条，清除后恢复 4 条，现有数据保留。`pnpm test` 7/7、TypeScript、Vite、NSIS 构建通过，覆盖安装退出码 0；独立只读审查无阻断发现。
 
 ## 当前实现
 

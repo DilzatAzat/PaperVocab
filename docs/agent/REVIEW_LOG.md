@@ -62,3 +62,4 @@
 - 浮窗由固定滚动外壳改为固定头部、可滚动内容区和固定底部关闭按钮，窗口高度调整为 300px，长释义不会把关闭操作推出视口。
 - 使用统一 PaperVocab 书页/星芒图标重新生成 Windows `icon.ico`，应用内品牌图和浏览器 favicon 同步替换。
 - `pnpm exec tsc --noEmit`、`pnpm exec vite build`、`cargo check`、`pnpm test` 7/7、`pnpm tauri build` 均通过；新 NSIS 包待提交后更新哈希。
+- 最后复核发现标题栏组件每次渲染都新建窗口句柄，可能重复注册 resize 监听；已改为稳定句柄并处理监听注册期间卸载的清理竞态。重建 NSIS 成功，最终包 SHA-256 为 `BF1582256BBDC6557B4E04264A8423A527ACD89C0D7C8202881E80D917812A44`。

@@ -9,7 +9,8 @@ type Page = "library" | "review" | "settings";
 type CaptureEvent = { word_id: number; original: string; status: string; message?: string; word?: Word };
 
 const tauriAvailable = typeof window !== "undefined" && "__TAURI_INTERNALS__" in window;
-const isPopup = tauriAvailable && getCurrentWindow().label === "capture";
+const currentWindow = tauriAvailable ? getCurrentWindow() : null;
+const isPopup = currentWindow?.label === "capture";
 const defaultSettings: Settings = { api_base_url: "https://api.openai.com/v1", model: "gpt-4o-mini", target_language: "中文", shortcut: "CTRL+SHIFT+L", has_api_key: false, shortcut_error: null };
 
 function formatTime(value: string) {
@@ -101,15 +102,16 @@ export function App() {
 }
 
 function WindowTitlebar() {
-  const window = tauriAvailable ? getCurrentWindow() : null;
+  const window = currentWindow;
   const [maximized, setMaximized] = useState(false);
 
   useEffect(() => {
     if (!window) return;
     let unlisten: (() => void) | undefined;
+    let cancelled = false;
     void window.isMaximized().then(setMaximized).catch(() => undefined);
-    void window.onResized(() => { void window.isMaximized().then(setMaximized).catch(() => undefined); }).then((fn) => { unlisten = fn; });
-    return () => { unlisten?.(); };
+    void window.onResized(() => { void window.isMaximized().then(setMaximized).catch(() => undefined); }).then((fn) => { if (cancelled) fn(); else unlisten = fn; });
+    return () => { cancelled = true; unlisten?.(); };
   }, [window]);
 
   const beginDrag = (event: MouseEvent<HTMLDivElement>) => {

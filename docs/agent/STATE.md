@@ -12,7 +12,7 @@
 - cargo fmt --all -- --check、node --test tests/*.test.mjs 通过。
 - cargo clippy --locked --all-targets -- -D warnings 通过。
 - Tauri NSIS 构建已通过，生成 x64 安装包；最新 release exe 的 PE Subsystem 为 2 (Windows GUI)。
-- 当前本地安装包：`src-tauri/target/release/bundle/nsis/PaperVocab_0.1.0_x64-setup.exe`，SHA-256 为 `29C38DB58B0505C525CD89B67A55B13F27092B71447BA03D554E9CEBFEB4C582`；本轮构建的 release exe PE Subsystem 为 2（Windows GUI）。
+- 当前本地安装包：`src-tauri/target/release/bundle/nsis/PaperVocab_0.1.0_x64-setup.exe`，SHA-256 为 `BF1582256BBDC6557B4E04264A8423A527ACD89C0D7C8202881E80D917812A44`；本轮构建的 release exe PE Subsystem 为 2（Windows GUI）。
 - 已用 Windows 桌面启动 release exe，进程存在且主窗口标题为 PaperVocab；此前已检查中文工作台显示正常。
 - 已完成独立宣传主页 `site/`：中文默认、中英文切换、产品流程说明、GitHub 仓库入口和 Release 下载入口；新增 GitHub Pages 工作流，部署时自动写入真实仓库地址。
 - 已补充 GitHub 发布、自定义域名和双语宣传文案文档；主页本地静态服务器首屏、桌面布局和移动断点已检查。

@@ -12,7 +12,7 @@
 - cargo fmt --all -- --check、node --test tests/*.test.mjs 通过。
 - cargo clippy --locked --all-targets -- -D warnings 通过。
 - Tauri NSIS 构建已通过，生成 x64 安装包；最新 release exe 的 PE Subsystem 为 2 (Windows GUI)。
-- 当前本地安装包：`src-tauri/target/release/bundle/nsis/PaperVocab_0.1.0_x64-setup.exe`，SHA-256 为 `BF1582256BBDC6557B4E04264A8423A527ACD89C0D7C8202881E80D917812A44`；本轮构建的 release exe PE Subsystem 为 2（Windows GUI）。
+- 当前本地安装包：`src-tauri/target/release/bundle/nsis/PaperVocab_0.1.0_x64-setup.exe`，SHA-256 为 `5AE0767B7199BE167CC32B689D3D12B4BC05D2284CDB711FF2AC09D8EE7C39E2`；release exe PE Subsystem 为 2（Windows GUI）。
 - 已用 Windows 桌面启动 release exe，进程存在且主窗口标题为 PaperVocab；此前已检查中文工作台显示正常。
 - 已完成独立宣传主页 `site/`：中文默认、中英文切换、产品流程说明、GitHub 仓库入口和 Release 下载入口；新增 GitHub Pages 工作流，部署时自动写入真实仓库地址。
 - 已补充 GitHub 发布、自定义域名和双语宣传文案文档；主页本地静态服务器首屏、桌面布局和移动断点已检查。
@@ -27,6 +27,9 @@
 - 浏览器视口复验：1280×720 和 390×844 无横向溢出，移动端手动收词输入高度正常；设置页在窄视口可滚动展示。
 - 本轮修复标题栏权限和交互：主窗 capability 现在允许最小化、最大化/还原、关闭和拖动；标题栏改为标准三按钮，整条标题栏可拖动。浮窗单独使用隐藏/拖动权限，内容区支持滚动，关闭按钮固定在底部。
 - 已将 PaperVocab 图标升级为论文书页与光标星芒标记，重新生成 `src-tauri/icons/icon.ico`，应用内品牌标记同步使用 `public/brand-mark.png`。
+- 本轮将取词浮窗顶部改为从窗口上沿开始的 62px 有色拖动区，正文仍独立滚动。Windows 11 实测标题区中部拖动位移 `(+120,+64)`，靠近上沿 8px 拖动位移 `(-80,-40)`；实际浮窗顶部关闭按钮点击后隐藏。
+- 品牌标记改为深色底纸页字母 P，已同步 SVG、ICO 和应用内 PNG。Cargo `build.rs` 现追踪 `icons/icon.ico`，避免图标变更时复用旧 Windows 资源库。重建并静默覆盖安装后，从 release exe 与已安装 exe 提取的 32px 图标逐像素一致，桌面快捷方式指向新 exe 且 Windows 快捷方式图标提取结果为新 P 标记。
+- Windows 11 上使用无选区测试触发真实浮窗，提示“没有新的可复制文本”，未创建单词或遇见记录；两个临时测试窗口已关闭，测试时意外产生的一条收词已按精确时间和 ID 清理，数据库复核为 0 词、0 遇见。
 
 ## 当前实现
 
@@ -34,11 +37,11 @@ Tauri 2 + React/TypeScript + Rust。后端实现托盘、单实例、全局快�
 
 ## 未验证/阻塞
 
-- 真实 PDF 选区、快捷键冲突实际占用、托盘菜单、浮窗不抢焦点、翻译 API、剪贴板图片/并发保护和安装包安装/退出仍需人工验收。
+- 真实 PDF 选区、快捷键冲突实际占用、托盘菜单、浮窗不抢焦点、翻译 API、剪贴板图片/并发保护和完整安装/退出流程仍需人工验收；本轮只验证了浮窗拖动/关闭、无选区提示和覆盖安装后的图标。
 - JSON 导入导出后端命令已实现，备份已保留目标语言字段；完整导入/导出 UI 仍待补齐。
 - 未使用真实 API 做翻译验证；未在真实 PDF、托盘、浮窗和安装包安装流程上重复人工验收；后续代码提交的 GitHub CI 结果仍需核对。
 - GitHub Release 尚未发布，`releases/latest` 返回 404；主页据此显示待发布状态，发布安装包后会自动链接到实际资产。
-- UI 改动已提交为 `3311d8f`；本轮标题栏、浮窗和图标修复已提交为 `ad2cdc6`，并通过 `git -c http.proxy=http://127.0.0.1:9567 push origin master` 推送到 `origin/master`；安装包仍保存在本机，尚未创建 GitHub Release。
+- UI 改动已提交为 `3311d8f`；先前标题栏、浮窗和图标修复已提交为 `ad2cdc6` 并推送到 `origin/master`。安装包保存在本机，尚未创建 GitHub Release；最新提交和远端状态以实际 Git 状态为准。
 - Playwright 生成的本地截图和会话目录不纳入版本控制。先前出现的根目录 `papervocab.exe` 与 `uninstall.exe` 没有纳入任何提交。
 
 ## 下一步

@@ -135,4 +135,32 @@ function ReviewPanel({ words, onReview }: { words: Word[]; onReview: (id: number
 
 function SettingsPanel({ settings, onSaved }: { settings: Settings | null; onSaved: (settings: Settings) => void }) { const [baseUrl, setBaseUrl] = useState(settings?.api_base_url || "https://api.openai.com/v1"); const [model, setModel] = useState(settings?.model || "gpt-4o-mini"); const [targetLanguage, setTargetLanguage] = useState(settings?.target_language || "中文"); const [key, setKey] = useState(""); const [shortcut, setShortcut] = useState(settings?.shortcut || "CTRL+SHIFT+L"); const [message, setMessage] = useState(""); useEffect(() => { if (settings) { setBaseUrl(settings.api_base_url); setModel(settings.model); setTargetLanguage(settings.target_language); setShortcut(settings.shortcut); } }, [settings]); const save = async () => { if (!tauriAvailable) { setMessage("请在 PaperVocab 桌面版中保存设置"); return; } try { const next = await api.saveSettings(baseUrl, model, targetLanguage, key, shortcut); onSaved(next); setKey(""); setMessage("设置已保存"); } catch (e) { setMessage(String(e)); } }; return <section className="settings-panel"><div className="settings-intro"><div className="eyebrow">TRANSLATION</div><h2>翻译服务</h2><p>当前支持 OpenAI Chat Completions 兼容协议，请求在本机后端发出，密钥保存在 Windows 凭据管理器中。兼容该协议的服务可以使用；原生 Anthropic 等其他协议暂不支持。</p></div><label>API Base URL<input value={baseUrl} onChange={(e) => setBaseUrl(e.target.value)} placeholder="https://api.openai.com/v1" /></label><label>模型<input value={model} onChange={(e) => setModel(e.target.value)} placeholder="gpt-4o-mini" /></label><label>API 密钥<input type="password" value={key} onChange={(e) => setKey(e.target.value)} placeholder={settings?.has_api_key ? "已保存，留空表示不修改" : "sk-…"} /></label><label>目标语言<select value={targetLanguage} onChange={(e) => setTargetLanguage(e.target.value)}><option value="中文">中文</option><option value="English">English</option><option value="Deutsch">Deutsch</option><option value="Français">Français</option><option value="日本語">日本語</option></select></label><div className="settings-divider" /><div className="settings-intro"><div className="eyebrow">CAPTURE</div><h2>全局取词</h2><p>快捷键会等待你松开组合键，再模拟 Ctrl+C 读取选区；完成取词后会尽量恢复原有文字或图片剪贴板。</p></div>{settings?.shortcut_error && <div className="error-banner settings-error">{settings.shortcut_error}</div>}<label>快捷键<input value={shortcut} onChange={(e) => setShortcut(e.target.value.toUpperCase())} placeholder="CTRL+SHIFT+L" /></label><div className="settings-actions"><button className="primary-button" onClick={() => void save()}>保存设置</button>{message && <span className="save-message">{message}</span>}</div></section>; }
 
-function CapturePopup({ capture }: { capture: CaptureEvent | null }) { const hide = () => void getCurrentWindow().hide(); const drag = (event: MouseEvent<HTMLDivElement>) => { if (event.button === 0 && !(event.target as HTMLElement).closest("button")) void getCurrentWindow().startDragging(); }; return <div className="popup-shell"><div className="popup-top" onMouseDown={drag}><div className="popup-brand"><BrandMark small /><span>PaperVocab</span></div><button className="popup-close-icon" aria-label="关闭取词浮窗" title="关闭" onClick={hide}><X size={16} /></button></div><div className="popup-body">{capture ? <><div className="popup-word">{capture.original}</div>{capture.status === "loading" || capture.status === "saved" ? <div className="popup-loading"><span className="spinner" />正在获取释义…</div> : capture.status === "failed" ? <div className="popup-fail"><strong>暂时无法翻译</strong><span>{capture.message || "请稍后重试"}</span></div> : <div className="popup-result"><div className="popup-pos">{capture.word?.part_of_speech}</div><strong>{capture.word?.meaning_zh || "暂无释义"}</strong><p>{capture.word?.explanation_zh}</p>{capture.word?.example_en && <div className="example"><span>生成例句</span>{capture.word.example_en}</div>}</div>}</> : <div className="popup-loading">等待选中的文本…</div>}</div><button className="popup-close" onClick={hide}>关闭</button></div>; }
+function CapturePopup({ capture }: { capture: CaptureEvent | null }) {
+  const hide = () => void getCurrentWindow().hide();
+  const hideOnMouseDown = (event: MouseEvent<HTMLButtonElement>) => {
+    if (event.button !== 0) return;
+    event.stopPropagation();
+    hide();
+  };
+  const drag = (event: MouseEvent<HTMLDivElement>) => {
+    if (event.button === 0 && !(event.target as HTMLElement).closest("button")) {
+      void getCurrentWindow().startDragging();
+    }
+  };
+
+  return <div className="popup-shell">
+    <div className="popup-top" onMouseDown={drag}>
+      <div className="popup-brand"><BrandMark small /><span>PaperVocab</span></div>
+      <button className="popup-close-icon" aria-label="关闭取词浮窗" title="关闭" onMouseDown={hideOnMouseDown} onClick={hide}><X size={16} /></button>
+    </div>
+    <div className="popup-body">{capture ? <>
+      <div className="popup-word">{capture.original}</div>
+      {capture.status === "loading" || capture.status === "saved"
+        ? <div className="popup-loading"><span className="spinner" />正在获取释义…</div>
+        : capture.status === "failed"
+          ? <div className="popup-fail"><strong>暂时无法翻译</strong><span>{capture.message || "请稍后重试"}</span></div>
+          : <div className="popup-result"><div className="popup-pos">{capture.word?.part_of_speech}</div><strong>{capture.word?.meaning_zh || "暂无释义"}</strong><p>{capture.word?.explanation_zh}</p>{capture.word?.example_en && <div className="example"><span>生成例句</span>{capture.word.example_en}</div>}</div>}
+    </> : <div className="popup-loading">等待选中的文本…</div>}</div>
+    <button className="popup-close" onMouseDown={hideOnMouseDown} onClick={hide}>关闭</button>
+  </div>;
+}

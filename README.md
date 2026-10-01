@@ -8,13 +8,13 @@ PaperVocab 是一个面向英文论文阅读的 Windows 本地单词本。
 
 ## 下载
 
-源码现已公开；Windows 安装包尚未发布。发布后可在 [GitHub Releases](https://github.com/DilzatAzat/PaperVocab/releases) 下载 `PaperVocab_*_x64-setup.exe`。第一版面向 Windows 10/11 x64。
+访问 [PaperVocab 主页](https://dilzat.com/PaperVocab/)，点击“下载 Windows 版”，或 [直接下载 v0.1.0 安装包](https://github.com/DilzatAzat/PaperVocab/releases/download/v0.1.0/PaperVocab_0.1.0_x64-setup.exe)。支持 Windows 10/11 x64；双击安装后即可从桌面快捷方式打开，无需 Node.js、Rust 或开发终端。
 
-访问 [宣传主页](https://dilzatazat.github.io/PaperVocab/)；发布安装包后，主页会自动找到最新的 GitHub Release 安装包。自定义域名和 Pages 设置见 [docs/DOMAIN.md](docs/DOMAIN.md)。
+首次翻译需配置自己的 API 地址、模型与密钥，软件不附带翻译服务或免费额度。若缺少 WebView2，安装程序需要联网下载运行时。当前安装包未签名，Windows 可能显示未知发布者或 SmartScreen 提示。校验文件和已知限制见 [发布说明](https://github.com/DilzatAzat/PaperVocab/releases/tag/v0.1.0)；自定义域名和 Pages 设置见 [docs/DOMAIN.md](docs/DOMAIN.md)。
 
 ## 使用
 
-1. 启动 PaperVocab，打开“设置”。
+1. 下载安装包并双击安装，启动 PaperVocab，打开“设置”。
 2. 填写 OpenAI 兼容 API Base URL、模型和 API 密钥。
 3. 选择目标语言；默认是中文。
 4. 在可复制文本的 PDF 中选中英文。

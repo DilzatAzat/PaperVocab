@@ -8,13 +8,13 @@ Select English text in a PDF or browser, press the global shortcut, and PaperVoc
 
 ## Download
 
-The source is public; the Windows installer has not been released yet. Once published, download `PaperVocab_*_x64-setup.exe` from [GitHub Releases](https://github.com/DilzatAzat/PaperVocab/releases). The first release targets Windows 10/11 x64.
+Visit the [PaperVocab site](https://dilzat.com/PaperVocab/) and click “Download for Windows”, or [download the v0.1.0 installer directly](https://github.com/DilzatAzat/PaperVocab/releases/download/v0.1.0/PaperVocab_0.1.0_x64-setup.exe). Supports Windows 10/11 x64. Run the installer, then open the desktop shortcut; Node.js, Rust, and a development terminal are not required.
 
-Visit the [promotional site](https://dilzatazat.github.io/PaperVocab/). Once an installer is published, the site finds the latest GitHub Release asset automatically. See [docs/DOMAIN.md](docs/DOMAIN.md) for a custom domain.
+Translation requires your own API URL, model, and key; no translation service or API credits are included. If WebView2 is missing, installation requires internet access to download it. The installer is currently unsigned, so Windows may show an unknown publisher or SmartScreen prompt. See the [release notes](https://github.com/DilzatAzat/PaperVocab/releases/tag/v0.1.0) for checksums and known limitations, and [docs/DOMAIN.md](docs/DOMAIN.md) for domain setup.
 
 ## Use
 
-1. Start PaperVocab and open Settings.
+1. Download and run the installer, then start PaperVocab and open Settings.
 2. Enter an OpenAI-compatible API Base URL, model, and API key.
 3. Choose a target language; Chinese is the default.
 4. Select copyable English text in a PDF.

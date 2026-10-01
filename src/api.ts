@@ -19,6 +19,9 @@ export type Word = {
 export type Encounter = { id: number; word_id: number; original: string; seen_at: string; source_sentence: string | null };
 export type Review = { id: number; word_id: number; rating: string; reviewed_at: string; due_at: string };
 export type Settings = { api_base_url: string; model: string; target_language: string; shortcut: string; has_api_key: boolean; shortcut_error: string | null };
+export type PlatformInfo = { os: "windows" | "macos"; default_shortcut: string; copy_shortcut: string; credential_store: string; accessibility_required: boolean; accessibility_granted: boolean };
+
+export const previewPlatform: PlatformInfo = { os: "windows", default_shortcut: "CTRL+SHIFT+L", copy_shortcut: "Ctrl+C", credential_store: "Windows 凭据管理器", accessibility_required: false, accessibility_granted: true };
 
 export const api = {
   words: (search?: string, date?: string) => invoke<Word[]>("list_words", { search: search || null, date: date || null }),
@@ -29,6 +32,10 @@ export const api = {
   undoDelete: (id: number) => invoke<void>("undo_delete", { id }),
   review: (wordId: number, rating: string) => invoke<Review>("save_review", { wordId, rating }),
   settings: () => invoke<Settings>("get_settings"),
+  platformInfo: () => invoke<PlatformInfo>("get_platform_info"),
+  requestCapturePermission: () => invoke<PlatformInfo>("request_capture_permission"),
+  openCapturePermissionSettings: () => invoke<void>("open_capture_permission_settings"),
+  showCaptureWindow: () => invoke<void>("show_capture_window"),
   saveSettings: (baseUrl: string, model: string, targetLanguage: string, apiKey: string, shortcut: string) =>
     invoke<Settings>("save_settings", { baseUrl, model, targetLanguage, apiKeyValue: apiKey || null, shortcut }),
   retry: (wordId: number) => invoke<void>("retry_translation", { wordId }),

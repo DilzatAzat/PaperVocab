@@ -1,6 +1,6 @@
 # PaperVocab 工程说明
 
-PaperVocab 是独立的 Windows 桌面项目。不要修改旧博客，不要复制博客的 Jekyll 路由、部署配置或历史进度。
+PaperVocab 是独立的 Windows / macOS 桌面项目。不要修改旧博客，不要复制博客的 Jekyll 路由、部署配置或历史进度。
 
 ## 恢复入口
 
@@ -16,4 +16,4 @@ PaperVocab 是独立的 Windows 桌面项目。不要修改旧博客，不要复
 - pnpm tauri dev
 - pnpm tauri build
 
-数据保存在 Windows 应用数据目录的 SQLite 中。翻译密钥只进入 Windows 凭据管理器。不要把密钥写入数据库、前端持久化、日志、导出或 Git。未在 Windows 实测的系统交互必须标为待实测。
+数据保存在各平台应用数据目录的 SQLite 中。翻译密钥只进入 Windows 凭据管理器或 macOS Keychain。不要把密钥写入数据库、前端持久化、日志、导出或 Git。未在对应平台交互式桌面实测的系统交互必须标为待实测。

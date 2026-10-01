@@ -13,8 +13,9 @@ use tauri::{Emitter, Manager, State};
 use tauri_plugin_global_shortcut::{GlobalShortcutExt, ShortcutState};
 mod backup;
 mod capture;
+mod platform;
 
-const DEFAULT_SHORTCUT: &str = "CTRL+SHIFT+L";
+use platform::DEFAULT_SHORTCUT;
 const DEFAULT_TARGET_LANGUAGE: &str = "中文";
 const KEYRING_SERVICE: &str = "PaperVocab";
 const KEYRING_USER: &str = "translation-api-key";
@@ -488,7 +489,7 @@ fn process_capture(app: tauri::AppHandle) {
     if state.capture_busy.swap(true, Ordering::SeqCst) {
         return;
     }
-    match capture::selection(capture::foreground()) {
+    match capture::foreground().and_then(capture::selection) {
         Ok(text) => {
             let word = state.db.lock().ok().and_then(|db| {
                 let target_language = get_target_language(&db);
@@ -773,6 +774,101 @@ fn import_json(state: State<'_, AppState>, data: String) -> Result<(), String> {
     backup::import(&mut db, &data)
 }
 
+#[tauri::command]
+fn get_platform_info() -> platform::PlatformInfo {
+    #[cfg(target_os = "macos")]
+    let granted = capture::accessibility_granted();
+    #[cfg(not(target_os = "macos"))]
+    let granted = true;
+    platform::PlatformInfo::for_os(std::env::consts::OS, granted)
+}
+
+#[tauri::command]
+fn request_capture_permission(
+    window: tauri::WebviewWindow,
+) -> Result<platform::PlatformInfo, String> {
+    platform::require_main_label(window.label())?;
+    #[cfg(target_os = "macos")]
+    {
+        capture::request_accessibility();
+        Ok(get_platform_info())
+    }
+    #[cfg(not(target_os = "macos"))]
+    Err("当前系统无需辅助功能授权".into())
+}
+
+#[tauri::command]
+fn open_capture_permission_settings(window: tauri::WebviewWindow) -> Result<(), String> {
+    platform::require_main_label(window.label())?;
+    #[cfg(target_os = "macos")]
+    {
+        // A fixed URL and executable: never accept a shell command or URL from IPC.
+        let status = std::process::Command::new("/usr/bin/open")
+            .arg("x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility")
+            .status()
+            .map_err(|_| "无法打开系统设置，请手动进入隐私与安全性 → 辅助功能")?;
+        if status.success() {
+            Ok(())
+        } else {
+            Err("无法打开系统设置，请手动进入隐私与安全性 → 辅助功能".into())
+        }
+    }
+    #[cfg(not(target_os = "macos"))]
+    Err("当前系统无需辅助功能授权".into())
+}
+
+#[tauri::command]
+async fn show_capture_window(
+    app: tauri::AppHandle,
+    window: tauri::WebviewWindow,
+) -> Result<(), String> {
+    platform::require_main_label(window.label())?;
+    let popup = app.get_webview_window("capture").ok_or("取词浮窗不可用")?;
+    #[cfg(target_os = "macos")]
+    {
+        let (send, receive) = std::sync::mpsc::channel();
+        app.run_on_main_thread(move || {
+            use objc2_app_kit::{NSWindow, NSWindowCollectionBehavior as Behavior};
+            let result = popup
+                .ns_window()
+                .map_err(|e| e.to_string())
+                .and_then(|ptr| {
+                    if ptr.is_null() {
+                        return Err("取词浮窗不可用".into());
+                    }
+                    // Tauri owns this NSWindow subclass, and the cloned live window is
+                    // held for the duration of this main-thread-only native operation.
+                    let native = unsafe { &*ptr.cast::<NSWindow>() };
+                    native.setCollectionBehavior(
+                        (native.collectionBehavior()
+                            & !(Behavior::FullScreenPrimary | Behavior::FullScreenNone))
+                            | Behavior::CanJoinAllSpaces
+                            | Behavior::FullScreenAuxiliary,
+                    );
+                    // Tauri .show() can make a macOS window key. This public AppKit API
+                    // orders it front without activating the app or taking reader focus.
+                    native.orderFrontRegardless();
+                    Ok(())
+                });
+            let _ = send.send(result);
+        })
+        .map_err(|e| e.to_string())?;
+        tauri::async_runtime::spawn_blocking(move || receive.recv())
+            .await
+            .map_err(|e| e.to_string())?
+            .map_err(|_| "取词浮窗不可用".to_string())?
+    }
+    #[cfg(not(target_os = "macos"))]
+    popup.show().map_err(|e| e.to_string())
+}
+
+fn show_main_window(app: &tauri::AppHandle) {
+    if let Some(window) = app.get_webview_window("main") {
+        let _ = window.show();
+        let _ = window.set_focus();
+    }
+}
+
 fn register_shortcut(app: &tauri::AppHandle, shortcut: &str) -> Result<(), String> {
     app.global_shortcut()
         .register(shortcut)
@@ -782,10 +878,7 @@ fn register_shortcut(app: &tauri::AppHandle, shortcut: &str) -> Result<(), Strin
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_single_instance::init(|app, _args, _cwd| {
-            if let Some(window) = app.get_webview_window("main") {
-                let _ = window.show();
-                let _ = window.set_focus();
-            }
+            show_main_window(app);
         }))
         .plugin(
             tauri_plugin_global_shortcut::Builder::new()
@@ -798,6 +891,8 @@ pub fn run() {
                 .build(),
         )
         .setup(|app| {
+            #[cfg(target_os = "macos")]
+            app.set_menu(tauri::menu::Menu::default(app.handle())?)?;
             let path = app.path().app_data_dir().map_err(|e| e.to_string())?;
             std::fs::create_dir_all(&path).map_err(|e| e.to_string())?;
             let connection =
@@ -829,12 +924,7 @@ pub fn run() {
                 .icon(app.default_window_icon().unwrap().clone())
                 .menu(&menu)
                 .on_menu_event(|app, event| match event.id().as_ref() {
-                    "show" => {
-                        if let Some(window) = app.get_webview_window("main") {
-                            let _ = window.show();
-                            let _ = window.set_focus();
-                        }
-                    }
+                    "show" => show_main_window(app),
                     "quit" => app.exit(0),
                     _ => {}
                 })
@@ -856,13 +946,23 @@ pub fn run() {
             undo_delete,
             save_review,
             get_settings,
+            get_platform_info,
+            request_capture_permission,
+            open_capture_permission_settings,
+            show_capture_window,
             save_settings,
             retry_translation,
             export_json,
             import_json
         ])
-        .run(tauri::generate_context!())
-        .expect("error while running PaperVocab");
+        .build(tauri::generate_context!())
+        .expect("error while building PaperVocab")
+        .run(|_app, _event| {
+            #[cfg(target_os = "macos")]
+            if let tauri::RunEvent::Reopen { .. } = _event {
+                show_main_window(_app);
+            }
+        });
 }
 
 #[cfg(test)]

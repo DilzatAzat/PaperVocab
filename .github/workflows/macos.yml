@@ -1,0 +1,141 @@
+name: macOS checks and installers
+
+on:
+  push:
+    branches: [codex/macos]
+    tags: ['macos-v*-beta.*']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  macos:
+    name: macOS ${{ matrix.architecture }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: macos-15
+            architecture: aarch64
+            binary_architecture: arm64
+          - runner: macos-15-intel
+            architecture: x64
+            binary_architecture: x86_64
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 45
+    env:
+      CARGO_TERM_COLOR: always
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.25.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: pnpm
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri -> target
+      - run: pnpm install --frozen-lockfile
+      - name: Check Mac release version
+        if: startsWith(github.ref, 'refs/tags/macos-v')
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: |
+          node --input-type=module <<'JS'
+          import fs from 'node:fs';
+          const match = /^macos-v(\d+\.\d+\.\d+)-beta\.\d+$/.exec(process.env.RELEASE_TAG);
+          const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+          const tauri = JSON.parse(fs.readFileSync('src-tauri/tauri.conf.json', 'utf8'));
+          const cargo = /^version\s*=\s*"([^"]+)"/m.exec(fs.readFileSync('src-tauri/Cargo.toml', 'utf8'));
+          if (!match || match[1] !== pkg.version || match[1] !== tauri.version || match[1] !== cargo?.[1]) throw new Error('Mac release/app version mismatch');
+          if (!fs.existsSync(`docs/releases/${process.env.RELEASE_TAG}.md`)) throw new Error('Missing Mac release notes');
+          JS
+      - run: pnpm test
+      - run: pnpm build
+      - run: cargo fmt --manifest-path src-tauri/Cargo.toml --all -- --check
+      - run: cargo test --locked --manifest-path src-tauri/Cargo.toml
+      - run: cargo clippy --locked --manifest-path src-tauri/Cargo.toml --all-targets -- -D warnings
+      - name: Build app and DMG with ad-hoc signature
+        run: pnpm exec tauri build --bundles app,dmg
+      - name: Verify architecture, signature, DMG and startup
+        env:
+          PACKAGE_ARCH: ${{ matrix.architecture }}
+          BINARY_ARCH: ${{ matrix.binary_architecture }}
+        run: |
+          set -euo pipefail
+          APP_PATH="src-tauri/target/release/bundle/macos/PaperVocab.app"
+          APP_BINARY="$APP_PATH/Contents/MacOS/papervocab"
+          DMG_PATH="src-tauri/target/release/bundle/dmg/PaperVocab_0.1.0_${PACKAGE_ARCH}.dmg"
+          test "$(lipo -archs "$APP_BINARY")" = "$BINARY_ARCH"
+          codesign --verify --deep --strict --verbose=2 "$APP_PATH"
+          hdiutil verify "$DMG_PATH"
+          mkdir -p macos-validation
+          "$APP_BINARY" > macos-validation/startup.log 2>&1 &
+          APP_PID=$!
+          trap 'kill "$APP_PID" 2>/dev/null || true' EXIT
+          for attempt in {1..8}; do
+            sleep 1
+            if ! kill -0 "$APP_PID" 2>/dev/null; then
+              cat macos-validation/startup.log
+              echo "Application exited before startup smoke test completed"
+              exit 1
+            fi
+          done
+          kill "$APP_PID"
+          wait "$APP_PID" || true
+          trap - EXIT
+          shasum -a 256 "$DMG_PATH" | sed 's|  .*/|  |' > macos-validation/SHA256SUMS.txt
+          printf '%s\n' "Architecture: $BINARY_ARCH" "Ad-hoc signature: verified" "DMG: verified" "Startup: alive for 8 seconds" "PDF capture, Accessibility and focus: pending desktop acceptance" > macos-validation/RESULTS.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: PaperVocab-macos-${{ matrix.architecture }}
+          path: |
+            src-tauri/target/release/bundle/dmg/*.dmg
+            macos-validation/
+          if-no-files-found: error
+          retention-days: 14
+      - name: Upload diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: PaperVocab-macos-${{ matrix.architecture }}-diagnostics
+          path: macos-validation/
+          if-no-files-found: ignore
+
+  publish:
+    name: Publish Mac preview
+    needs: macos
+    if: startsWith(github.ref, 'refs/tags/macos-v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: PaperVocab-macos-*
+          path: macos-packages
+      - name: Collect and checksum both installers
+        run: |
+          set -euo pipefail
+          mkdir release-assets
+          find macos-packages -type f -name '*.dmg' -exec cp {} release-assets/ \;
+          test "$(find release-assets -type f -name '*.dmg' | wc -l)" -eq 2
+          cd release-assets
+          sha256sum *.dmg > SHA256SUMS.txt
+      - uses: softprops/action-gh-release@v2
+        with:
+          name: PaperVocab macOS preview ${{ github.ref_name }}
+          body_path: docs/releases/${{ github.ref_name }}.md
+          prerelease: true
+          fail_on_unmatched_files: true
+          files: |
+            release-assets/*.dmg
+            release-assets/SHA256SUMS.txt

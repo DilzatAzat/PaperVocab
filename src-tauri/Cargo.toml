@@ -21,9 +21,18 @@ serde_json = "1"
 rusqlite = { version = "0.32", features = ["bundled"] }
 arboard = "3.4"
 reqwest = { version = "0.12", default-features = false, features = ["blocking", "json", "rustls-tls"] }
-keyring = { version = "3", features = ["windows-native"] }
 chrono = { version = "0.4", features = ["clock"] }
+
+[target.'cfg(target_os = "windows")'.dependencies]
+keyring = { version = "3", features = ["windows-native"] }
 windows = { version = "0.60", features = ["Win32_Foundation", "Win32_System_DataExchange", "Win32_UI_Input_KeyboardAndMouse", "Win32_UI_WindowsAndMessaging"] }
+
+[target.'cfg(target_os = "macos")'.dependencies]
+keyring = { version = "3", features = ["apple-native"] }
+objc2 = "0.6"
+objc2-app-kit = { version = "0.3", default-features = false, features = ["std", "NSPasteboard", "NSWindow", "NSResponder", "NSView", "NSGraphics"] }
+core-foundation = "0.10"
+core-graphics = "0.25"
 
 [features]
 custom-protocol = ["tauri/custom-protocol"]

@@ -8,4 +8,16 @@ window.PAPERVOCAB_RELEASE = {
 };
 
 // Set only after both public DMGs have been downloaded and their SHA-256 verified.
-window.PAPERVOCAB_MAC_RELEASE = null;
+window.PAPERVOCAB_MAC_RELEASE = {
+  "tag_name": "macos-v0.1.0-beta.1",
+  "assets": [
+    {
+      "name": "PaperVocab_0.1.0_aarch64.dmg",
+      "browser_download_url": "https://github.com/DilzatAzat/PaperVocab/releases/download/macos-v0.1.0-beta.1/PaperVocab_0.1.0_aarch64.dmg"
+    },
+    {
+      "name": "PaperVocab_0.1.0_x64.dmg",
+      "browser_download_url": "https://github.com/DilzatAzat/PaperVocab/releases/download/macos-v0.1.0-beta.1/PaperVocab_0.1.0_x64.dmg"
+    }
+  ]
+};

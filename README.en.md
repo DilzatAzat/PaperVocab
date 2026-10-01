@@ -12,7 +12,7 @@ Visit the [PaperVocab site](https://dilzat.com/PaperVocab/) and click “Downloa
 
 Translation requires your own API URL, model, and key; no translation service or API credits are included. If WebView2 is missing, installation requires internet access to download it. The installer is currently unsigned, so Windows may show an unknown publisher or SmartScreen prompt. See the [release notes](https://github.com/DilzatAzat/PaperVocab/releases/tag/v0.1.0) for checksums and known limitations, and [docs/DOMAIN.md](docs/DOMAIN.md) for domain setup.
 
-macOS preview: the site offers Apple Silicon and Intel DMGs for macOS 11 or later. Move the app into Applications and grant Accessibility access from Settings. This is an ad-hoc signed preview without Apple Developer ID signing or notarization; full PDF, permission, and popup behavior still await interactive Mac desktop testing. See [Mac acceptance and build instructions](docs/MACOS_TEST.md).
+macOS preview: download [Apple Silicon](https://github.com/DilzatAzat/PaperVocab/releases/download/macos-v0.1.0-beta.1/PaperVocab_0.1.0_aarch64.dmg) / [Intel Mac](https://github.com/DilzatAzat/PaperVocab/releases/download/macos-v0.1.0-beta.1/PaperVocab_0.1.0_x64.dmg) directly. the site offers Apple Silicon and Intel DMGs for macOS 11 or later. Move the app into Applications and grant Accessibility access from Settings. This is an ad-hoc signed preview without Apple Developer ID signing or notarization; full PDF, permission, and popup behavior still await interactive Mac desktop testing. See [Mac acceptance and build instructions](docs/MACOS_TEST.md).
 
 ## Use
 

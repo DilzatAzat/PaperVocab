@@ -16,7 +16,7 @@ function releaseFor(version = "0.2.0", url) {
   };
 }
 
-async function loadWithRelease(response, fallback, macFallback, repoUrl = repository) {
+async function loadWithRelease(response, fallback, macFallback, repoUrl = repository, branch = "master") {
   const status = { textContent: "" };
   const version = { textContent: "", hidden: true };
   const installer = { href: "", innerHTML: "" };
@@ -35,6 +35,23 @@ async function loadWithRelease(response, fallback, macFallback, repoUrl = reposi
   const helpTitle = { innerHTML: "", dataset: { i18n: "windowsHelpTitle" } };
   const trustAdvice = { innerHTML: "", dataset: { i18n: "windowsTrustAdvice" } };
   const toggle = { setAttribute() {}, addEventListener(_, callback) { this.click = callback; } };
+  const interactive = (dataset = {}) => ({ dataset, attributes: {}, hidden: false,
+    setAttribute(name, value) { this.attributes[name] = value; },
+    addEventListener(_, callback) { this.click = callback; },
+    focus() { this.focused = true; },
+  });
+  const guide = { href: "" };
+  const feedback = { href: "" };
+  const visual = interactive();
+  const card = interactive();
+  const lookup = interactive();
+  const review = interactive();
+  const answer = interactive();
+  const reveal = interactive();
+  const reset = interactive();
+  const close = interactive();
+  const demoStatus = { textContent: "" };
+  const steps = ["selection", "lookup", "review"].map((demoStep) => interactive({ demoStep }));
   const elements = new Map([
     ["[data-release-status]", status],
     ["[data-release-version]", version],
@@ -51,6 +68,10 @@ async function loadWithRelease(response, fallback, macFallback, repoUrl = reposi
     ["[data-windows-checksum-row]", checksumRow],
     ["[data-windows-sha256]", checksumText],
     ["[data-windows-checksum-link]", checksumLink],
+    [".hero-visual", visual], [".lookup-card", card],
+    ["[data-demo-lookup]", lookup], ["[data-demo-review]", review],
+    ["[data-demo-answer]", answer], ["[data-demo-reveal]", reveal],
+    ["[data-preview-reset]", reset], ["[data-demo-status]", demoStatus],
   ]);
   const document = {
     documentElement: {},
@@ -58,6 +79,10 @@ async function loadWithRelease(response, fallback, macFallback, repoUrl = reposi
     querySelectorAll(selector) {
       if (selector === "[data-release-page-link]") return [releaseNotes];
       if (selector === "[data-i18n]") return [helpTitle, trustAdvice, checksumLink];
+      if (selector === "[data-getting-started]") return [guide];
+      if (selector === "[data-feedback-link]") return [feedback];
+      if (selector === "[data-demo-step]") return steps;
+      if (selector === "[data-preview-close]") return [close];
       return [];
     },
   };
@@ -67,7 +92,7 @@ async function loadWithRelease(response, fallback, macFallback, repoUrl = reposi
     URL,
     window: {
       PAPERVOCAB_REPO: repoUrl,
-      PAPERVOCAB_BRANCH: "master",
+      PAPERVOCAB_BRANCH: branch,
       PAPERVOCAB_RELEASE: fallback,
       PAPERVOCAB_MAC_RELEASE: macFallback,
       localStorage: { getItem() { return null; }, setItem() {} },
@@ -77,8 +102,64 @@ async function loadWithRelease(response, fallback, macFallback, repoUrl = reposi
   runInNewContext(source, context);
   const immediately = { href: installer.href, heroHref: heroInstaller.href, status: status.textContent, macHref: macApple.href, sha256: checksumText.textContent, trust: trustStatus.textContent };
   await new Promise(setImmediate);
-  return { status, version, installer, heroInstaller, toggle, immediately, macStatus, macVersion, macApple, macIntel, macNotes, releaseNotes, trustStatus, fileMetadata, checksumRow, checksumText, checksumLink, helpTitle, trustAdvice };
+  return { status, version, installer, heroInstaller, toggle, immediately, macStatus, macVersion, macApple, macIntel, macNotes, releaseNotes, trustStatus, fileMetadata, checksumRow, checksumText, checksumLink, helpTitle, trustAdvice, guide, feedback,
+    demo: { visual, card, lookup, review, answer, reveal, reset, close, steps, status: demoStatus },
+    translations: runInNewContext("({ zh: Object.keys(copy.zh), en: Object.keys(copy.en) })", context),
+  };
 }
+
+test("setup guides follow language and repository while feedback stays on the configured project", async () => {
+  const project = "https://github.com/example/papers";
+  const state = await loadWithRelease(() => { throw new Error("offline"); }, undefined, undefined, project, "codex/preview");
+  assert.equal(state.guide.href, `${project}/blob/codex%2Fpreview/docs/GETTING_STARTED.md`);
+  assert.equal(state.feedback.href, `${project}/issues/new?template=onboarding_feedback.yml`);
+  state.toggle.click();
+  assert.equal(state.guide.href, `${project}/blob/codex%2Fpreview/docs/GETTING_STARTED.en.md`);
+  assert.equal(state.feedback.href, `${project}/issues/new?template=onboarding_feedback.yml`);
+});
+
+test("illustration can be closed and restored, and review meaning is revealed only on request", async () => {
+  const state = await loadWithRelease(() => { throw new Error("offline"); }, releaseFor());
+  const { demo } = state;
+  assert.equal(demo.card.hidden, false);
+  assert.equal(demo.visual.dataset.demoStage, "lookup");
+  demo.close.click();
+  assert.equal(demo.card.hidden, true);
+  assert.equal(demo.reset.focused, true);
+  assert.match(demo.status.textContent, /已关闭/);
+  state.toggle.click();
+  assert.equal(demo.card.hidden, true);
+  assert.match(demo.status.textContent, /Illustration closed/);
+  demo.steps[2].click();
+  assert.equal(demo.card.hidden, false);
+  assert.equal(demo.lookup.hidden, true);
+  assert.equal(demo.review.hidden, false);
+  assert.equal(demo.answer.hidden, true);
+  assert.equal(demo.reveal.attributes["aria-expanded"], "false");
+  demo.reveal.click();
+  assert.equal(demo.answer.hidden, false);
+  assert.equal(demo.reveal.attributes["aria-expanded"], "true");
+  state.toggle.click();
+  assert.equal(demo.answer.hidden, false);
+  assert.equal(demo.reveal.textContent, "收起释义");
+  demo.reset.click();
+  assert.equal(demo.visual.dataset.demoStage, "selection");
+  assert.equal(demo.card.hidden, true);
+  assert.equal(demo.answer.hidden, true);
+  demo.steps[1].click();
+  assert.equal(demo.card.hidden, false);
+  assert.equal(demo.lookup.hidden, false);
+  assert.equal(demo.steps[1].attributes["aria-pressed"], "true");
+});
+
+test("every landing page copy key has both Chinese and English text", async () => {
+  const state = await loadWithRelease(() => { throw new Error("offline"); });
+  const html = readFileSync(new URL("../site/index.html", import.meta.url), "utf8");
+  for (const [, key] of html.matchAll(/data-i18n="([^"]+)"/g)) {
+    assert.ok(state.translations.zh.includes(key), `Missing Chinese copy: ${key}`);
+    assert.ok(state.translations.en.includes(key), `Missing English copy: ${key}`);
+  }
+});
 
 const knownSha256 = "97556ea2fcba7f92618017ac8795beeaec43a2e72bd495de6c28a1ae163c4efe";
 

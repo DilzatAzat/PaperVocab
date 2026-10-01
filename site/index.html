@@ -1,136 +1,68 @@
 <!doctype html>
 <html lang="zh-CN">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#eef2f6" />
-    <meta name="description" content="PaperVocab 帮你在英文论文中快捷取词、收词与复习。原词保存在本地，选中文本会发送至你配置的翻译 API。" />
-    <meta property="og:title" content="PaperVocab | 让论文里的生词顺手留下" />
-    <meta property="og:description" content="选词、查看释义，再到收词汇总里搜索、按首次收录日期筛选和复习。" />
-    <meta property="og:type" content="website" />
-    <title>PaperVocab | 论文阅读伴侣</title>
-    <link rel="icon" type="image/png" href="brand-mark.png" />
-    <link rel="stylesheet" href="styles.css?v=10" />
-  </head>
-  <body>
-    <header class="site-header">
-      <a class="brand" href="#top" aria-label="PaperVocab home">
-        <img class="brand-mark" src="brand-mark.png" alt="" aria-hidden="true" />
-        <span>PaperVocab</span>
-      </a>
-      <nav class="site-nav" aria-label="Primary navigation">
-        <a href="#workflow" data-i18n="navWorkflow">使用流程</a>
-        <a href="#download" data-i18n="navDownload">下载</a>
-      </nav>
-      <button class="language-toggle" type="button" data-language-toggle aria-label="Switch language">EN</button>
-    </header>
-
-    <main id="top">
-      <section class="hero" aria-labelledby="hero-title">
-        <div class="hero-copy">
-          <p class="eyebrow" data-i18n="heroEyebrow">ENGLISH PAPER READING</p>
-          <h1 id="hero-title" data-i18n="heroTitle">Paper<em>Vocab</em></h1>
-          <p class="hero-tagline" data-i18n="heroTagline">论文生词，顺手留下。</p>
-          <p class="hero-lede" data-i18n="heroLede">选中一个词，按下快捷键。释义出现在阅读边缘，单词留在本地词本里，不打断你正在读的内容。</p>
-          <div class="hero-actions">
-            <a class="button button-primary" href="#download" data-hero-installer-link data-i18n="heroPrimary">下载 Windows 版 <span aria-hidden="true">↗</span></a>
-            <a class="button button-quiet" href="#mac-download" data-i18n="heroMac">macOS 测试版 <span aria-hidden="true">↗</span></a>
-            <a class="button button-quiet" href="#workflow" data-i18n="heroSecondary">了解使用流程</a>
-          </div>
-          <div class="hero-note"><span class="status-dot"></span><span data-i18n="heroNote">Windows 10/11 · 目标语言可选 · 默认中文</span></div>
-        </div>
-
-        <div class="hero-visual" aria-label="PaperVocab product preview">
-          <div class="paper-sheet">
-            <div class="paper-meta"><span data-i18n="paperMeta">RESEARCH NOTE 04</span><span>12:42</span></div>
-            <div class="paper-title" data-i18n="paperTitle">Learning representations from limited supervision</div>
-            <div class="paper-line wide"></div>
-            <div class="paper-line"></div>
-            <div class="paper-line short"></div>
-            <p class="paper-copy"><span data-i18n="paperCopyA">A useful representation should remain</span> <mark>robust</mark> <span data-i18n="paperCopyB">when the available labels are sparse.</span></p>
-            <div class="paper-line"></div>
-            <div class="paper-line wide"></div>
-            <div class="paper-line short"></div>
-            <div class="paper-footer"><span>01</span><span>PaperVocab</span></div>
-          </div>
-          <div class="lookup-card">
-            <div class="lookup-top"><img class="mini-mark" src="brand-mark.png" alt="" aria-hidden="true" /><span>PaperVocab</span><button type="button" data-preview-close aria-label="Close preview">×</button></div>
-            <div class="lookup-body"><div class="lookup-word">robust</div>
-              <div class="lookup-pos" data-i18n="lookupPos">形容词</div>
-              <div class="lookup-meaning" data-i18n="lookupMeaning">稳健的；具有适应力的</div>
-              <p data-i18n="lookupExplain">在论文中常指方法面对噪声、数据变化或有限监督时仍能保持稳定。</p>
-              <div class="lookup-example"><span data-i18n="lookupExampleLabel">生成例句</span><span data-i18n="lookupExample">The robust model performs well on unseen data.</span></div>
-            </div>
+<head>
+  <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><meta name="theme-color" content="#f6f5ef" />
+  <meta name="description" content="选中英文词，按下快捷键，查看释义并自动留在本地词库。PaperVocab 为 Windows 与 macOS 论文阅读提供收词和复习；翻译需自备兼容 API。" />
+  <meta property="og:title" content="PaperVocab | 读懂这个词，也记住它" /><meta property="og:description" content="从论文选词，到本地收词，再到复习。Windows 下载与 macOS 测试版，自备翻译 API。" /><meta property="og:type" content="website" />
+  <meta property="og:url" content="https://dilzat.com/PaperVocab/" /><meta property="og:image" content="https://dilzat.com/PaperVocab/media/social-card.png" /><meta property="og:image:width" content="1200" /><meta property="og:image:height" content="630" /><meta property="og:image:alt" content="PaperVocab：论文选词、本地收词、复习。产品界面示意。" /><meta property="og:locale" content="zh_CN" />
+  <meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content="PaperVocab | 读懂这个词，也记住它" /><meta name="twitter:description" content="从论文选词，到本地收词，再到复习。自备翻译 API。" /><meta name="twitter:image" content="https://dilzat.com/PaperVocab/media/social-card.png" /><link rel="canonical" href="https://dilzat.com/PaperVocab/" />
+  <title>PaperVocab | 读懂这个词，也记住它</title><link rel="icon" type="image/png" href="brand-mark.png" /><link rel="stylesheet" href="styles.css?v=launch-1" />
+</head>
+<body>
+  <a class="skip-link" href="#main-content" data-i18n="skipLink">跳到正文</a>
+  <header class="site-header" id="top">
+    <a class="brand" href="#top" aria-label="PaperVocab 首页"><img class="brand-mark" src="brand-mark.png" alt="" aria-hidden="true" /><span>PaperVocab</span></a>
+    <nav class="site-nav" aria-label="主要导航"><a href="#workflow" data-i18n="navWorkflow">使用流程</a><a href="#faq" data-i18n="navFaq">常见问题</a><a href="#download" data-i18n="navDownload">下载</a></nav>
+    <button class="language-toggle" type="button" data-language-toggle aria-label="Switch to English">EN</button>
+  </header>
+  <main id="main-content">
+    <section class="hero section-shell" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow" data-i18n="heroEyebrow">给读英文论文的你</p><h1 id="hero-title" data-i18n="heroTitle">读懂这个词。<br><em>也记住它。</em></h1>
+        <p class="hero-tagline" data-i18n="heroTagline">从论文选词，到你的本地词库。</p><p class="hero-lede" data-i18n="heroLede">选中英文词或短语，按快捷键查看释义。生词自动收好，读完再复习。</p>
+        <div class="hero-actions"><a class="button button-primary" href="#download" data-hero-installer-link data-i18n="heroPrimary">下载 Windows 版 <span aria-hidden="true">↗</span></a><a class="button button-quiet" href="#mac-download" data-i18n="heroMac">macOS 测试版 <span aria-hidden="true">↗</span></a></div>
+        <p class="hero-requirement" data-i18n="heroRequirement">需自备兼容 API · 翻译服务费用自付<br>PaperVocab 无需注册账号</p><a class="text-link" data-getting-started href="https://github.com/DilzatAzat/PaperVocab/blob/master/docs/GETTING_STARTED.md" data-i18n="heroGuide">第一次使用？看看配置指南 <span aria-hidden="true">→</span></a>
+      </div>
+      <div class="hero-visual" data-demo-stage="lookup" aria-label="PaperVocab 产品流程示意">
+        <div class="visual-caption"><span class="illustration-label" data-i18n="previewLabel">产品流程示意 · 非真实录屏</span><button class="demo-reset" type="button" data-preview-reset data-i18n="demoReset">重新演示 ↺</button></div>
+        <div class="reading-scene">
+          <div class="paper-sheet"><div class="paper-meta"><span data-i18n="paperMeta">示例论文片段</span><span>01 / 12</span></div><div class="paper-title">Learning representations<br>from limited supervision</div><div class="paper-line wide"></div><div class="paper-line"></div><p class="paper-copy">A useful representation should remain <mark>robust</mark> when the available labels are sparse.</p><div class="paper-line"></div><div class="paper-line wide"></div><div class="paper-line short"></div><div class="paper-footer"><span>RESEARCH NOTES</span><span>04</span></div></div>
+          <div class="lookup-card" id="lookup-demo"><div class="lookup-top"><img class="mini-mark" src="brand-mark.png" alt="" aria-hidden="true" /><span>PaperVocab</span><button type="button" data-preview-close aria-label="关闭示意浮窗">×</button></div>
+            <div class="lookup-body" data-demo-lookup><div class="lookup-word">robust</div><div class="lookup-pos" data-i18n="lookupPos">形容词</div><div class="lookup-meaning" data-i18n="lookupMeaning">稳健的；强健的</div><p data-i18n="lookupExplain">常用于描述对噪声或变化不敏感的方法。具体含义需结合原句判断。</p><div class="saved-note"><span aria-hidden="true">✓</span><span data-i18n="lookupSaved">已收录到本地词库 · 示意</span></div></div>
+            <div class="lookup-body review-preview" data-demo-review hidden><p class="review-kicker" data-i18n="demoReviewLabel">到期复习 · 示意</p><div class="lookup-word">robust</div><button type="button" class="review-reveal" data-demo-reveal data-i18n="demoReveal">查看释义</button><div class="demo-review-answer" data-demo-answer hidden><strong data-i18n="lookupMeaning">稳健的；强健的</strong><p data-i18n="demoReviewHint">在软件中选择认识程度，安排下次复习。</p></div></div>
             <button class="lookup-close" type="button" data-preview-close data-i18n="lookupClose">关闭</button>
-          </div>
+          </div><div class="selection-note" data-i18n="selectionNote">选中英文词或短语</div>
         </div>
-      </section>
-
-      <section class="signal-row" aria-label="Product principles">
-        <div><span class="signal-number">01</span><strong data-i18n="signalOneTitle">不离开阅读</strong><p data-i18n="signalOneBody">浮窗贴近你的阅读流程，不要求切换到另一个网页。</p></div>
-        <div><span class="signal-number">02</span><strong data-i18n="signalTwoTitle">先保存，再翻译</strong><p data-i18n="signalTwoBody">网络失败时，原词仍在本地词本里等待重试。</p></div>
-        <div><span class="signal-number">03</span><strong data-i18n="signalThreeTitle">按自己的节奏复习</strong><p data-i18n="signalThreeBody">在收词汇总中找回单词，再用三个简单选项完成复习。</p></div>
-      </section>
-
-      <section class="workflow section-shell" id="workflow">
-        <div class="section-intro"><p class="eyebrow" data-i18n="workflowEyebrow">THE WORKFLOW</p><h2 data-i18n="workflowTitle">从选词到复习，只需三步。</h2><p data-i18n="workflowLede">PaperVocab 在需要时出现，让查词、记录和复习自然衔接。</p></div>
-        <div class="workflow-grid">
-          <article class="workflow-step"><span>01</span><h3 data-i18n="stepOneTitle">选中</h3><p data-i18n="stepOneBody">在可复制的 PDF 或浏览器里选中英文词或短语。</p><div class="step-demo select-demo"><span>representation</span></div></article>
-          <article class="workflow-step"><span>02</span><h3 data-i18n="stepTwoTitle">按快捷键</h3><p data-i18n="stepTwoBody">原词立即保存，随后请求当前选择的目标语言释义。</p><div class="step-demo key-demo"><kbd>Ctrl / ⌘</kbd><b>+</b><kbd>Shift</kbd><b>+</b><kbd>L</kbd></div></article>
-          <article class="workflow-step"><span>03</span><h3 data-i18n="stepThreeTitle">回顾与复习</h3><p data-i18n="stepThreeBody">在收词汇总中搜索或按首次收录日期筛选，再进入到期复习。</p><div class="step-demo review-demo"><span data-i18n="reviewDemoWord">representation</span><i data-i18n="reviewDemoStatus">有点印象</i></div></article>
-        </div>
-      </section>
-
-      <section class="library-section section-shell" aria-labelledby="library-title">
-        <div class="library-copy"><p class="eyebrow" data-i18n="libraryEyebrow">YOUR WORDS, TOGETHER</p><h2 id="library-title" data-i18n="libraryTitle">收词汇总，随时找回。</h2><p data-i18n="libraryLede">全部收词集中在一处。搜索单词或释义、按首次收录日期筛选，同时看到词库总数与重复遇见次数。</p></div>
-        <div class="library-preview" aria-label="PaperVocab library preview">
-          <div class="library-preview-bar"><img src="brand-mark.png" alt="" aria-hidden="true" /><span>PaperVocab</span><span class="preview-controls" aria-hidden="true">−　□　×</span></div>
-          <div class="library-preview-layout">
-            <div class="library-preview-nav"><div class="preview-nav-active" data-i18n="libraryNav">收词汇总</div><div data-i18n="libraryReview">到期复习</div><div data-i18n="librarySettings">设置</div></div>
-            <div class="library-preview-content"><span class="preview-eyebrow">LOCAL LIBRARY</span><h3 data-i18n="libraryNav">收词汇总</h3>
-              <div class="library-preview-counts"><div><span data-i18n="libraryFiltered">当前筛选结果</span><strong>2</strong></div><div><span data-i18n="libraryTotal">本地词库总数</span><strong>2</strong></div></div>
-              <div class="library-preview-tools"><span data-i18n="librarySearch">搜索单词或释义</span><span data-i18n="libraryDate">首次收录日期</span></div>
-              <div class="library-preview-row"><strong>robust</strong><span data-i18n="libraryMeaningOne">稳健的</span><small data-i18n="libraryEncounter">遇见 2 次</small></div>
-              <div class="library-preview-row"><strong>representation</strong><span data-i18n="libraryMeaningTwo">表征；表示</span><small data-i18n="libraryEncounterOne">遇见 1 次</small></div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="feature-band">
-        <div class="feature-copy"><p class="eyebrow" data-i18n="featureEyebrow">MADE FOR RESEARCH READING</p><h2 data-i18n="featureTitle">查词、翻译，继续读。</h2><p data-i18n="featureLede">选词即查，释义和遇见记录随手留存。原文面向英文论文，目标语言可选择中文、英语、德语、法语或日语。</p></div>
-        <div class="feature-list">
-          <div><span class="feature-mark">↗</span><strong data-i18n="featureOneTitle">自选翻译服务</strong><p data-i18n="featureOneBody">目前支持兼容 OpenAI Chat Completions 协议的 API；密钥保存在 Windows 凭据管理器。</p></div>
-          <div><span class="feature-mark">⌁</span><strong data-i18n="featureTwoTitle">选择目标语言</strong><p data-i18n="featureTwoBody">当前可选中文、英语、德语、法语和日语；默认目标语言为中文。</p></div>
-          <div><span class="feature-mark">✓</span><strong data-i18n="featureThreeTitle">统一收词与复习</strong><p data-i18n="featureThreeBody">收词汇总支持搜索、首次收录日期筛选和总数查看；重复遇见不会被误算为复习。</p></div>
-        </div>
-      </section>
-
-      <section class="download-section section-shell" id="download">
-        <div class="download-copy"><p class="eyebrow" data-i18n="downloadEyebrow">READY WHEN YOU ARE</p><h2 data-i18n="downloadTitle">开始更顺畅的论文阅读。</h2><p data-i18n="downloadLede">下载安装包 → 运行安装 → 配置自己的 Chat Completions 兼容 API，即可开始使用。首次翻译需要你自己的 API 地址、模型与密钥；软件不内置翻译服务。</p></div>
-        <div class="download-platforms">
-          <div class="download-panel"><h3>Windows</h3><div class="download-version" aria-live="polite"><span class="status-dot"></span><span data-release-status>正在检查安装包</span><strong data-release-version hidden></strong></div><a class="button button-primary full" data-installer-link href="#download">查看发布进度 <span aria-hidden="true">↗</span></a><a class="release-link" data-release-page-link href="#" data-i18n="downloadReleasePage">查看 GitHub Release 页面</a><p data-i18n="downloadMeta">Windows 10/11 · x64 · NSIS installer</p>
-            <details class="download-help">
-              <summary data-i18n="windowsHelpTitle">下载说明与文件校验</summary>
-              <div class="download-help-content">
-                <p data-windows-trust-status>此版本的签名状态和校验信息以对应发布说明为准。</p>
-                <p data-i18n="windowsTrustAdvice">请先确认下载来自本项目 GitHub Release，并核对 SHA-256；确认后由你决定是否打开。文件校验用于确认文件一致性，并不等于安全审查。</p>
-                <p class="download-file-meta" data-windows-file-meta hidden></p>
-                <div class="download-checksum" data-windows-checksum-row hidden><span>SHA-256</span><code data-windows-sha256></code></div>
-                <a class="release-link" data-windows-checksum-link href="#download" data-i18n="windowsChecksums" hidden>下载 SHA256SUMS.txt</a>
-                <p class="download-policy"><a class="release-link" data-project-document="CODE_SIGNING_POLICY.md" href="https://github.com/DilzatAzat/PaperVocab/blob/master/CODE_SIGNING_POLICY.md">Code signing policy</a></p>
-              </div>
-            </details>
-          </div>
-          <div class="download-panel mac-download" id="mac-download"><h3>macOS <span class="preview-badge" data-i18n="macPreview">测试版</span></h3><div class="download-version" aria-live="polite"><span data-mac-release-status>正在检查安装包</span><strong data-mac-release-version hidden></strong></div><a class="button button-primary full" data-mac-installer-link="aarch64" href="#mac-download">Apple Silicon · M 系列</a><a class="button button-quiet full" data-mac-installer-link="x64" href="#mac-download">Intel Mac</a><p class="mac-requirements" data-i18n="macMeta">macOS 11 及以上 · DMG</p><p class="mac-install-note" data-i18n="macInstall">将应用拖入“应用程序”，打开后在设置中授权辅助功能。</p><p class="mac-validation-note" data-i18n="macValidation">测试版尚无 Apple Developer ID 签名及公证；完整 PDF 取词与浮窗行为待 Mac 桌面实测。</p><a class="release-link" data-mac-release-page-link href="#mac-download" data-i18n="macReleasePage">Mac 测试版发布说明</a></div>
-        </div>
-      </section>
-
-    </main>
-
-    <footer class="site-footer"><span>PaperVocab</span><span data-i18n="footerText">让论文阅读与翻译更顺畅。</span><nav class="site-footer-links" aria-label="Project information"><a data-project-document="PRIVACY.md" href="https://github.com/DilzatAzat/PaperVocab/blob/master/PRIVACY.md" data-i18n="privacyPolicy">隐私政策</a><a data-project-document="CODE_SIGNING_POLICY.md" href="https://github.com/DilzatAzat/PaperVocab/blob/master/CODE_SIGNING_POLICY.md">Code signing policy</a><a data-repo-link href="#top" data-i18n="footerRepo">GitHub 仓库</a></nav></footer>
-    <script src="config.js"></script>
-    <script src="release.js?v=trust-1"></script>
-    <script src="app.js?v=13"></script>
-  </body>
+        <div class="demo-controls" role="group" aria-label="产品流程示意步骤"><button type="button" data-demo-step="selection" aria-pressed="false"><span>01</span><span data-i18n="demoSelect">选词</span></button><button type="button" data-demo-step="lookup" aria-pressed="true"><span>02</span><span data-i18n="demoLookup">查看释义</span></button><button type="button" data-demo-step="review" aria-pressed="false"><span>03</span><span data-i18n="demoReview">留待复习</span></button></div><p class="demo-status" data-demo-status aria-live="polite">释义浮窗示意：原词先保存，再请求翻译。</p>
+      </div>
+    </section>
+    <section class="workflow section-shell" id="workflow" aria-labelledby="workflow-title">
+      <div class="section-intro"><p class="eyebrow" data-i18n="workflowEyebrow">一条自然的阅读路径</p><h2 id="workflow-title" data-i18n="workflowTitle">查过的词，不再散落。</h2><p data-i18n="workflowLede">把查词、记录和复习连在一起，减少来回切换和手动整理。</p></div>
+      <div class="workflow-grid"><article class="workflow-step"><span class="step-number">01 /</span><h3 data-i18n="stepOneTitle">在阅读中查词</h3><p data-i18n="stepOneBody">在可复制的 PDF 或浏览器中选词，按快捷键呼出小浮窗。快捷键可在设置中修改。</p><div class="step-demo key-demo"><kbd>Ctrl / ⌘</kbd><b>+</b><kbd>Shift</kbd><b>+</b><kbd>L</kbd></div></article><article class="workflow-step"><span class="step-number">02 /</span><h3 data-i18n="stepTwoTitle">原词先留下</h3><p data-i18n="stepTwoBody">先保存原词，再请求翻译。网络失败可以重试；再次遇见同一个词，会留下新的遇见记录。</p><div class="step-demo"><span class="saved-indicator" aria-hidden="true">✓</span><span data-i18n="stepSaved">本地词库 · robust</span></div></article><article class="workflow-step"><span class="step-number">03 /</span><h3 data-i18n="stepThreeTitle">读完，再记牢</h3><p data-i18n="stepThreeBody">先回想英文，再主动查看释义。用“不认识 / 有点印象 / 认识”安排下一次复习。</p><div class="step-demo review-demo"><span>robust</span><span data-i18n="reviewDemoStatus">有点印象</span></div></article></div>
+    </section>
+    <section class="library-section section-shell" aria-labelledby="library-title">
+      <div class="library-copy"><p class="eyebrow" data-i18n="libraryEyebrow">你的词，放在一起</p><h2 id="library-title" data-i18n="libraryTitle">读过的论文，<br>留下自己的词库。</h2><p data-i18n="libraryLede">一个收词汇总页，搜索单词或释义、按首次收录日期筛选、查看总数。重复遇见和完成复习分开记录。</p><ul class="library-notes"><li data-i18n="libraryNoteLocal">词库保存在设备本地。</li><li data-i18n="libraryNoteLanguage">目标语言：中文、英语、德语、法语、日语。</li><li data-i18n="libraryNoteContext">可以补充原句，帮助判断词义。</li></ul></div>
+      <div class="library-illustration"><p class="illustration-label" data-i18n="libraryPreviewLabel">收词汇总示意 · 非软件截图</p><div class="library-preview" aria-label="PaperVocab 收词汇总示意"><div class="library-preview-bar"><img src="brand-mark.png" alt="" aria-hidden="true" /><span>PaperVocab</span><span class="preview-controls" aria-hidden="true">−　□　×</span></div><div class="library-preview-layout"><div class="library-preview-nav"><div class="preview-nav-active" data-i18n="libraryNav">收词汇总</div><div data-i18n="libraryReview">到期复习</div><div data-i18n="librarySettings">设置</div></div><div class="library-preview-content"><span class="preview-eyebrow">LOCAL LIBRARY</span><h3 data-i18n="libraryNav">收词汇总</h3><div class="library-preview-counts"><div><span data-i18n="libraryFiltered">当前筛选结果</span><strong>2</strong></div><div><span data-i18n="libraryTotal">本地词库总数</span><strong>2</strong></div></div><div class="library-preview-tools"><span data-i18n="librarySearch">搜索单词或释义</span><span data-i18n="libraryDate">首次收录日期</span></div><div class="library-preview-row"><strong>robust</strong><span data-i18n="libraryMeaningOne">稳健的</span><small data-i18n="libraryEncounter">遇见 2 次</small></div><div class="library-preview-row"><strong>representation</strong><span data-i18n="libraryMeaningTwo">表征；表示</span><small data-i18n="libraryEncounterOne">遇见 1 次</small></div></div></div></div></div>
+    </section>
+    <section class="getting-started section-shell" id="start" aria-labelledby="start-title"><div><p class="eyebrow" data-i18n="startEyebrow">第一次使用</p><h2 id="start-title" data-i18n="startTitle">带上你的 API，<br>从一个词开始。</h2><p data-i18n="startLede">PaperVocab 不提供内置翻译额度。你需要一个兼容 OpenAI Chat Completions 协议的服务，以及它的地址、模型和密钥。</p><a class="text-link" data-getting-started href="https://github.com/DilzatAzat/PaperVocab/blob/master/docs/GETTING_STARTED.md" data-i18n="startGuide">查看逐步配置指南 <span aria-hidden="true">→</span></a></div><ol class="setup-list"><li><strong data-i18n="setupOneTitle">安装并打开</strong><p data-i18n="setupOneBody">选择对应系统的安装包。Mac 测试版还需要辅助功能权限。</p></li><li><strong data-i18n="setupTwoTitle">填写翻译设置</strong><p data-i18n="setupTwoBody">填写 API Base URL、模型与密钥，选择目标语言。服务费用由提供方收取。</p></li><li><strong data-i18n="setupThreeTitle">试一次真实选词</strong><p data-i18n="setupThreeBody">打开可复制文本的 PDF，选一个英文词，按快捷键。遇到问题可以反馈使用体验。</p></li></ol></section>
+    <section class="download-section section-shell" id="download" aria-labelledby="download-title">
+      <div class="download-copy"><p class="eyebrow" data-i18n="downloadEyebrow">开始使用</p><h2 id="download-title" data-i18n="downloadTitle">下一篇论文，<br>带上 PaperVocab。</h2><p data-i18n="downloadLede">选择你的系统，直接下载安装包。桌面界面目前为中文；此网页的中英文切换不代表软件已支持英文界面。</p><a class="text-link" data-feedback-link href="https://github.com/DilzatAzat/PaperVocab/issues/new?template=onboarding_feedback.yml" data-i18n="feedbackLink">告诉我你的首次使用体验 <span aria-hidden="true">→</span></a><p class="testing-note" data-i18n="testingNote">这是早期版本。真实 PDF、真实 API 与完整卸载仍待补齐验收，欢迎反馈具体问题。</p></div>
+      <div class="download-platforms">
+        <div class="download-panel"><h3>Windows <span class="platform-detail">x64</span></h3><div class="download-version" aria-live="polite"><span data-release-status>正在检查安装包</span><strong data-release-version hidden></strong></div><a class="button button-primary full" data-installer-link href="#download">查看发布进度 <span aria-hidden="true">↗</span></a><a class="release-link" data-release-page-link href="#" data-i18n="downloadReleasePage">查看 GitHub Release 页面</a><p class="platform-meta" data-i18n="downloadMeta">Windows 10/11 · x64 · NSIS installer</p><p class="windows-trust-notice" data-windows-trust-status>此版本的签名状态和校验信息以对应发布说明为准。</p><details class="download-help"><summary data-i18n="windowsHelpTitle">下载说明与文件校验</summary><div class="download-help-content"><p data-i18n="windowsTrustAdvice">请先确认下载来自本项目 GitHub Release，并核对 SHA-256；确认后由你决定是否打开。文件校验用于确认文件一致性，并不等于安全审查。</p><p class="download-file-meta" data-windows-file-meta hidden></p><div class="download-checksum" data-windows-checksum-row hidden><span>SHA-256</span><code data-windows-sha256></code></div><a class="release-link" data-windows-checksum-link href="#download" data-i18n="windowsChecksums" hidden>下载 SHA256SUMS.txt</a><p class="download-policy"><a class="release-link" data-project-document="CODE_SIGNING_POLICY.md" href="https://github.com/DilzatAzat/PaperVocab/blob/master/CODE_SIGNING_POLICY.md" data-i18n="signingPolicy">代码签名政策</a></p></div></details></div>
+        <div class="download-panel mac-download" id="mac-download"><h3>macOS <span class="preview-badge" data-i18n="macPreview">测试版</span></h3><div class="download-version" aria-live="polite"><span data-mac-release-status>正在检查安装包</span><strong data-mac-release-version hidden></strong></div><a class="button button-primary full" data-mac-installer-link="aarch64" href="#mac-download">Apple Silicon · M 系列</a><a class="button button-quiet full" data-mac-installer-link="x64" href="#mac-download">Intel Mac</a><p class="platform-meta" data-i18n="macMeta">macOS 11 及以上 · DMG</p><p class="mac-install-note" data-i18n="macInstall">选择对应芯片的安装包，将应用拖入“应用程序”。取词前在软件设置中授权辅助功能。</p><p class="mac-validation-note" data-i18n="macValidation">测试版未获 Apple Developer ID 签名与公证；完整 PDF 取词、权限和浮窗行为仍待 Mac 桌面实测。</p><a class="release-link" data-mac-release-page-link href="#mac-download" data-i18n="macReleasePage">Mac 测试版发布说明</a></div>
+      </div>
+    </section>
+    <section class="faq-section section-shell" id="faq" aria-labelledby="faq-title"><div class="section-intro"><p class="eyebrow" data-i18n="faqEyebrow">先了解，再开始</p><h2 id="faq-title" data-i18n="faqTitle">你可能想问。</h2></div><div class="faq-list">
+      <details><summary data-i18n="faqCostTitle">软件和翻译都免费吗？需要注册吗？</summary><p data-i18n="faqCostBody">PaperVocab 可免费下载和使用，无需注册 PaperVocab 账号。翻译需要你自己的 API，服务商可能收取费用，也可能要求注册；软件不附赠翻译额度。</p></details>
+      <details><summary data-i18n="faqProtocolTitle">只能用 OpenAI 吗？</summary><p data-i18n="faqProtocolBody">“OpenAI Chat Completions”在这里指 API 协议，不是限定服务品牌。兼容这个协议的服务可以配置，但并非所有服务都经过逐一验证；其他原生协议目前未实现。</p></details>
+      <details><summary data-i18n="faqPdfTitle">扫描 PDF 可以用吗？</summary><p data-i18n="faqPdfBody">当前取词依赖源应用能复制选中文本。扫描图片、复制受限的 PDF 或部分阅读器可能无法取词；第一版不提供 OCR，可以手动输入或粘贴。</p></details>
+      <details><summary data-i18n="faqOfflineTitle">没有网络时还能做什么？</summary><p data-i18n="faqOfflineBody">已有词库和复习记录保存在本地，可以离线查看。新的原词会先保存，在线翻译失败后可以重试；调用外部 API 需要网络。</p></details>
+      <details><summary data-i18n="faqPrivacyTitle">我的密钥、单词和原句放在哪里？</summary><p data-i18n="faqPrivacyBody">词库保存在本机 SQLite；密钥保存在 Windows 凭据管理器或 macOS Keychain。翻译时，所选文本和你补充的原句会发送给配置的 API 服务。PaperVocab 不上传剪贴板历史，服务商的数据政策需自行核对。</p></details>
+      <details><summary data-i18n="faqWarningTitle">为什么下载或启动时有安全提示？</summary><p data-i18n="faqWarningBody">已核对的 v0.1.0 Windows 安装包未签名，可能出现 Edge 少下载或 SmartScreen 提示；Mac 测试版未做 Developer ID 签名与公证。请核对官方 Release 和校验文件。不能通过关闭系统安全保护来代替签名与验收。</p></details>
+      <details><summary data-i18n="faqLanguageTitle">网页能切英文，软件也是双语吗？</summary><p data-i18n="faqLanguageBody">目前 Windows 与 Mac 桌面界面为中文。网页和使用文档提供中英文；释义的目标语言可选中文、英语、德语、法语或日语。同一个词当前只保留最近目标语言的释义。</p></details>
+    </div></section>
+  </main>
+  <footer class="site-footer"><a class="brand footer-brand" href="#top"><img class="brand-mark" src="brand-mark.png" alt="" aria-hidden="true" /><span>PaperVocab</span></a><span data-i18n="footerText">让每次阅读，都留下积累。</span><nav class="site-footer-links" aria-label="项目信息"><a data-project-document="PRIVACY.md" href="https://github.com/DilzatAzat/PaperVocab/blob/master/PRIVACY.md" data-i18n="privacyPolicy">隐私政策</a><a data-project-document="CODE_SIGNING_POLICY.md" href="https://github.com/DilzatAzat/PaperVocab/blob/master/CODE_SIGNING_POLICY.md" data-i18n="signingPolicy">代码签名政策</a><a data-repo-link href="https://github.com/DilzatAzat/PaperVocab" data-i18n="footerRepo">GitHub</a><a data-feedback-link href="https://github.com/DilzatAzat/PaperVocab/issues/new?template=onboarding_feedback.yml" data-i18n="footerFeedback">反馈</a></nav></footer>
+  <script src="config.js"></script><script src="release.js?v=trust-1"></script><script src="app.js?v=launch-1"></script>
+</body>
 </html>

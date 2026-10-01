@@ -1,0 +1,41 @@
+name: First-use feedback / 首次使用体验
+description: 告诉我们是否完成第一个词，哪些地方最难用。Share what worked and where you got stuck.
+title: "[Feedback] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢试用！这里是公开反馈，不要包含 API 密钥、个人信息、词库、请求头或论文全文。
+        This feedback is public. Do not include API keys, personal information, libraries, request headers or full papers.
+  - type: input
+    id: environment
+    attributes:
+      label: 软件版本、系统与阅读器 / App version, OS and reader
+      placeholder: "例如 / e.g. v0.1.0, Windows 11, Edge PDF"
+    validations:
+      required: true
+  - type: dropdown
+    id: first_word
+    attributes:
+      label: 第一个词完成到哪一步？ / How far did you get?
+      options:
+        - "已完成 PDF/浏览器取词和翻译 / Captured and translated from a PDF or browser"
+        - "手动输入翻译成功，快捷键未成功 / Manual translation worked; shortcut did not"
+        - "取到原词，翻译失败 / Captured a word; translation failed"
+        - "停在 API 配置 / Stuck at API setup"
+        - "停在下载或安装 / Stuck at download or installation"
+        - "还未尝试 / Not tried yet"
+    validations:
+      required: true
+  - type: textarea
+    id: experience
+    attributes:
+      label: 最有帮助或最困惑的地方 / What helped or confused you?
+      description: 简单描述步骤和结果，截图先脱敏。Describe steps and results; redact screenshots first.
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: 从哪里发现它？（可选） / Where did you find it? (optional)
+      placeholder: "朋友、B站、V2EX、GitHub… / Friend, video, GitHub…"

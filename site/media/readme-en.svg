@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">PaperVocab — a vocabulary companion for papers</title>
+  <desc id="desc">Understand a word. Keep it for next time. PRODUCT ILLUSTRATION · NOT A REAL API RESULT</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse"><stop stop-color="#F7F6F1"/><stop offset="1" stop-color="#E8F0EC"/></linearGradient>
+    <linearGradient id="glass" x1="690" y1="230" x2="1060" y2="505" gradientUnits="userSpaceOnUse"><stop stop-color="#FFFFFF" stop-opacity=".97"/><stop offset="1" stop-color="#F4F8F5" stop-opacity=".94"/></linearGradient>
+    <filter id="shadow" x="-40%" y="-30%" width="190%" height="190%"><feDropShadow dx="0" dy="16" stdDeviation="17" flood-color="#233D35" flood-opacity=".13"/></filter>
+  </defs>
+  <rect width="1200" height="630" rx="24" fill="url(#bg)"/>
+  <circle cx="1130" cy="50" r="280" fill="#DCE9E0" opacity=".42"/>
+  <svg x="62" y="55" xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 1024 1024" fill="none">
+  <defs>
+    <linearGradient id="surface" x1="175" y1="96" x2="840" y2="930" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#314247"/>
+      <stop offset="0.55" stop-color="#1D2C30"/>
+      <stop offset="1" stop-color="#101D21"/>
+    </linearGradient>
+    <linearGradient id="letter" x1="0" y1="0" x2="0.8" y2="1">
+      <stop stop-color="#FFFCF4"/>
+      <stop offset="1" stop-color="#E1EBE7"/>
+    </linearGradient>
+  </defs>
+  <rect x="32" y="32" width="960" height="960" rx="228" fill="url(#surface)"/>
+  <rect x="49" y="49" width="926" height="926" rx="211" stroke="#FFFFFF" stroke-opacity="0.19" stroke-width="10"/>
+  <!-- Berkshire Swash P outline; SIL OFL 1.1 license is in BerkshireSwash-OFL.txt. -->
+  <g transform="matrix(0.45665 0 0 -0.45665 182.72 849.75)">
+    <path d="M836 131Q836 54 795.5 19.0Q755 -16 672 -16Q588 -16 548.0 19.0Q508 54 508 131V1327Q508 1382 432 1382Q377 1382 320.5 1365.5Q264 1349 218.5 1320.5Q173 1292 144.0 1252.5Q115 1213 115 1167Q115 1135 123.5 1116.0Q132 1097 143.0 1087.5Q154 1078 165.5 1075.5Q177 1073 182 1073Q207 1073 223.0 1081.5Q239 1090 252.0 1099.5Q265 1109 276.5 1117.5Q288 1126 303 1126Q315 1126 328.5 1120.5Q342 1115 353.5 1103.0Q365 1091 373.0 1071.5Q381 1052 381 1024Q381 984 365.5 955.0Q350 926 325.5 906.5Q301 887 269.5 877.5Q238 868 207 868Q159 868 120.5 884.5Q82 901 55.0 930.0Q28 959 14.0 998.0Q0 1037 0 1081Q0 1164 31.0 1227.5Q62 1291 118.5 1337.0Q175 1383 254.0 1413.5Q333 1444 429.0 1462.0Q525 1480 634.5 1487.5Q744 1495 862 1495Q1148 1495 1295.0 1385.5Q1442 1276 1442 1071Q1442 971 1415.5 894.0Q1389 817 1344.5 761.5Q1300 706 1242.0 671.5Q1184 637 1122.0 622.0Q1060 607 997.5 610.0Q935 613 881 633L895 676Q970 653 1018.5 674.5Q1067 696 1094.5 751.0Q1122 806 1132.5 890.0Q1143 974 1143 1075Q1143 1151 1127.0 1213.5Q1111 1276 1083.5 1320.0Q1056 1364 1019.5 1388.5Q983 1413 942 1413Q910 1413 889.5 1403.5Q869 1394 857.5 1379.5Q846 1365 841.5 1348.5Q837 1332 836 1317Z" fill="url(#letter)"/>
+  </g>
+</svg>
+
+  <g font-family="Segoe UI, Microsoft YaHei, sans-serif" fill="#20362F">
+    <text x="134" y="96" font-size="28" font-weight="650" letter-spacing="-.7">PaperVocab</text>
+    <text x="64" y="164" font-size="12" font-weight="600" letter-spacing="2.4" fill="#5F756B">FOR READERS OF ENGLISH PAPERS</text>
+    <text x="60" y="243" font-size="51" font-weight="650" letter-spacing="-2.2">Understand a word.</text>
+    <text x="60" y="313" font-size="51" font-weight="650" letter-spacing="-2.2" fill="#447663">Keep it for next time.</text>
+    <text x="64" y="369" font-size="20" fill="#61746C">Look up while reading. Review afterwards.</text>
+    <text x="64" y="405" font-size="20" fill="#61746C">Select English. Press a shortcut.</text>
+    <rect x="64" y="442" width="260" height="34" rx="17" fill="#FFF" fill-opacity=".65" stroke="#CCD8CF"/>
+    <text x="81" y="464" font-size="13" fill="#526C60">Windows  /  macOS preview</text>
+  </g>
+  <g transform="rotate(4 918 287)" filter="url(#shadow)">
+    <rect x="759" y="106" width="345" height="369" rx="3" fill="#FFFEFB" stroke="#DCE2DA"/>
+    <text x="789" y="145" font-family="Segoe UI, sans-serif" font-size="10" letter-spacing="1.7" fill="#809086">RESEARCH NOTE  /  01</text>
+    <g font-family="Georgia, serif" fill="#2A3F36" font-size="24"><text x="789" y="195">Learning representations</text><text x="789" y="227">from limited supervision</text></g>
+    <rect x="790" y="253" width="264" height="4" fill="#E9EDE7"/><rect x="790" y="267" width="238" height="4" fill="#E9EDE7"/>
+    <rect x="790" y="296" width="68" height="27" rx="3" fill="#D6E6DC"/>
+    <text x="797" y="315" font-family="Georgia, serif" font-size="18" fill="#244333">robust</text>
+    <rect x="790" y="340" width="264" height="4" fill="#E9EDE7"/><rect x="790" y="354" width="226" height="4" fill="#E9EDE7"/><rect x="790" y="368" width="251" height="4" fill="#E9EDE7"/>
+    <text x="789" y="439" font-family="Segoe UI, sans-serif" font-size="10" fill="#9BA99F">01</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="665" y="319" width="367" height="198" rx="18" fill="url(#glass)" stroke="#FFF" stroke-width="2"/>
+    <rect x="665" y="319" width="367" height="38" rx="18" fill="#243E35"/>
+    <rect x="665" y="338" width="367" height="19" fill="#243E35"/>
+    <text x="688" y="344" font-family="Segoe UI, sans-serif" font-size="13" fill="#F1F6F1">PaperVocab</text>
+    <path d="M1003 333l10 10m0-10l-10 10" stroke="#D3E0D5" stroke-width="1.5"/>
+    <g font-family="Segoe UI, Microsoft YaHei, sans-serif"><text x="687" y="397" font-size="31" font-weight="650" fill="#20362F">robust</text><text x="688" y="421" font-size="12" fill="#6D8176">adjective · example explanation</text><text x="687" y="455" font-size="19" font-weight="600" fill="#2F5746">stable under change; resilient</text><text x="688" y="490" font-size="12" fill="#6D8176">Save first. Retry if translation fails.</text></g>
+  </g>
+  <path d="M64 531H576" stroke="#CDD9D0"/>
+  <g font-family="Segoe UI, Microsoft YaHei, sans-serif"><text x="64" y="564" font-size="12" font-weight="600" fill="#3C6150" letter-spacing=".6">CAPTURE  /  TRANSLATE  /  SAVE LOCALLY  /  REVIEW</text><text x="665" y="559" font-size="11" fill="#647A6D">PRODUCT ILLUSTRATION · NOT A REAL API RESULT</text><text x="64" y="596" font-size="13" fill="#667D70">dilzat.com/PaperVocab</text><text x="665" y="590" font-size="12" fill="#667D70">Free app · Bring your own translation API</text></g>
+</svg>

@@ -2,6 +2,16 @@
 
 更新时间：2026-10-01
 
+## 最新检查点：README 与宣传主页更新
+
+- 本轮在 `C:/Users/ROG/.codex/worktrees/download-trust/paperVocab`、`codex/launch-refresh` 工作，起点 `0dbcd64` 与 origin/master 一致。Desktop 项目的 Mac 分支和已有未提交修改保留。
+- 双语 README 改为用途、平台下载、第一个词、实用功能、FAQ 和反馈优先；新增双语首次使用指南、公开反馈表单、1200×630 分享图及可编辑 SVG。图示明确标为示意，不是真实软件录屏或 API 验收证据。
+- 宣传页改为暖纸色与深绿色，加入可关闭/恢复的选词、释义、复习三阶段示意、配置指南、FAQ 与反馈。完整双语、Windows/Mac 下载、精确版本校验和网络失败备用入口保留，未签名说明直接可见。
+- `docs/LAUNCH.md` 包含首批 20 位试用者目标、两周行动顺序、真实演示脚本、渠道策略和中英文文案。目标数字不是已有用户；没有发社交帖、联系他人或投广告。GitHub About/topics/social preview 是待维护者设置的建议。
+- 实际本地验证：`pnpm test` 27/27、两份主页 JS 语法、TypeScript、Vite、`git diff --check` 通过。新鲜只读 Reviewer 独立复验 27/27、相对链接、SVG XML 和事实声明，无阻断发现。主线程浏览器验证中英文 1280/390/320px 无横向溢出，三阶段、关闭/恢复、主动揭示、双语指南与完整哈希均正确。
+- 本轮没有改变桌面业务或安装包；真实 PDF、真实 API、完整卸载、Windows 签名和 Mac 真机验收继续待完成。
+- 当前代码审查与本地验收完成，公开推送与 Pages/CI、正式站核验尚待执行。下一条动作：正常推送 `HEAD:master`，等待该提交的工作流，核对正式 README 与主页。
+
 ## 已验证
 
 - Windows 10/11、Node/npm/pnpm、Rust/MSVC、WebView2、SQLite CLI 可用。

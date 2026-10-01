@@ -8,4 +8,4 @@ Do not paste API keys, database files, or paper content into public issues. Use 
 
 ## Data handling
 
-PaperVocab stores translation keys in Windows Credential Manager. Translation requests are sent to the Base URL configured by the user. The project does not provide an account system or cloud sync.
+PaperVocab stores translation keys in Windows Credential Manager or macOS Keychain. Translation requests are sent to the Base URL configured by the user. The project does not provide an account system or cloud sync.

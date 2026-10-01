@@ -34,6 +34,7 @@
           <p class="hero-lede" data-i18n="heroLede">选中一个词，按下快捷键。释义出现在阅读边缘，单词留在本地词本里，不打断你正在读的内容。</p>
           <div class="hero-actions">
             <a class="button button-primary" href="#download" data-hero-installer-link data-i18n="heroPrimary">下载 Windows 版 <span aria-hidden="true">↗</span></a>
+            <a class="button button-quiet" href="#mac-download" data-i18n="heroMac">macOS 测试版 <span aria-hidden="true">↗</span></a>
             <a class="button button-quiet" href="#workflow" data-i18n="heroSecondary">了解使用流程</a>
           </div>
           <div class="hero-note"><span class="status-dot"></span><span data-i18n="heroNote">Windows 10/11 · 目标语言可选 · 默认中文</span></div>
@@ -75,7 +76,7 @@
         <div class="section-intro"><p class="eyebrow" data-i18n="workflowEyebrow">THE WORKFLOW</p><h2 data-i18n="workflowTitle">从选词到复习，只需三步。</h2><p data-i18n="workflowLede">PaperVocab 在需要时出现，让查词、记录和复习自然衔接。</p></div>
         <div class="workflow-grid">
           <article class="workflow-step"><span>01</span><h3 data-i18n="stepOneTitle">选中</h3><p data-i18n="stepOneBody">在可复制的 PDF 或浏览器里选中英文词或短语。</p><div class="step-demo select-demo"><span>representation</span></div></article>
-          <article class="workflow-step"><span>02</span><h3 data-i18n="stepTwoTitle">按快捷键</h3><p data-i18n="stepTwoBody">原词立即保存，随后请求当前选择的目标语言释义。</p><div class="step-demo key-demo"><kbd>Ctrl</kbd><b>+</b><kbd>Shift</kbd><b>+</b><kbd>L</kbd></div></article>
+          <article class="workflow-step"><span>02</span><h3 data-i18n="stepTwoTitle">按快捷键</h3><p data-i18n="stepTwoBody">原词立即保存，随后请求当前选择的目标语言释义。</p><div class="step-demo key-demo"><kbd>Ctrl / ⌘</kbd><b>+</b><kbd>Shift</kbd><b>+</b><kbd>L</kbd></div></article>
           <article class="workflow-step"><span>03</span><h3 data-i18n="stepThreeTitle">回顾与复习</h3><p data-i18n="stepThreeBody">在收词汇总中搜索或按首次收录日期筛选，再进入到期复习。</p><div class="step-demo review-demo"><span data-i18n="reviewDemoWord">representation</span><i data-i18n="reviewDemoStatus">有点印象</i></div></article>
         </div>
       </section>
@@ -107,14 +108,17 @@
 
       <section class="download-section section-shell" id="download">
         <div class="download-copy"><p class="eyebrow" data-i18n="downloadEyebrow">READY WHEN YOU ARE</p><h2 data-i18n="downloadTitle">开始更顺畅的论文阅读。</h2><p data-i18n="downloadLede">下载安装包 → 运行安装 → 配置自己的 Chat Completions 兼容 API，即可开始使用。首次翻译需要你自己的 API 地址、模型与密钥；软件不内置翻译服务。</p></div>
-        <div class="download-panel"><div class="download-version" aria-live="polite"><span class="status-dot"></span><span data-release-status>正在检查安装包</span><strong data-release-version hidden></strong></div><a class="button button-primary full" data-installer-link href="#download">查看发布进度 <span aria-hidden="true">↗</span></a><a class="release-link" data-release-page-link href="#" data-i18n="downloadReleasePage">查看 GitHub Release 页面</a><p data-i18n="downloadMeta">Windows 10/11 · x64 · NSIS installer</p></div>
+        <div class="download-platforms">
+          <div class="download-panel"><h3>Windows</h3><div class="download-version" aria-live="polite"><span class="status-dot"></span><span data-release-status>正在检查安装包</span><strong data-release-version hidden></strong></div><a class="button button-primary full" data-installer-link href="#download">查看发布进度 <span aria-hidden="true">↗</span></a><a class="release-link" data-release-page-link href="#" data-i18n="downloadReleasePage">查看 GitHub Release 页面</a><p data-i18n="downloadMeta">Windows 10/11 · x64 · NSIS installer</p></div>
+          <div class="download-panel mac-download" id="mac-download"><h3>macOS <span class="preview-badge" data-i18n="macPreview">测试版</span></h3><div class="download-version" aria-live="polite"><span data-mac-release-status>正在检查安装包</span><strong data-mac-release-version hidden></strong></div><a class="button button-primary full" data-mac-installer-link="aarch64" href="#mac-download">Apple Silicon · M 系列</a><a class="button button-quiet full" data-mac-installer-link="x64" href="#mac-download">Intel Mac</a><p class="mac-requirements" data-i18n="macMeta">macOS · DMG</p><p class="mac-install-note" data-i18n="macInstall">将应用拖入“应用程序”，打开后在设置中授权辅助功能。</p><p class="mac-validation-note" data-i18n="macValidation">未签名、未经 Apple 公证；完整 PDF 取词与浮窗行为待 Mac 桌面实测。</p><a class="release-link" data-mac-release-page-link href="#mac-download" data-i18n="macReleasePage">Mac 测试版发布说明</a></div>
+        </div>
       </section>
 
     </main>
 
     <footer class="site-footer"><span>PaperVocab</span><span data-i18n="footerText">让论文阅读与翻译更顺畅。</span><a data-repo-link href="#top" data-i18n="footerRepo">GitHub 仓库</a></footer>
     <script src="config.js"></script>
-    <script src="release.js?v=0.1.0"></script>
-    <script src="app.js?v=11"></script>
+    <script src="release.js?v=macos-1"></script>
+    <script src="app.js?v=12"></script>
   </body>
 </html>

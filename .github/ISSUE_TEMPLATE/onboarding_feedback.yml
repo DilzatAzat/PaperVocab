@@ -19,12 +19,12 @@ body:
     attributes:
       label: 第一个词完成到哪一步？ / How far did you get?
       options:
+        - "还未尝试 / Not tried yet"
         - "已完成 PDF/浏览器取词和翻译 / Captured and translated from a PDF or browser"
         - "手动输入翻译成功，快捷键未成功 / Manual translation worked; shortcut did not"
         - "取到原词，翻译失败 / Captured a word; translation failed"
         - "停在 API 配置 / Stuck at API setup"
         - "停在下载或安装 / Stuck at download or installation"
-        - "还未尝试 / Not tried yet"
     validations:
       required: true
   - type: textarea

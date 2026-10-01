@@ -15,7 +15,11 @@
     git tag v0.1.0
     git push origin v0.1.0
 
-`release.yml` 会在 Windows runner 上重新构建 NSIS 安装包，并自动附加到 GitHub Release。发布前完成 `docs/WINDOWS_TEST.md` 中的真实安装和取词验收。
+发布前准备与 tag 同名的双语说明，例如 `docs/releases/v0.1.0.md`，核对版本号、自动检查、安装烟测及已知限制。完整桌面验收按 `docs/WINDOWS_TEST.md` 执行，未执行项目必须如实列入发布说明。
+
+`release.yml` 会在 Windows runner 上重新构建 NSIS 安装包，生成 `SHA256SUMS.txt`，并将两者附加到 GitHub Release。tag、package.json、Tauri 配置和 Cargo 的版本必须一致。
+
+工作流成功后下载公开安装包和 `SHA256SUMS.txt`，比对 SHA-256；确认资产名称、版本及下载链接正确后，更新 `site/release.js` 的 `window.PAPERVOCAB_RELEASE`，采用 GitHub Release 的 `tag_name` 与 `assets` 字段格式。只记录真实已发布且下载验证过的安装包。
 
 ## 发布宣传主页
 
@@ -23,7 +27,7 @@
 
     https://dilzatazat.github.io/PaperVocab/
 
-主页会检查 GitHub 最新 Release：存在 NSIS 安装包时主按钮直达该资产；尚未发布或检查失败时，主按钮指向 Releases 页面并显示对应状态。自定义域名的 DNS 与 Pages 设置见 [DOMAIN.md](DOMAIN.md)。
+首屏和下载区的按钮均直达安装包。主页先使用 `site/release.js` 中已验证的公开版本，再查询 GitHub 的最新 Release；查询暂时失败时仍能下载已验证版本。无已验证版本且未查询到安装包时，按钮指向 Releases 页面并显示对应状态。自定义域名的 DNS 与 Pages 设置见 [DOMAIN.md](DOMAIN.md)。
 
 ## 宣传素材
 

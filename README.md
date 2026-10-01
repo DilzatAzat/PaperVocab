@@ -12,7 +12,7 @@ PaperVocab 是一个面向英文论文阅读的 Windows / macOS 本地单词本�
 
 首次翻译需配置自己的 API 地址、模型与密钥，软件不附带翻译服务或免费额度。若缺少 WebView2，安装程序需要联网下载运行时。当前安装包未签名，Windows 可能显示未知发布者或 SmartScreen 提示。校验文件和已知限制见 [发布说明](https://github.com/DilzatAzat/PaperVocab/releases/tag/v0.1.0)；自定义域名和 Pages 设置见 [docs/DOMAIN.md](docs/DOMAIN.md)。
 
-macOS 测试版：主页提供 Apple Silicon（M 系列）和 Intel 两种 DMG。要求 macOS 11 及以上；安装后将应用移入“应用程序”，在软件设置中授权辅助功能。当前为 ad-hoc 签名测试版，尚无 Apple Developer ID 签名/公证，完整 PDF、权限与浮窗行为待 Mac 桌面实测。详见 [Mac 验收与构建](docs/MACOS_TEST.md)。
+macOS 测试版：直接下载 [Apple Silicon / M 系列](https://github.com/DilzatAzat/PaperVocab/releases/download/macos-v0.1.0-beta.1/PaperVocab_0.1.0_aarch64.dmg) / [Intel Mac](https://github.com/DilzatAzat/PaperVocab/releases/download/macos-v0.1.0-beta.1/PaperVocab_0.1.0_x64.dmg)。主页提供 Apple Silicon（M 系列）和 Intel 两种 DMG。要求 macOS 11 及以上；安装后将应用移入“应用程序”，在软件设置中授权辅助功能。当前为 ad-hoc 签名测试版，尚无 Apple Developer ID 签名/公证，完整 PDF、权限与浮窗行为待 Mac 桌面实测。详见 [Mac 验收与构建](docs/MACOS_TEST.md)。
 
 ## 使用
 
@@ -26,6 +26,8 @@ macOS 测试版：主页提供 Apple Silicon（M 系列）和 Intel 两种 DMG�
 当前仅实现 OpenAI Chat Completions 兼容协议：请求为 POST {API Base URL}/chat/completions，要求响应包含 choices[0].message.content，内容再解析为 PaperVocab 的 JSON 释义结构。使用该协议的服务可以配置；原生 Anthropic Messages API、Gemini 原生 API 等非兼容协议暂不支持直接接入。
 
 ## 开发
+
+Windows 开发使用 `codex/windows`，Mac 开发先切换到 `codex/macos`；`master` 主要维护公开主页。请在对应平台运行桌面构建。
 
     pnpm install
     pnpm test

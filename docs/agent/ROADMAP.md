@@ -27,3 +27,14 @@
 ## 第一版验收
 
 配置 API 后，在可复制 PDF 中选中文本按 Ctrl+Shift+L，看到浮窗释义，重启仍能查看，并完成一次复习。
+
+
+## macOS 版
+
+- [x] 建立 Windows / macOS 平台分支，复用现有工作台和业务逻辑
+- [x] 原生 Command+C/AX 焦点/pasteboard 保护、Keychain、辅助功能入口和浮窗适配
+- [x] Apple Silicon 与 Intel CI：测试、Clippy、DMG、签名与启动烟测
+- [x] 发布 macos-v0.1.0-beta.1，下载并核对两个 DMG 的 SHA-256
+- [x] 宣传主页双语 Mac 下载和网络失败备用入口
+- [ ] 交互式 Mac 桌面完成 docs/MACOS_TEST.md 的真实 PDF、权限、焦点、剪贴板、API 和安装卸载验收
+- [ ] 取得 Apple Developer 签名凭据，完成 Developer ID 签名与 Apple 公证

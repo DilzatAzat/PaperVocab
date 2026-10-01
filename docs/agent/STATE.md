@@ -78,6 +78,7 @@ Tauri 2 + React/TypeScript + Rust。后端实现托盘、单实例、全局快�
 - 已引入此前准备的 Windows 签名/真实验收文档和只读检查脚本，增加显式 `-AssetName` 支持浏览器 `(1)` 重名，不自动模糊匹配；未签名包仍被 `-RequireSigned` 拒绝。
 - 本轮实际验证：`pnpm test` 24/24、两份主页 JS 语法、TypeScript、Vite、`git diff --check` 通过。PowerShell 5.1/7 均完成真实公开包校验及 11 个正/负例（重命名成功；缺失/错误条目、篡改字节、重复/坏格式、路径资产名、缺应用、重复文件、真实未签名门禁拒绝）。临时回归脚本 `C:/Users/ROG/AppData/Local/Temp/papervocab-check-trust.ps1` 不纳入仓库。
 - 浏览器本地 1280px、390px、320px 中英文无横向溢出，下载说明、哈希及 Mac 链接正确；980px 也检查无横向溢出并保存真实截图至忽略的 `output/playwright/`。独立只读审查无新增阻断，独立 Node 24/24 与真实包校验通过。
-- 本轮不改桌面业务代码，未重新跑 Rust/安装器构建或真实 PDF/API/卸载流程；以前的未验收项继续保留。官网正式部署和生产校验尚待完成。
+- 本轮不改桌面业务代码，未在本机重新跑 Rust/安装器构建或真实 PDF/API/卸载流程；以前的未验收项继续保留。提交 `4bffc68` 已正常推送 master；Pages `36826644245` 和 Windows Checks/Installer `36826644274` 成功。
+- 正式站 `https://dilzat.com/PaperVocab/` 返回 HTTP 200。浏览器确认中英文版本说明、完整哈希、隐私/签名政策和双平台下载地址正确；实际点击校验文件链接得到 `C:/Users/ROG/Downloads/SHA256SUMS.txt`，内容与真实 v0.1.0 包再次 MATCH。一次辅助 `downloadMedia` 获取超时，改用实际点击和 download 事件后成功，不将超时记成通过。截图保存于 `output/playwright/download-trust-live.jpg`（不纳入 Git）。
 
-下一条工程动作：提交 scoped 变更、正常推送 master，等待 Pages 成功并核查正式页面、校验文件真实下载。下一条签名动作：维护者阅读 `docs/SIGNPATH_APPLICATION.md`，补联系人/MFA/角色/许可与真实声誉证据，本人阅读协议后提交；服务审核未完成前继续明确未签名。
+本轮工程任务已完成并发布。下一条签名动作：维护者阅读 `docs/SIGNPATH_APPLICATION.md`，补联系人/MFA/角色/许可与真实声誉证据，本人阅读协议后提交；服务审核未完成前继续明确未签名。审批后再按真实服务配置接入签名及新版本验收；会话结束后不会自行等待审批或继续运行。

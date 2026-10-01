@@ -64,6 +64,6 @@ Tauri 2 + React/TypeScript + Rust。后端实现托盘、单实例、全局快�
 - 独立审查发现并修复 Mac 浮窗首次点击和 DMG 校验写死版本两项；第二轮复核无新增阻断。
 - 最终发布流程 `36819037816` 全部成功；tag `macos-v0.1.0-beta.1` 对应 `6101609`。两种架构前端/Rust 检查、DMG 构建、lipo、ad-hoc 签名、DMG 完整性和 8 秒启动均通过。
 - 公开 DMG 已真实下载校验：Apple Silicon 6,351,305 字节，SHA-256 `92843639bd31e39a7066d038c4d39feeb4f026691959f521b0a6c0c7945812d3`；Intel 6,689,310 字节，SHA-256 `6592fb026881e0a1834fd5459f71309fa603d952efd2147eb7388b682feec4d3`；均与 Mac Release 的 SHA256SUMS 一致。Windows v0.1.0 下载保留。
-- 双语主页与 README 已增加两种 Mac 芯片下载和真实备用元数据；主页提交 `d934927` 已推送，等待线上部署及点击复验。
+- 双语主页与 README 已增加两种 Mac 芯片下载和真实备用元数据；主页提交 `d934927` 已推送，Pages `36820540213` 成功；正式站中文 Apple Silicon 和英文 Intel 下载实点击得到的两个 DMG 哈希均匹配，双语 1280/390/320px 无横向溢出。模拟 GitHub 版本 API 失败后，Windows 与两个 Mac 的真实备用下载仍可用。
 - Mac 测试版仅有 ad-hoc 签名，无 Developer ID/Apple 公证。完整 PDF、权限授权、剪贴板并发、浮窗焦点/全屏、真实 API、安装卸载继续按 docs/MACOS_TEST.md 标为待桌面实测，不能将 CI 启动等同全部实测。
 - 并行 Windows 签名/验收文档的本地修改已保留，未混入 Mac 提交或发布包。

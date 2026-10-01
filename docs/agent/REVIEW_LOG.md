@@ -99,6 +99,6 @@
 
 - 只读 Explorer/Planner 明确平台 API、Keychain target feature、非激活浮窗与独立 Mac Release；一个 Coder 负责 app，Boss 负责独立的主页/CI/发布文件。
 - 新鲜独立 Reviewer 核查原生 API/CF 所有权、焦点/剪贴板防旧内容、权限动作、共享 UI、日期回退、资产 URL/版本/备用入口、图标和发布工作流。发现 Mac 非激活浮窗需 acceptFirstMouse，以及 DMG 验证不能写死 0.1.0；已修复并复核无新增阻断。
-- 本地 19 项 Node、13 项 Rust、TS、Vite、fmt、Clippy 通过；最终双架构 Mac CI `36819037816` 成功，验证架构/ad-hoc 签名/DMG/8 秒启动。公开两个 DMG 真实下载 SHA-256 均与校验文件一致。
+- 本地 19 项 Node、13 项 Rust、TS、Vite、fmt、Clippy 通过；最终双架构 Mac CI `36819037816` 成功，验证架构/ad-hoc 签名/DMG/8 秒启动。公开两个 DMG 真实下载 SHA-256 均与校验文件一致；Pages `36820540213` 成功，正式站中文 Apple Silicon / 英文 Intel 实点击下载后再次比对一致，双语三个视口与版本 API 失败备用入口通过。
 - 浏览器已验证中英文 1280/390/320px 主页无溢出；模拟缺失 showPicker 的日期回退拒绝无效日期、接受闰日、可清除，Escape 恢复焦点。上述模拟仅限浏览器兼容回退，不等于 Mac 桌面实测。
 - 接受实现与测试版发布范围；真实取词/权限/焦点/全屏/API 及完整安装卸载仍按 Mac 验收表待实测。无 Apple 签名凭据，未宣称正式签名、公证或全阅读器兼容。

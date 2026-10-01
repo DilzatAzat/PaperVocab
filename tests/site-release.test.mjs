@@ -16,11 +16,16 @@ function releaseFor(version = "0.2.0", url) {
   };
 }
 
-async function loadWithRelease(response, fallback) {
+async function loadWithRelease(response, fallback, macFallback) {
   const status = { textContent: "" };
   const version = { textContent: "", hidden: true };
   const installer = { href: "", innerHTML: "" };
   const heroInstaller = { href: "", innerHTML: "" };
+  const macStatus = { textContent: "" };
+  const macVersion = { textContent: "", hidden: true };
+  const macApple = { href: "", innerHTML: "" };
+  const macIntel = { href: "", innerHTML: "" };
+  const macNotes = { href: "" };
   const toggle = { setAttribute() {}, addEventListener(_, callback) { this.click = callback; } };
   const elements = new Map([
     ["[data-release-status]", status],
@@ -28,6 +33,11 @@ async function loadWithRelease(response, fallback) {
     ["[data-installer-link]", installer],
     ["[data-hero-installer-link]", heroInstaller],
     ["[data-language-toggle]", toggle],
+    ["[data-mac-release-status]", macStatus],
+    ["[data-mac-release-version]", macVersion],
+    ['[data-mac-installer-link="aarch64"]', macApple],
+    ['[data-mac-installer-link="x64"]', macIntel],
+    ["[data-mac-release-page-link]", macNotes],
   ]);
   const document = {
     documentElement: {},
@@ -42,15 +52,81 @@ async function loadWithRelease(response, fallback) {
       PAPERVOCAB_REPO: repository,
       PAPERVOCAB_BRANCH: "master",
       PAPERVOCAB_RELEASE: fallback,
+      PAPERVOCAB_MAC_RELEASE: macFallback,
       localStorage: { getItem() { return null; }, setItem() {} },
     },
-    fetch: async () => typeof response === "function" ? response() : response,
+    fetch: async (url) => typeof response === "function" ? response(url) : response,
   };
   runInNewContext(source, context);
-  const immediately = { href: installer.href, heroHref: heroInstaller.href, status: status.textContent };
+  const immediately = { href: installer.href, heroHref: heroInstaller.href, status: status.textContent, macHref: macApple.href };
   await new Promise(setImmediate);
-  return { status, version, installer, heroInstaller, toggle, immediately };
+  return { status, version, installer, heroInstaller, toggle, immediately, macStatus, macVersion, macApple, macIntel, macNotes };
 }
+
+function macReleaseFor(version = "0.1.0", beta = 1) {
+  const tag = `macos-v${version}-beta.${beta}`;
+  return { tag_name: tag, prerelease: true, assets: ["aarch64", "x64"].map((architecture) => ({
+    name: `PaperVocab_${version}_${architecture}.dmg`,
+    browser_download_url: `${repository}/releases/download/${tag}/PaperVocab_${version}_${architecture}.dmg`,
+  })) };
+}
+
+test("Mac preview exposes both chips independently of the Windows release", async () => {
+  const mac = macReleaseFor();
+  const windows = releaseFor();
+  const state = await loadWithRelease((url) => ({ status: 200, ok: true, json: async () => url.endsWith('/latest') ? windows : [mac] }));
+  assert.equal(state.installer.href, windows.assets[0].browser_download_url);
+  assert.equal(state.macApple.href, mac.assets[0].browser_download_url);
+  assert.equal(state.macIntel.href, mac.assets[1].browser_download_url);
+  assert.equal(state.macStatus.textContent, "Mac 测试版已发布");
+  assert.equal(state.macVersion.hidden, false);
+  assert.equal(state.macNotes.href, `${repository}/releases/tag/${mac.tag_name}`);
+  state.toggle.click();
+  assert.match(state.macApple.innerHTML, /Apple Silicon/);
+  assert.match(state.macIntel.innerHTML, /Intel Mac/);
+  assert.equal(state.macApple.href, mac.assets[0].browser_download_url);
+  assert.equal(state.installer.href, windows.assets[0].browser_download_url);
+});
+
+test("verified Mac links render immediately and survive API failure", async () => {
+  const mac = macReleaseFor();
+  const state = await loadWithRelease(() => { throw new Error('offline'); }, releaseFor(), mac);
+  assert.equal(state.immediately.macHref, mac.assets[0].browser_download_url);
+  assert.equal(state.macApple.href, mac.assets[0].browser_download_url);
+  assert.equal(state.macIntel.href, mac.assets[1].browser_download_url);
+  assert.equal(state.macStatus.textContent, "Mac 测试版已发布");
+});
+
+test("incomplete or noncanonical Mac assets never become installer links", async () => {
+  const candidates = [macReleaseFor(), macReleaseFor(), macReleaseFor(), macReleaseFor()];
+  candidates[0].assets.pop();
+  candidates[1].assets[0].browser_download_url += '?redirect=evil';
+  candidates[2].assets[1].browser_download_url = candidates[2].assets[1].browser_download_url.replace('github.com', 'github.com.evil.example');
+  candidates[3].tag_name = 'macos-v0.2.0-beta.1';
+  for (const candidate of candidates) {
+    const state = await loadWithRelease({ status: 200, ok: true, json: async () => [candidate] }, releaseFor(), candidate);
+    assert.equal(state.macApple.href, `${repository}/releases`);
+    assert.equal(state.macIntel.href, `${repository}/releases`);
+    assert.equal(state.macVersion.hidden, true);
+    assert.equal(state.installer.href, releaseFor().assets[0].browser_download_url);
+  }
+});
+
+test("older Mac previews and drafts cannot replace verified downloads", async () => {
+  const fallback = macReleaseFor('0.2.0', 2);
+  const draft = { ...macReleaseFor('0.3.0', 1), draft: true };
+  const state = await loadWithRelease({ status: 200, ok: true, json: async () => [macReleaseFor('0.1.0', 9), macReleaseFor('0.2.0', 1), draft] }, releaseFor(), fallback);
+  assert.equal(state.macVersion.textContent, fallback.tag_name);
+  assert.equal(state.macApple.href, fallback.assets[0].browser_download_url);
+});
+
+test("newer Mac preview replaces fallback without replacing Windows", async () => {
+  const next = macReleaseFor('0.1.0', 2);
+  const state = await loadWithRelease({ status: 200, ok: true, json: async () => [next, macReleaseFor()] }, releaseFor(), macReleaseFor());
+  assert.equal(state.macVersion.textContent, next.tag_name);
+  assert.equal(state.macIntel.href, next.assets[1].browser_download_url);
+  assert.equal(state.installer.href, releaseFor().assets[0].browser_download_url);
+});
 
 test("unpublished release links to the Releases page", async () => {
   const { status, version, installer, heroInstaller } = await loadWithRelease({ status: 404 });

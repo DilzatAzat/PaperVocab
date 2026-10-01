@@ -72,7 +72,8 @@ jobs:
           set -euo pipefail
           APP_PATH="src-tauri/target/release/bundle/macos/PaperVocab.app"
           APP_BINARY="$APP_PATH/Contents/MacOS/papervocab"
-          DMG_PATH="src-tauri/target/release/bundle/dmg/PaperVocab_0.1.0_${PACKAGE_ARCH}.dmg"
+          APP_VERSION=$(node -p "require('./package.json').version")
+          DMG_PATH="src-tauri/target/release/bundle/dmg/PaperVocab_${APP_VERSION}_${PACKAGE_ARCH}.dmg"
           test "$(lipo -archs "$APP_BINARY")" = "$BINARY_ARCH"
           codesign --verify --deep --strict --verbose=2 "$APP_PATH"
           hdiutil verify "$DMG_PATH"

@@ -27,6 +27,8 @@ macOS 测试版：主页提供 Apple Silicon（M 系列）和 Intel 两种 DMG�
 
 ## 开发
 
+Windows 开发使用 `codex/windows`，Mac 开发先切换到 `codex/macos`；`master` 主要维护公开主页。请在对应平台运行桌面构建。
+
     pnpm install
     pnpm test
     pnpm exec tsc --noEmit

@@ -27,6 +27,8 @@ The current release implements only the OpenAI Chat Completions compatible proto
 
 ## Development
 
+Use `codex/windows` for Windows development and switch to `codex/macos` for Mac development. `master` primarily maintains the public site. Run desktop builds on the corresponding platform.
+
     pnpm install
     pnpm test
     pnpm exec tsc --noEmit

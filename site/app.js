@@ -9,8 +9,9 @@ const copy = {
     libraryEyebrow: "YOUR WORDS, TOGETHER", libraryTitle: "收词汇总，随时找回。", libraryLede: "全部收词集中在一处。搜索单词或释义、按首次收录日期筛选，同时看到词库总数与重复遇见次数。", libraryNav: "收词汇总", libraryReview: "到期复习", librarySettings: "设置", libraryFiltered: "当前筛选结果", libraryTotal: "本地词库总数", librarySearch: "搜索单词或释义", libraryDate: "首次收录日期", libraryMeaningOne: "稳健的", libraryMeaningTwo: "表征；表示", libraryEncounter: "遇见 2 次", libraryEncounterOne: "遇见 1 次",
     featureEyebrow: "MADE FOR RESEARCH READING", featureTitle: "查词、翻译，继续读。", featureLede: "选词即查，释义和遇见记录随手留存。原文面向英文论文，目标语言可选择中文、英语、德语、法语或日语。", featureOneTitle: "自选翻译服务", featureOneBody: "目前只实现 OpenAI Chat Completions 兼容协议；兼容该协议的服务可以使用，密钥保存在 Windows 凭据管理器或 macOS 钥匙串。", featureTwoTitle: "选择目标语言", featureTwoBody: "当前可选中文、英语、德语、法语和日语；默认目标语言为中文。", featureThreeTitle: "统一收词与复习", featureThreeBody: "收词汇总支持搜索、首次收录日期筛选和总数查看；重复遇见不会被误算为复习。",
     downloadEyebrow: "READY WHEN YOU ARE", downloadTitle: "开始更顺畅的论文阅读。", downloadLede: "下载安装包 → 运行安装 → 配置自己的 Chat Completions 兼容 API，即可开始使用。首次翻译需要你自己的 API 地址、模型与密钥；软件不内置翻译服务。", downloadStatus: "最新公开版本", downloadChecking: "正在检查安装包", downloadPending: "安装包尚未发布", downloadUnknown: "请在 GitHub 查看发布状态", downloadButton: "下载 Windows 安装包 <span aria-hidden=\"true\">↗</span>", downloadFallback: "查看发布进度 <span aria-hidden=\"true\">↗</span>", downloadReleasePage: "查看 GitHub Release 页面", downloadMeta: "Windows 10/11 · x64 · NSIS installer",
+    windowsHelpTitle: "下载说明与文件校验", windowsUnsignedNotice: "当前 {version} Windows 安装包未签名。Edge 可能提示“通常不会下载”，Windows 也可能显示 SmartScreen 提示。", windowsReleaseNotice: "此版本的签名状态和校验信息以对应发布说明为准。", windowsTrustAdvice: "请先确认下载来自本项目 GitHub Release，并核对 SHA-256；确认后由你决定是否打开。文件校验用于确认文件一致性，并不等于安全审查。", windowsChecksums: "下载 SHA256SUMS.txt", windowsBytes: "字节",
     heroMac: "macOS 测试版 <span aria-hidden=\"true\">↗</span>", macPreview: "测试版", macChecking: "正在检查 Mac 安装包", macAvailable: "Mac 测试版已发布", macPending: "Mac 安装包尚未发布", macUnknown: "请在 GitHub 查看 Mac 发布状态", macApple: "Apple Silicon · M 系列 <span aria-hidden=\"true\">↗</span>", macIntel: "Intel Mac <span aria-hidden=\"true\">↗</span>", macFallback: "查看 Mac 发布进度 <span aria-hidden=\"true\">↗</span>", macMeta: "macOS 11 及以上 · DMG", macInstall: "选择对应芯片的安装包，将应用拖入“应用程序”。首次打开可能需要在“隐私与安全性”中允许运行；取词前在软件设置中授权辅助功能。", macValidation: "测试版未获 Apple Developer ID 签名与公证；完整 PDF 取词、权限和浮窗行为仍待 Mac 桌面实测。", macReleasePage: "Mac 测试版发布说明",
-    footerText: "让论文阅读与翻译更顺畅。", footerRepo: "GitHub 仓库"
+    privacyPolicy: "隐私政策", footerText: "让论文阅读与翻译更顺畅。", footerRepo: "GitHub 仓库"
   },
   en: {
     pageTitle: "PaperVocab | A reading companion for papers", metaDescription: "PaperVocab helps you collect and review words from English papers on Windows and macOS. Words are saved locally; selected text is sent to your chosen translation API.", ogTitle: "PaperVocab | Keep the words that make a paper click", ogDescription: "Select a word, see its meaning, then search, filter by first collected date, and review it in one library.",
@@ -22,8 +23,9 @@ const copy = {
     libraryEyebrow: "YOUR WORDS, TOGETHER", libraryTitle: "One place for every word.", libraryLede: "See all collected words in one library. Search words or meanings, filter by first collection date, and see the total word count and repeat encounters.", libraryNav: "Word library", libraryReview: "Due reviews", librarySettings: "Settings", libraryFiltered: "Filtered results", libraryTotal: "Words in library", librarySearch: "Search words or meanings", libraryDate: "First collected date", libraryMeaningOne: "resilient; robust", libraryMeaningTwo: "representation", libraryEncounter: "Seen twice", libraryEncounterOne: "Seen once",
     featureEyebrow: "MADE FOR RESEARCH READING", featureTitle: "Look up. Translate. Keep reading.", featureLede: "Look up a selection and keep its explanation and encounter record close at hand. The source is English paper text, with Chinese, English, German, French, or Japanese as the target language.", featureOneTitle: "Choose your translation service", featureOneBody: "The current release implements the OpenAI Chat Completions compatible protocol. Services using that protocol can work; keys stay in Windows Credential Manager or macOS Keychain.", featureTwoTitle: "Choose a target language", featureTwoBody: "Chinese, English, German, French, and Japanese are available today; Chinese is the default.", featureThreeTitle: "One library, steady review", featureThreeBody: "Search, filter by first collection date, and see total words. Seeing a word again does not count as a review.",
     downloadEyebrow: "READY WHEN YOU ARE", downloadTitle: "Read your next paper with less friction.", downloadLede: "Download → run the installer → configure your own Chat Completions-compatible API. Translation requires your API URL, model, and key; no translation service is bundled.", downloadStatus: "Latest public release", downloadChecking: "Checking for an installer", downloadPending: "Installer not yet published", downloadUnknown: "Check release status on GitHub", downloadButton: "Download the Windows installer <span aria-hidden=\"true\">↗</span>", downloadFallback: "View release progress <span aria-hidden=\"true\">↗</span>", downloadReleasePage: "View the GitHub Release page", downloadMeta: "Windows 10/11 · x64 · NSIS installer",
+    windowsHelpTitle: "Download notes & file verification", windowsUnsignedNotice: "The current {version} Windows installer is unsigned. Edge may flag it as not commonly downloaded, and Windows may show a SmartScreen prompt.", windowsReleaseNotice: "See this version's release notes for its signature status and checksum information.", windowsTrustAdvice: "Confirm the download comes from this project's GitHub Release and compare its SHA-256 before deciding whether to open it. A matching checksum confirms file integrity; it is not a security review.", windowsChecksums: "Download SHA256SUMS.txt", windowsBytes: "bytes",
     heroMac: "macOS preview <span aria-hidden=\"true\">↗</span>", macPreview: "Preview", macChecking: "Checking for Mac installers", macAvailable: "Mac preview available", macPending: "Mac installers not yet published", macUnknown: "Check Mac release status on GitHub", macApple: "Apple Silicon · M series <span aria-hidden=\"true\">↗</span>", macIntel: "Intel Mac <span aria-hidden=\"true\">↗</span>", macFallback: "View Mac release progress <span aria-hidden=\"true\">↗</span>", macMeta: "macOS 11 or later · DMG", macInstall: "Choose your Mac's chip, then drag the app into Applications. You may need to allow the first launch in Privacy & Security. Grant Accessibility access in the app's settings before capturing words.", macValidation: "This preview has no Apple Developer ID signature or notarization. PDF capture, permission flows, and popup behavior still await interactive Mac desktop testing.", macReleasePage: "Mac preview release notes",
-    footerText: "Reading and translation, in one flow.", footerRepo: "GitHub repository"
+    privacyPolicy: "Privacy policy", footerText: "Reading and translation, in one flow.", footerRepo: "GitHub repository"
   }
 };
 
@@ -39,6 +41,9 @@ let language = readStorage("papervocab-language") || (navigator.language.toLower
 let releaseState = "checking";
 let installerUrl = "";
 let releaseVersion = "";
+let checksumUrl = "";
+let verifiedWindowsInstaller = null;
+let verifiedWindowsMetadata = null;
 let macState = "checking";
 let macRelease = null;
 
@@ -91,7 +96,35 @@ function renderRelease() {
   const heroButton = document.querySelector("[data-hero-installer-link]");
   heroButton.href = installerUrl || "#download";
   heroButton.innerHTML = copy[language].heroPrimary;
+  document.querySelectorAll("[data-release-page-link]").forEach((link) => {
+    link.href = installerUrl ? `${repository}/releases/tag/${releaseVersion}` : releasePageLink;
+  });
+  renderWindowsVerification();
   renderMacRelease();
+}
+
+function renderWindowsVerification() {
+  const status = document.querySelector("[data-windows-trust-status]");
+  if (!status) return;
+  // Only locally recorded verification can describe a signature or digest.
+  // A newer API release must never inherit an older installer's verification.
+  const matchesVerified = verifiedWindowsInstaller?.url === installerUrl
+    && verifiedWindowsInstaller?.version === releaseVersion;
+  const verification = matchesVerified ? verifiedWindowsMetadata : null;
+  status.textContent = verification?.signatureStatus === "unsigned"
+    ? copy[language].windowsUnsignedNotice.replace("{version}", releaseVersion)
+    : copy[language].windowsReleaseNotice;
+  const metadata = document.querySelector("[data-windows-file-meta]");
+  metadata.hidden = !verification;
+  metadata.textContent = verification
+    ? `${verifiedWindowsInstaller.name} · ${verification.size.toLocaleString(language === "zh" ? "zh-CN" : "en-US")} ${copy[language].windowsBytes}`
+    : "";
+  document.querySelector("[data-windows-checksum-row]").hidden = !verification;
+  document.querySelector("[data-windows-sha256]").textContent = verification?.sha256 || "";
+  const link = document.querySelector("[data-windows-checksum-link]");
+  const availableChecksum = checksumUrl || (matchesVerified ? verifiedWindowsInstaller?.checksumUrl : "");
+  link.hidden = !availableChecksum;
+  link.href = availableChecksum || "#download";
 }
 
 function renderMacRelease() {
@@ -161,7 +194,17 @@ function validatedInstaller(release) {
     return match && release.tag_name === `v${match[1]}`
       && item.browser_download_url === `${repository}/releases/download/${release.tag_name}/${item.name}`;
   });
-  return asset ? { url: asset.browser_download_url, version: release.tag_name } : null;
+  if (!asset) return null;
+  const checksumAsset = release.assets.find((item) => item?.name === "SHA256SUMS.txt"
+    && item.browser_download_url === `${repository}/releases/download/${release.tag_name}/SHA256SUMS.txt`);
+  return { url: asset.browser_download_url, version: release.tag_name, name: asset.name, checksumUrl: checksumAsset?.browser_download_url || "" };
+}
+
+function validatedWindowsVerification(verification) {
+  if (!verification || !/^[a-f0-9]{64}$/.test(verification.sha256)
+    || !Number.isSafeInteger(verification.size) || verification.size <= 0
+    || verification.signatureStatus !== "unsigned") return null;
+  return { sha256: verification.sha256, size: verification.size, signatureStatus: verification.signatureStatus };
 }
 
 function useRelease(candidate) {
@@ -172,6 +215,7 @@ function useRelease(candidate) {
   if (releaseVersion && changedPart !== -1 && next[changedPart] < current[changedPart]) return false;
   installerUrl = candidate.url;
   releaseVersion = candidate.version;
+  checksumUrl = candidate.checksumUrl;
   releaseState = "available";
   return true;
 }
@@ -194,9 +238,17 @@ async function checkRelease() {
 
 document.querySelectorAll("[data-release-page-link]").forEach((link) => { link.href = releasePageLink; });
 document.querySelectorAll("[data-repo-link]").forEach((link) => { link.href = repository || "#top"; });
+document.querySelectorAll("[data-project-document]").forEach((link) => {
+  const name = link.dataset.projectDocument;
+  if (["PRIVACY.md", "CODE_SIGNING_POLICY.md"].includes(name) && repository) {
+    link.href = `${repository}/blob/${encodeURIComponent(window.PAPERVOCAB_BRANCH || "master")}/${name}`;
+  }
+});
 document.querySelector("[data-language-toggle]").addEventListener("click", () => { language = language === "zh" ? "en" : "zh"; applyLanguage(); });
 document.querySelectorAll("[data-preview-close]").forEach((button) => { button.addEventListener("click", () => document.querySelector(".lookup-card")?.classList.add("is-closed")); });
-useRelease(validatedInstaller(window.PAPERVOCAB_RELEASE));
+verifiedWindowsInstaller = validatedInstaller(window.PAPERVOCAB_RELEASE);
+verifiedWindowsMetadata = verifiedWindowsInstaller ? validatedWindowsVerification(window.PAPERVOCAB_RELEASE?.verification) : null;
+useRelease(verifiedWindowsInstaller);
 useMacRelease(validatedMacRelease(window.PAPERVOCAB_MAC_RELEASE));
 applyLanguage();
 checkRelease();

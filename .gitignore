@@ -17,3 +17,8 @@ src-tauri/icons/128x128.png
 src-tauri/icons/128x128@2x.png
 src-tauri/icons/Square*Logo.png
 src-tauri/icons/StoreLogo.png
+# Local signing configuration and private keys must never be committed.
+src-tauri/tauri.signing.local.json
+*.pfx
+*.p12
+*.key

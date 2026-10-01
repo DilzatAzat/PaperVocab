@@ -1,5 +1,12 @@
 # 审查记录
 
+## 2026-10-01：下载信誉与免费签名准备
+
+- 新鲜只读 Reviewer 检查全部本轮 diff 和新增文档/脚本，未发现新增阻断问题。独立 Node 24/24、差异检查、真实公开包 checksum MATCH/NotSigned 和缺应用的签名门禁拒绝通过。
+- Boss 确认新版不继承旧 hash/size/unsigned、API verification 不冒充签名证据、校验链接对应真实版本，Windows/Mac下载和双语保留。主线程本地多视口无横向溢出；PowerShell 5.1/7 11项正负例通过。
+- 申请材料明确声誉、组件许可、MFA、联系人和本人协议提交缺口；没有发送申请或假造资助鸣谢。SignPath/Store 与 Microsoft 官方文档限制已核查。
+- 没有修改原 Desktop 的未提交工作，没有签名/重打包/覆盖公开 v0.1.0。真实 API/PDF/卸载仍待验收；本轮主页生产发布待后续记录。
+
 ## 2026-09-27
 
 - 旧博客 harness 已只读检查；确认其流程文档和 Jekyll 命令不适用于本项目。

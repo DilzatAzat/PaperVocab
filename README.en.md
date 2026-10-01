@@ -14,6 +14,8 @@ Translation requires your own API URL, model, and key; no translation service or
 
 macOS preview: download [Apple Silicon](https://github.com/DilzatAzat/PaperVocab/releases/download/macos-v0.1.0-beta.1/PaperVocab_0.1.0_aarch64.dmg) / [Intel Mac](https://github.com/DilzatAzat/PaperVocab/releases/download/macos-v0.1.0-beta.1/PaperVocab_0.1.0_x64.dmg) directly. the site offers Apple Silicon and Intel DMGs for macOS 11 or later. Move the app into Applications and grant Accessibility access from Settings. This is an ad-hoc signed preview without Apple Developer ID signing or notarization; full PDF, permission, and popup behavior still await interactive Mac desktop testing. See [Mac acceptance and build instructions](docs/MACOS_TEST.md).
 
+See [Windows download notes and distribution options](docs/DOWNLOAD_TRUST.md) for uncommon-download and SmartScreen prompts. The bilingual [Privacy policy](PRIVACY.md) and [Code signing policy](CODE_SIGNING_POLICY.md) are public. [Free open-source signing application materials](docs/SIGNPATH_APPLICATION.md) have been prepared; no application has been submitted or approved yet.
+
 ## Use
 
 1. Download and run the installer, then start PaperVocab and open Settings.

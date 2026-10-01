@@ -16,7 +16,7 @@ function releaseFor(version = "0.2.0", url) {
   };
 }
 
-async function loadWithRelease(response, fallback, macFallback) {
+async function loadWithRelease(response, fallback, macFallback, repoUrl = repository) {
   const status = { textContent: "" };
   const version = { textContent: "", hidden: true };
   const installer = { href: "", innerHTML: "" };
@@ -26,6 +26,14 @@ async function loadWithRelease(response, fallback, macFallback) {
   const macApple = { href: "", innerHTML: "" };
   const macIntel = { href: "", innerHTML: "" };
   const macNotes = { href: "" };
+  const releaseNotes = { href: "" };
+  const trustStatus = { textContent: "" };
+  const fileMetadata = { textContent: "", hidden: true };
+  const checksumRow = { hidden: true };
+  const checksumText = { textContent: "" };
+  const checksumLink = { href: "", hidden: true, dataset: { i18n: "windowsChecksums" } };
+  const helpTitle = { innerHTML: "", dataset: { i18n: "windowsHelpTitle" } };
+  const trustAdvice = { innerHTML: "", dataset: { i18n: "windowsTrustAdvice" } };
   const toggle = { setAttribute() {}, addEventListener(_, callback) { this.click = callback; } };
   const elements = new Map([
     ["[data-release-status]", status],
@@ -38,18 +46,27 @@ async function loadWithRelease(response, fallback, macFallback) {
     ['[data-mac-installer-link="aarch64"]', macApple],
     ['[data-mac-installer-link="x64"]', macIntel],
     ["[data-mac-release-page-link]", macNotes],
+    ["[data-windows-trust-status]", trustStatus],
+    ["[data-windows-file-meta]", fileMetadata],
+    ["[data-windows-checksum-row]", checksumRow],
+    ["[data-windows-sha256]", checksumText],
+    ["[data-windows-checksum-link]", checksumLink],
   ]);
   const document = {
     documentElement: {},
     querySelector(selector) { return elements.get(selector) || null; },
-    querySelectorAll() { return []; },
+    querySelectorAll(selector) {
+      if (selector === "[data-release-page-link]") return [releaseNotes];
+      if (selector === "[data-i18n]") return [helpTitle, trustAdvice, checksumLink];
+      return [];
+    },
   };
   const context = {
     document,
     navigator: { language: "zh-CN" },
     URL,
     window: {
-      PAPERVOCAB_REPO: repository,
+      PAPERVOCAB_REPO: repoUrl,
       PAPERVOCAB_BRANCH: "master",
       PAPERVOCAB_RELEASE: fallback,
       PAPERVOCAB_MAC_RELEASE: macFallback,
@@ -58,10 +75,119 @@ async function loadWithRelease(response, fallback, macFallback) {
     fetch: async (url) => typeof response === "function" ? response(url) : response,
   };
   runInNewContext(source, context);
-  const immediately = { href: installer.href, heroHref: heroInstaller.href, status: status.textContent, macHref: macApple.href };
+  const immediately = { href: installer.href, heroHref: heroInstaller.href, status: status.textContent, macHref: macApple.href, sha256: checksumText.textContent, trust: trustStatus.textContent };
   await new Promise(setImmediate);
-  return { status, version, installer, heroInstaller, toggle, immediately, macStatus, macVersion, macApple, macIntel, macNotes };
+  return { status, version, installer, heroInstaller, toggle, immediately, macStatus, macVersion, macApple, macIntel, macNotes, releaseNotes, trustStatus, fileMetadata, checksumRow, checksumText, checksumLink, helpTitle, trustAdvice };
 }
+
+const knownSha256 = "97556ea2fcba7f92618017ac8795beeaec43a2e72bd495de6c28a1ae163c4efe";
+
+function verifiedWindowsRelease() {
+  const release = releaseFor("0.1.0");
+  release.verification = { sha256: knownSha256, size: 3976305, signatureStatus: "unsigned" };
+  release.assets.push({ name: "SHA256SUMS.txt", browser_download_url: `${repository}/releases/download/v0.1.0/SHA256SUMS.txt` });
+  return release;
+}
+
+test("published Windows verification is accurate in both languages without changing Mac downloads", async () => {
+  const published = { window: {} };
+  runInNewContext(readFileSync(new URL("../site/release.js", import.meta.url), "utf8"), published);
+  const repoUrl = "https://github.com/DilzatAzat/PaperVocab";
+  const state = await loadWithRelease(() => { throw new Error("offline"); }, published.window.PAPERVOCAB_RELEASE, published.window.PAPERVOCAB_MAC_RELEASE, repoUrl);
+  assert.match(state.helpTitle.innerHTML, /下载说明与文件校验/);
+  assert.match(state.trustStatus.textContent, /v0\.1\.0.*未签名/);
+  assert.match(state.trustStatus.textContent, /Edge.*通常不会下载.*SmartScreen/);
+  assert.equal(state.checksumRow.hidden, false);
+  assert.equal(state.checksumText.textContent, knownSha256);
+  assert.match(state.fileMetadata.textContent, /PaperVocab_0\.1\.0_x64-setup\.exe · 3,976,305 字节/);
+  assert.equal(state.checksumLink.hidden, false);
+  assert.equal(state.checksumLink.href, `${repoUrl}/releases/download/v0.1.0/SHA256SUMS.txt`);
+  assert.equal(state.releaseNotes.href, `${repoUrl}/releases/tag/v0.1.0`);
+  const macUrl = state.macApple.href;
+  state.toggle.click();
+  assert.match(state.helpTitle.innerHTML, /Download notes & file verification/);
+  assert.match(state.trustStatus.textContent, /v0\.1\.0.*unsigned/);
+  assert.match(state.trustAdvice.innerHTML, /not a security review/);
+  assert.match(state.fileMetadata.textContent, /3,976,305 bytes/);
+  assert.match(state.checksumLink.innerHTML, /Download SHA256SUMS\.txt/);
+  assert.equal(state.checksumText.textContent, knownSha256);
+  assert.equal(state.macApple.href, macUrl);
+});
+
+test("API failures and older releases retain pinned Windows verification", async () => {
+  for (const response of [() => { throw new Error("offline"); }, { status: 403, ok: false }, { status: 404 }, { status: 200, ok: true, json: async () => releaseFor("0.0.9") }]) {
+    const state = await loadWithRelease(response, verifiedWindowsRelease());
+    assert.equal(state.immediately.sha256, knownSha256);
+    assert.match(state.immediately.trust, /未签名/);
+    assert.equal(state.checksumText.textContent, knownSha256);
+    assert.equal(state.checksumRow.hidden, false);
+    assert.equal(state.checksumLink.hidden, false);
+  }
+});
+
+test("same-version API metadata cannot change the locally verified signature or hash", async () => {
+  const apiRelease = releaseFor("0.1.0");
+  apiRelease.verification = { sha256: "b".repeat(64), size: 9000, signatureStatus: "signed" };
+  const state = await loadWithRelease({ status: 200, ok: true, json: async () => apiRelease }, verifiedWindowsRelease());
+  assert.match(state.trustStatus.textContent, /未签名/);
+  assert.equal(state.checksumText.textContent, knownSha256);
+  assert.equal(state.checksumLink.href, `${repository}/releases/download/v0.1.0/SHA256SUMS.txt`);
+});
+
+test("new API versions never inherit old verification or trust API signature metadata", async () => {
+  const release = releaseFor("0.2.0");
+  release.verification = { sha256: "b".repeat(64), size: 9999, signatureStatus: "unsigned" };
+  const state = await loadWithRelease({ status: 200, ok: true, json: async () => release }, verifiedWindowsRelease());
+  assert.equal(state.installer.href, release.assets[0].browser_download_url);
+  assert.equal(state.releaseNotes.href, `${repository}/releases/tag/v0.2.0`);
+  assert.match(state.trustStatus.textContent, /对应发布说明/);
+  assert.equal(state.checksumRow.hidden, true);
+  assert.equal(state.checksumText.textContent, "");
+  assert.equal(state.fileMetadata.hidden, true);
+  assert.equal(state.checksumLink.hidden, true);
+  state.toggle.click();
+  assert.match(state.trustStatus.textContent, /this version's release notes/);
+  assert.doesNotMatch(state.trustStatus.textContent, /unsigned/);
+  assert.equal(state.checksumText.textContent, "");
+});
+
+test("a new version exposes only its exact published checksum asset", async () => {
+  const release = releaseFor("0.2.0");
+  const checksumUrl = `${repository}/releases/download/v0.2.0/SHA256SUMS.txt`;
+  release.assets.push({ name: "SHA256SUMS.txt", browser_download_url: checksumUrl });
+  const state = await loadWithRelease({ status: 200, ok: true, json: async () => release }, verifiedWindowsRelease());
+  assert.equal(state.checksumLink.hidden, false);
+  assert.equal(state.checksumLink.href, checksumUrl);
+  assert.equal(state.checksumRow.hidden, true);
+  assert.equal(state.checksumText.textContent, "");
+});
+
+test("missing and noncanonical checksum assets are hidden instead of fabricated", async () => {
+  const canonical = `${repository}/releases/download/v0.2.0/SHA256SUMS.txt`;
+  const invalidUrls = [canonical + "?download=1", canonical.replace("/v0.2.0/", "/v0.1.0/"), canonical.replace("github.com", "github.com.evil.example"), "https://example.com/SHA256SUMS.txt"];
+  for (const url of invalidUrls) {
+    const release = releaseFor("0.2.0");
+    release.assets.push({ name: "SHA256SUMS.txt", browser_download_url: url });
+    const state = await loadWithRelease({ status: 200, ok: true, json: async () => release }, verifiedWindowsRelease());
+    assert.equal(state.checksumLink.hidden, true, url);
+    assert.equal(state.checksumLink.href, "#download", url);
+  }
+  const release = releaseFor("0.2.0");
+  release.assets.push({ name: "other-checksums.txt", browser_download_url: canonical });
+  const state = await loadWithRelease({ status: 200, ok: true, json: async () => release });
+  assert.equal(state.checksumLink.hidden, true);
+});
+
+test("malformed local verification is not shown as verified data", async () => {
+  for (const invalid of [{ sha256: "<script>alert(1)</script>" }, { size: -1 }, { size: 1.5 }, { signatureStatus: "signed" }]) {
+    const fallback = verifiedWindowsRelease();
+    Object.assign(fallback.verification, invalid);
+    const state = await loadWithRelease(() => { throw new Error("offline"); }, fallback);
+    assert.equal(state.checksumRow.hidden, true);
+    assert.equal(state.checksumText.textContent, "");
+    assert.match(state.trustStatus.textContent, /对应发布说明/);
+  }
+});
 
 function macReleaseFor(version = "0.1.0", beta = 1) {
   const tag = `macos-v${version}-beta.${beta}`;

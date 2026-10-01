@@ -10,7 +10,7 @@
     <meta property="og:type" content="website" />
     <title>PaperVocab | 论文阅读伴侣</title>
     <link rel="icon" type="image/png" href="brand-mark.png" />
-    <link rel="stylesheet" href="styles.css?v=9" />
+    <link rel="stylesheet" href="styles.css?v=10" />
   </head>
   <body>
     <header class="site-header">
@@ -109,16 +109,28 @@
       <section class="download-section section-shell" id="download">
         <div class="download-copy"><p class="eyebrow" data-i18n="downloadEyebrow">READY WHEN YOU ARE</p><h2 data-i18n="downloadTitle">开始更顺畅的论文阅读。</h2><p data-i18n="downloadLede">下载安装包 → 运行安装 → 配置自己的 Chat Completions 兼容 API，即可开始使用。首次翻译需要你自己的 API 地址、模型与密钥；软件不内置翻译服务。</p></div>
         <div class="download-platforms">
-          <div class="download-panel"><h3>Windows</h3><div class="download-version" aria-live="polite"><span class="status-dot"></span><span data-release-status>正在检查安装包</span><strong data-release-version hidden></strong></div><a class="button button-primary full" data-installer-link href="#download">查看发布进度 <span aria-hidden="true">↗</span></a><a class="release-link" data-release-page-link href="#" data-i18n="downloadReleasePage">查看 GitHub Release 页面</a><p data-i18n="downloadMeta">Windows 10/11 · x64 · NSIS installer</p></div>
+          <div class="download-panel"><h3>Windows</h3><div class="download-version" aria-live="polite"><span class="status-dot"></span><span data-release-status>正在检查安装包</span><strong data-release-version hidden></strong></div><a class="button button-primary full" data-installer-link href="#download">查看发布进度 <span aria-hidden="true">↗</span></a><a class="release-link" data-release-page-link href="#" data-i18n="downloadReleasePage">查看 GitHub Release 页面</a><p data-i18n="downloadMeta">Windows 10/11 · x64 · NSIS installer</p>
+            <details class="download-help">
+              <summary data-i18n="windowsHelpTitle">下载说明与文件校验</summary>
+              <div class="download-help-content">
+                <p data-windows-trust-status>此版本的签名状态和校验信息以对应发布说明为准。</p>
+                <p data-i18n="windowsTrustAdvice">请先确认下载来自本项目 GitHub Release，并核对 SHA-256；确认后由你决定是否打开。文件校验用于确认文件一致性，并不等于安全审查。</p>
+                <p class="download-file-meta" data-windows-file-meta hidden></p>
+                <div class="download-checksum" data-windows-checksum-row hidden><span>SHA-256</span><code data-windows-sha256></code></div>
+                <a class="release-link" data-windows-checksum-link href="#download" data-i18n="windowsChecksums" hidden>下载 SHA256SUMS.txt</a>
+                <p class="download-policy"><a class="release-link" data-project-document="CODE_SIGNING_POLICY.md" href="https://github.com/DilzatAzat/PaperVocab/blob/master/CODE_SIGNING_POLICY.md">Code signing policy</a></p>
+              </div>
+            </details>
+          </div>
           <div class="download-panel mac-download" id="mac-download"><h3>macOS <span class="preview-badge" data-i18n="macPreview">测试版</span></h3><div class="download-version" aria-live="polite"><span data-mac-release-status>正在检查安装包</span><strong data-mac-release-version hidden></strong></div><a class="button button-primary full" data-mac-installer-link="aarch64" href="#mac-download">Apple Silicon · M 系列</a><a class="button button-quiet full" data-mac-installer-link="x64" href="#mac-download">Intel Mac</a><p class="mac-requirements" data-i18n="macMeta">macOS 11 及以上 · DMG</p><p class="mac-install-note" data-i18n="macInstall">将应用拖入“应用程序”，打开后在设置中授权辅助功能。</p><p class="mac-validation-note" data-i18n="macValidation">测试版尚无 Apple Developer ID 签名及公证；完整 PDF 取词与浮窗行为待 Mac 桌面实测。</p><a class="release-link" data-mac-release-page-link href="#mac-download" data-i18n="macReleasePage">Mac 测试版发布说明</a></div>
         </div>
       </section>
 
     </main>
 
-    <footer class="site-footer"><span>PaperVocab</span><span data-i18n="footerText">让论文阅读与翻译更顺畅。</span><a data-repo-link href="#top" data-i18n="footerRepo">GitHub 仓库</a></footer>
+    <footer class="site-footer"><span>PaperVocab</span><span data-i18n="footerText">让论文阅读与翻译更顺畅。</span><nav class="site-footer-links" aria-label="Project information"><a data-project-document="PRIVACY.md" href="https://github.com/DilzatAzat/PaperVocab/blob/master/PRIVACY.md" data-i18n="privacyPolicy">隐私政策</a><a data-project-document="CODE_SIGNING_POLICY.md" href="https://github.com/DilzatAzat/PaperVocab/blob/master/CODE_SIGNING_POLICY.md">Code signing policy</a><a data-repo-link href="#top" data-i18n="footerRepo">GitHub 仓库</a></nav></footer>
     <script src="config.js"></script>
-    <script src="release.js?v=macos-1"></script>
-    <script src="app.js?v=12"></script>
+    <script src="release.js?v=trust-1"></script>
+    <script src="app.js?v=13"></script>
   </body>
 </html>

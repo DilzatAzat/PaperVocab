@@ -67,3 +67,17 @@ Tauri 2 + React/TypeScript + Rust。后端实现托盘、单实例、全局快�
 - 双语主页与 README 已增加两种 Mac 芯片下载和真实备用元数据；主页提交 `d934927` 已推送，Pages `36820540213` 成功；正式站中文 Apple Silicon 和英文 Intel 下载实点击得到的两个 DMG 哈希均匹配，双语 1280/390/320px 无横向溢出。模拟 GitHub 版本 API 失败后，Windows 与两个 Mac 的真实备用下载仍可用。
 - Mac 测试版仅有 ad-hoc 签名，无 Developer ID/Apple 公证。完整 PDF、权限授权、剪贴板并发、浮窗焦点/全屏、真实 API、安装卸载继续按 docs/MACOS_TEST.md 标为待桌面实测，不能将 CI 启动等同全部实测。
 - 并行 Windows 签名/验收文档的本地修改已保留，未混入 Mac 提交或发布包。
+
+## 2026-10-01 Windows 下载信誉与免费签名准备
+
+- 当前工作位于独立 worktree `C:/Users/ROG/.codex/worktrees/download-trust/paperVocab`、`codex/download-trust`，基于 master `8136a3a`。原 Desktop 项目的 Mac 分支及未提交签名准备修改保留；没有修改博客、全局配置或替换已发布安装包。
+- 用户选择优先免费开源签名审批。官方资料确认：SignPath 需要项目声誉、许可条件、MFA、团队角色和逐次人工批准；免费 Store MSIX 可作备选，但需要重新打包及兼容验收。详见 `docs/DOWNLOAD_TRUST.md`。
+- 再次核查公开 Windows v0.1.0：3,976,305 字节，SHA-256 `97556ea2fcba7f92618017ac8795beeaec43a2e72bd495de6c28a1ae163c4efe` 与同 Release 校验文件匹配，Authenticode `NotSigned`。截图的 Edge 提示是少下载信誉提示，不能据此说已检出病毒或已证明安全。
+- 新增 SignPath 实际表单对应的英文申请草稿、双语 `CODE_SIGNING_POLICY.md` 和 `PRIVACY.md`。截至核查：仓库 1 star/0 fork、Windows 包 5 次下载（含开发者验证），没有已核实广泛使用或媒体证据。MFA、本人联系人、角色和完整组件许可审计未完成。**未提交申请、未获批、未接入签名。**
+- 官网中英文 Windows 下载区新增可展开说明、对应版本 Release/校验文件入口、真实大小和完整 SHA-256；未知新版清除旧版本的哈希/签名结论，API verification 不作为签名证据。Windows/Mac 双架构入口保留。双语 README 已链接签名与隐私说明。
+- 已引入此前准备的 Windows 签名/真实验收文档和只读检查脚本，增加显式 `-AssetName` 支持浏览器 `(1)` 重名，不自动模糊匹配；未签名包仍被 `-RequireSigned` 拒绝。
+- 本轮实际验证：`pnpm test` 24/24、两份主页 JS 语法、TypeScript、Vite、`git diff --check` 通过。PowerShell 5.1/7 均完成真实公开包校验及 11 个正/负例（重命名成功；缺失/错误条目、篡改字节、重复/坏格式、路径资产名、缺应用、重复文件、真实未签名门禁拒绝）。临时回归脚本 `C:/Users/ROG/AppData/Local/Temp/papervocab-check-trust.ps1` 不纳入仓库。
+- 浏览器本地 1280px、390px、320px 中英文无横向溢出，下载说明、哈希及 Mac 链接正确；980px 也检查无横向溢出并保存真实截图至忽略的 `output/playwright/`。独立只读审查无新增阻断，独立 Node 24/24 与真实包校验通过。
+- 本轮不改桌面业务代码，未重新跑 Rust/安装器构建或真实 PDF/API/卸载流程；以前的未验收项继续保留。官网正式部署和生产校验尚待完成。
+
+下一条工程动作：提交 scoped 变更、正常推送 master，等待 Pages 成功并核查正式页面、校验文件真实下载。下一条签名动作：维护者阅读 `docs/SIGNPATH_APPLICATION.md`，补联系人/MFA/角色/许可与真实声誉证据，本人阅读协议后提交；服务审核未完成前继续明确未签名。
